@@ -106,7 +106,7 @@ public class RedBlock implements Serializable {
 	}
 
 	/**
-	 * Removes a RedBlockChilds in a list from the RedBlock.
+	 * Removes a RedBlockChild in a list from the RedBlock.
 	 *
 	 * @param children the children
 	 * @return the number of blocks removed
@@ -134,8 +134,7 @@ public class RedBlock implements Serializable {
 	}
 
 	/**
-	 * Enables the RedBlock
-	 * Places all blocks controlled by the RedBlock.
+	 * Enables the children of the RedBlock.
 	 *
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already enabled and enable it again
 	 */
@@ -163,8 +162,7 @@ public class RedBlock implements Serializable {
 	}
 
 	/**
-	 * Disabled the RedBlock
-	 * Removes all blocks controlled by the RedBlock.
+	 * Disables the children of the RedBlock.
 	 *
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already disabled and disable it again
 	 */

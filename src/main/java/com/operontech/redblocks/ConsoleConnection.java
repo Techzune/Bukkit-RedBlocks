@@ -15,7 +15,7 @@ public class ConsoleConnection {
 	private final Plugin plugin;
 
 	/**
-	 * Instantiates a new console connection.
+	 * Initiates a new console connection.
 	 *
 	 * @param plugin the plugin
 	 * @param server the server
@@ -26,7 +26,7 @@ public class ConsoleConnection {
 	}
 
 	/**
-	 * Sends a message to the console with the RedBlocks tag.
+	 * Sends a message to the console with the plugin's tag.
 	 * 
 	 * Uses AQUA for text color.
 	 * @param msg the message
@@ -36,7 +36,7 @@ public class ConsoleConnection {
 	}
 
 	/**
-	 * Sends a message to the console with the RedBlocks tag.
+	 * Sends a message to the console with the plugin's tag.
 	 * 
 	 * Uses RED for text color.
 	 * @param msg the message
@@ -46,7 +46,7 @@ public class ConsoleConnection {
 	}
 
 	/**
-	 * Sends a message to the console with the RedBlocks tag.
+	 * Sends a message to the console with the plugin's tag.
 	 * 
 	 * Uses DARK_RED for text color.
 	 * @param msg the message

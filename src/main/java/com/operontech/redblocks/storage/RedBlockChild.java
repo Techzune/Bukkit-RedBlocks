@@ -33,6 +33,11 @@ public class RedBlockChild implements Serializable {
 		this.location = convertLocation(location);
 	}
 
+	/**
+	 * Sets the block in the world to the child's specifications and inserts inventory data.
+	 * 
+	 * @param blockUpdate
+	 */
 	@SuppressWarnings("deprecation")
 	public void enableBlock(final boolean blockUpdate) {
 		if ((typeId == Material.WATER.getId()) || (typeId == Material.LAVA.getId())) {
@@ -83,6 +88,11 @@ public class RedBlockChild implements Serializable {
 
 	}
 
+	/**
+	 * Stores the inventory data of the block then sets it to AIR.
+	 * 
+	 * @param blockUpdate
+	 */
 	@SuppressWarnings("deprecation")
 	public void disableBlock(final boolean blockUpdate) {
 		if (getBlock().isEmpty()) {
@@ -228,12 +238,6 @@ public class RedBlockChild implements Serializable {
 		this.location = location.toString();
 	}
 
-	/**
-	 * Convert location.
-	 *
-	 * @param loc the loc
-	 * @return the string
-	 */
 	private String convertLocation(final Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
 	}

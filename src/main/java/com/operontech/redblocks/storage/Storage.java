@@ -32,7 +32,7 @@ public class Storage {
 	}
 
 	/**
-	 * Saves RedBlocks then clears RAM usage of the storage/
+	 * Saves RedBlocks then clears RAM usage of the storage.
 	 */
 	public void clearRAMUsage() {
 		saveRedBlocks();
@@ -43,8 +43,7 @@ public class Storage {
 	}
 
 	/**
-	 * Loads the RedBlocks.dat File in the RedBlocks Plugin Folder
-	 * 
+	 * Loads the RedBlocks.dat File in the RedBlocks Plugin Folder.
 	 * If the file is using the old rbList (Set) format, it will be converted to the rbSorted (HashMap) format.
 	 * 
 	 */
@@ -114,8 +113,8 @@ public class Storage {
 	}
 
 	/**
-	 * Gets the HashMap (Key: Location String, Value: RedBlock) of RedBlocks.
-	 * @return the HashMap of RedBlocks
+	 * Gets the database of RedBlocks.
+	 * @return the HashMap (Key: Location String, Value: RedBlock) of RedBlocks
 	 */
 	public HashMap<String, RedBlock> getRedBlocks() {
 		return rbSorted;
@@ -132,7 +131,7 @@ public class Storage {
 	}
 
 	/**
-	 * Creates a RedBlock and adds it to the HashSet and HashMap of RedBlocks.
+	 * Creates a RedBlock and adds it to the database of RedBlocks.
 	 *
 	 * @param loc the location of the RedBlock
 	 * @param typeId the typeId of the RedBlock
@@ -147,7 +146,7 @@ public class Storage {
 	}
 
 	/**
-	 * Creates a RedBlock and adds it to the HashSet and HashMap of RedBlocks.
+	 * Creates a RedBlock and adds it to the database of RedBlocks.
 	 *
 	 * @param p the owner of the RedBlock
 	 * @param b the block of the RedBlock
@@ -159,17 +158,17 @@ public class Storage {
 	}
 
 	/**
-	 * Removes a RedBlock from the HashMap and HashSet of RedBlocks.
+	 * Removes a RedBlock from the database of RedBlocks.
 	 *
 	 * @param b the block to remove
 	 * @return if it was removed
 	 */
 	public boolean removeRedBlock(final Block b) {
-		return (rbSorted.remove(b.getLocation().toString()) == null) ? true : false;
+		return (rbSorted.remove(b.getLocation().toString()) != null);
 	}
 
 	/**
-	 * Checks if the database (HashMap) contains a RedBlock.
+	 * Checks if the database contains a RedBlock.
 	 * 
 	 * @param b the block to search for
 	 * @return if the RedBlock was found
@@ -196,8 +195,8 @@ public class Storage {
 	/**
 	 * Runs a cleaning process that removes clutter in the RedBlock database, then resorts the HashMap.
 	 * 
-	 * Removes empty RedBlocks
-	 * Removes children of the RedBlock if it they're AIR
+	 * Removes empty RedBlocks.
+	 * Removes children of the RedBlock if it they're AIR.
 	 * 
 	 */
 	public void cleanupRedBlocks() {

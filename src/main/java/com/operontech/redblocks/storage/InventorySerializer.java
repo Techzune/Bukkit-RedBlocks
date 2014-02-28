@@ -12,6 +12,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class InventorySerializer {
 
+	/**
+	 * Converts an Inventory into a String.
+	 * @param invInventory the Inventory to convert
+	 * @return the serialized inventory
+	 */
 	public String convertToString(final Inventory invInventory) {
 		String serialization = invInventory.getSize() + ";";
 		for (int i = 0; i < invInventory.getSize(); i++) {
@@ -45,6 +50,12 @@ public class InventorySerializer {
 		return serialization;
 	}
 
+	/**
+	 * Converts a serialized Inventory string to an Inventory.
+	 * @param invString the serialized Inventory
+	 * @param type the type of Inventory to return
+	 * @return the Inventory
+	 */
 	@SuppressWarnings("deprecation")
 	public ItemStack[] convertToInventory(final String invString, final InventoryType type) {
 		if ((invString == null) || (invString == "")) {
@@ -93,7 +104,7 @@ public class InventorySerializer {
 		return deserializedInventory.getContents();
 	}
 
-	public static boolean isNumber(final String number) {
+	private static boolean isNumber(final String number) {
 		try {
 			Double.parseDouble(number);
 		} catch (final NumberFormatException nfe) {

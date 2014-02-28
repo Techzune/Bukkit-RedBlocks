@@ -88,7 +88,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Reloads RedBlocks
+	 * Reloads the Configuration and Redblocks.
 	 * @return if the saving process was successful
 	 */
 	public boolean reloadPlugin() {
@@ -132,7 +132,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Sends a message to the editors of the RedBlock
+	 * Sends a message to the editors of the RedBlock.
 	 * 
 	 * Includes: "<!> RedBlocks: "
 	 * @param rb the RedBlock
@@ -149,7 +149,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Adds an editor to a RedBlock
+	 * Adds an editor to a RedBlock.
 	 * @param p the player to be added
 	 * @param b the block to be added
 	 */
@@ -174,7 +174,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Removes an editor from a RedBlock
+	 * Removes an editor from a RedBlock.
 	 * @param p the player to be removed
 	 */
 	public void removeEditor(final Player p) {
@@ -182,7 +182,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Removes an editor from a RedBlock
+	 * Removes an editor from a RedBlock.
 	 * @param p the player to be removed
 	 * @param blockUpdate if true, the RedBlock will check for redstone updates
 	 */
@@ -206,7 +206,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Adds a block to a RedBlock
+	 * Adds a block to a RedBlock.
 	 * @param p the player that placed the block
 	 * @param rb the RedBlock to add the block to
 	 * @param b the block to be added
@@ -230,7 +230,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Removes a block from a RedBlock
+	 * Removes a block from a RedBlock.
 	 * @param p the player that removed the block
 	 * @param rb the RedBlock that is losing a block
 	 * @param b the block to be removed
@@ -250,7 +250,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Enables a RedBlock
+	 * Enables a RedBlock.
 	 * @param rb the RedBlock to be enabled
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already enabled and enable it again
 	 * @return if the RedBlock was enabled
@@ -268,7 +268,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Disabled a RedBlock
+	 * Disabled a RedBlock.
 	 * @param rb the RedBlock to be disabled
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already disabled and disable it again
 	 * @return if the RedBlock was disabled
@@ -286,7 +286,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Deletes a RedBlock
+	 * Deletes a RedBlock.
 	 * @param b the block of the RedBlock
 	 */
 	public void destroyRedBlock(final Block b) {
@@ -303,7 +303,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Created a new RedBlock
+	 * Created a new RedBlock.
 	 * @param p the owner of the RedBlock
 	 * @param b the block of the RedBlock
 	 */
@@ -327,7 +327,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Notifies editors of that the RedBlock was lost
+	 * Notifies the editors of that the RedBlock was lost.
 	 * @param rb the RedBlock that was lost
 	 */
 	public void redBlockLost(final RedBlock rb) {
@@ -342,7 +342,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Runs the WorldEditCommand process on a RedBlock
+	 * Runs the WorldEditCommand process on a RedBlock.
 	 * @param rb the RedBlock receiving the WorldEditCommand process
 	 * @param p the player that has the selection
 	 * @param type the type of block to be added, can be null (use colon for data values)
@@ -417,7 +417,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Runs a Redstone check on a block
+	 * Runs a Redstone check on a block.
 	 * @param block the block that will check around itself for a RedBlock
 	 */
 	public void doBlockUpdate(final Block block) {
@@ -449,7 +449,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Starts the Redstone timeout timer on a RedBlock
+	 * Starts the Redstone timeout timer on a RedBlock.
 	 * @param rb the RedBlock
 	 */
 	public void startTimeout(final RedBlock rb) {
@@ -478,7 +478,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Checks if the player is editing a RedBlock
+	 * Checks if the player is editing a RedBlock.
 	 * @param p the player to check
 	 * @return if the player is editing a RedBlock
 	 */
@@ -487,7 +487,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Checks if a Redblock is being edited
+	 * Checks if a RedBlock is being edited.
 	 * @param rb the RedBlock to check
 	 * @return if the RedBlock is being edited
 	 */
@@ -496,7 +496,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the block of the RedBlock that is being edited by a player
+	 * Gets the Block of the RedBlock that is being edited by a player.
 	 * @param p the player to get the editing block of
 	 * @return the Block of the REdBlock
 	 */
@@ -505,7 +505,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Checks if a player is op or has a RedBlock permission
+	 * Checks if a player is op or has a RedBlock permission.
 	 * @param p the player to check
 	 * @param perm the permission node
 	 * @return if the player is op or has permission
@@ -515,7 +515,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the ConsoleConnection
+	 * Gets the ConsoleConnection.
 	 * @return RedBlock's ConsoleConnection
 	 */
 	public ConsoleConnection getConsoleConnection() {
@@ -523,7 +523,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the Configuration
+	 * Gets the Configuration.
 	 * @return RedBlock's Configuration
 	 */
 	public Configuration getConfiguration() {
@@ -531,7 +531,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the RedBlock Storage
+	 * Gets the RedBlock Storage.
 	 * @return RedBlock's Storage
 	 */
 	public Storage getStorage() {
@@ -539,15 +539,15 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets WorldEditCommand
-	 * @return WorldEditCommand
+	 * Gets the WorldEditPlugin.
+	 * @return WorldEditPlugin
 	 */
 	public WorldEditPlugin getWE() {
 		return (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
 	}
 
 	/**
-	 * Checks if the player has permission to edit a block at the location
+	 * Checks if the player has permission to edit a block at the location.
 	 * @param player the player
 	 * @param loc the location of the block
 	 * @return if the player has permission to edit the block at the location
