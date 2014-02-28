@@ -1,0 +1,29 @@
+<--- Changelog for RedBlocks --->
+
+Version 2.2.1
+  > Removed Original RedBlock Storage (Replaced With HashMap Instead Of Set; Converts Automatically)
+  > Changed Message Formats and Colors in the Console and Chat
+  > Reduced CPU Usage on Redstone Updates (Uses Sorted RedBlock List)
+  > Performance Improvements for Block Addition and Removal
+  > Converted to a Maven Project
+  > Git Access on BitBucket
+
+Version 2.2.0
+ Configuration Version: 1.5
+  > Added Configuration: "rules.maxBlocksPer"
+  > Added Maximum Blocks Check and Event Cancel (To BlockPlace and WorldEdit)
+  > Added Configuration: "rules.maxRedBlocksPer"
+  > Added Maximum RedBlocks Check (To RedBlock)
+  > Removed Unnecessary Iterations Through RedBlocks
+  > Removed Unnecessary Class
+  > Removed Old RedBlocks Converter
+  > Changed Configuration Description of updateCheck
+  > Updated checkForUpdate to New ServerMods API
+  > Fixed WorldEdit Error (Actually cancels the events now)
+  > Fixed Editor Notifications (More Efficient and Actually Works!)
+  > Fixed File Saving and Loading
+  > Fixed Block Inventory Saving
+
+Version 2.1.1
+  > Added PlayerInteractEvent to detect the extinguishing of fire
+  > Really fast block placement by applying physics last

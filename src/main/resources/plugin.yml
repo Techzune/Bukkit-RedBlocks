@@ -1,0 +1,33 @@
+name: ${project.name}
+author: Techzune
+main: ${project.groupId}.${project.artifactId}.${project.name}
+version: ${project.version}
+description: ${project.description}
+commands:
+  rb:
+    usage: /rb
+  redblocks:
+    usage: /redblocks
+permissions:
+  redblocks.worldedit:
+    description: Use WorldEdit with RedBlocks
+  redblocks.reload:
+    description: Reload RedBlocks Configuration
+  redblocks.use:
+    description: Use RedBlocks
+  redblocks.createanddestroy:
+    description: Create and Destroy RedBlocks
+  redblocks.bypassProtect:
+    description: Bypass Protection by RedBlocks
+  redblocks.bypassWEMax:
+    description: Bypass maxAtOnce in Configuration
+  redblocks.optionsProtect:
+    description: Set The "protect" Option
+  redblocks.optionsInverted:
+    description: Set The "inverted" Option
+  redblocks.optionsOwner:
+    description: Set The "owner" Option
+  redblocks.bypass.maxBlocksPer:
+    description: Bypass the maxBlocksPer in Configuration
+  redblocks.bypass.maxRedBlocksPer:
+    description: Bypass the maxRedBlocksPer in Configuration
