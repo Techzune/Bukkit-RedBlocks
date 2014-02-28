@@ -68,11 +68,12 @@ public class Storage {
 				final Object readObject = blocksReader.readObject();
 				if (readObject instanceof HashMap<?, ?>) {
 					rbSorted = (HashMap<String, RedBlock>) readObject;
+					console.info("RedBlocks Loaded Successfully!");
 				} else {
 					rbSorted = convertSetToHashMap((Set<RedBlock>) readObject);
+					console.info("RedBlocks Converted and Loaded Successfully!");
 				}
 			}
-			console.info("RedBlocks Loaded Successfully!");
 		} catch (final Exception ex) {
 			ex.printStackTrace();
 			console.warning("An error occured while loading the RedBlocks file.");
