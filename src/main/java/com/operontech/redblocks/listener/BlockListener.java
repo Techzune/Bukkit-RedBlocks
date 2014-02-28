@@ -131,7 +131,6 @@ public class BlockListener implements Listener {
 		final Player p = event.getPlayer();
 		final Block b = event.getBlock();
 		final boolean isRedBlock = plugin.getStorage().containsRedBlock(b);
-		final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
 		if (isRedBlock && plugin.isBeingEdited(plugin.getStorage().getRedBlock(b))) {
 			// Stop Editing
 			plugin.removeEditor(p);
@@ -148,7 +147,7 @@ public class BlockListener implements Listener {
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
 				// Create RedBlock
 				if (plugin.hasPermission(p, "createanddestroy")) {
-					if (parent == null) {
+					if (plugin.getStorage().getRedBlockParent(b) == null) {
 						plugin.createRedBlock(p, b);
 						event.setCancelled(true);
 						return;
