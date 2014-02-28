@@ -32,14 +32,6 @@ public class Storage {
 	}
 
 	/**
-	 * Gets the HashMap (Key: Location String, Value: RedBlock) of RedBlocks.
-	 * @return the HashMap of RedBlocks
-	 */
-	public HashMap<String, RedBlock> getRedBlocks() {
-		return rbSorted;
-	}
-
-	/**
 	 * Saves RedBlocks then clears RAM usage of the storage/
 	 */
 	public void clearRAMUsage() {
@@ -122,16 +114,21 @@ public class Storage {
 	}
 
 	/**
+	 * Gets the HashMap (Key: Location String, Value: RedBlock) of RedBlocks.
+	 * @return the HashMap of RedBlocks
+	 */
+	public HashMap<String, RedBlock> getRedBlocks() {
+		return rbSorted;
+	}
+
+	/**
 	 * Searches the sorted RedBlock list for a RedBlock with a matching location.
 	 *
 	 * @param b the block to search for
 	 * @return the RedBlock (if it was found)
 	 */
 	public RedBlock getRedBlock(final Block b) {
-		if (rbSorted.containsKey(b.getLocation().toString())) {
-			return rbSorted.get(b.getLocation().toString());
-		}
-		return null;
+		return rbSorted.get(b.getLocation().toString());
 	}
 
 	/**
@@ -168,11 +165,7 @@ public class Storage {
 	 * @return if it was removed
 	 */
 	public boolean removeRedBlock(final Block b) {
-		if (rbSorted.containsKey(b.getLocation().toString())) {
-			rbSorted.remove(b.getLocation().toString());
-			return true;
-		}
-		return false;
+		return (rbSorted.remove(b.getLocation().toString()) == null) ? true : false;
 	}
 
 	/**
