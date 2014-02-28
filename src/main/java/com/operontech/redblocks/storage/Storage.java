@@ -208,7 +208,7 @@ public class Storage {
 	 * 
 	 */
 	public void cleanupRedBlocks() {
-		console.info("Cleaning up RedBlocks...");
+		console.info("Cleaning up the RedBlocks database...");
 		int redBlocksRemoved = 0;
 		int blocksRemoved = 0;
 		List<RedBlockChild> list;
