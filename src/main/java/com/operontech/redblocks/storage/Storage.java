@@ -40,7 +40,7 @@ public class Storage {
 	}
 
 	/**
-	 * Saves RedBlocks then clears RAM usage of the storage.
+	 * Saves RedBlocks then clears RAM usage of the storage/
 	 */
 	public void clearRAMUsage() {
 		saveRedBlocks();
@@ -50,14 +50,12 @@ public class Storage {
 		rbSorted = null;
 	}
 
-	private HashMap<String, RedBlock> convertSetToHashMap(final Set<RedBlock> oldSet) {
-		final HashMap<String, RedBlock> newSet = new HashMap<String, RedBlock>();
-		for (final RedBlock rb : oldSet) {
-			newSet.put(rb.getLocation().toString(), rb);
-		}
-		return newSet;
-	}
-
+	/**
+	 * Loads the RedBlocks.dat File in the RedBlocks Plugin Folder
+	 * 
+	 * If the file is using the old rbList (Set) format, it will be converted to the rbSorted (HashMap) format.
+	 * 
+	 */
 	@SuppressWarnings("unchecked")
 	public void loadRedBlocks() {
 		ObjectInputStream blocksReader = null;
@@ -245,5 +243,13 @@ public class Storage {
 	 */
 	public InventorySerializer getInventorySerializer() {
 		return invSerializer;
+	}
+
+	private HashMap<String, RedBlock> convertSetToHashMap(final Set<RedBlock> oldSet) {
+		final HashMap<String, RedBlock> newSet = new HashMap<String, RedBlock>();
+		for (final RedBlock rb : oldSet) {
+			newSet.put(rb.getLocation().toString(), rb);
+		}
+		return newSet;
 	}
 }
