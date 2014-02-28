@@ -226,7 +226,7 @@ public class Storage {
 							list.add(child);
 						}
 					}
-					blocksRemoved = entry.getValue().removeList(list);
+					blocksRemoved += entry.getValue().removeList(list);
 				}
 			}
 		}
