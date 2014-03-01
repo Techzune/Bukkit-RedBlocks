@@ -7,6 +7,7 @@
   <version>2.2.1-SNAPSHOT</version>
   <name>RedBlocks</name>
   <description>Toggle Blocks with Redstone</description>
+  <packaging>jar</packaging>
 
   <!-- Repositories -->
   <repositories>
@@ -52,7 +53,7 @@
 
   <!-- Build Settings -->
   <build>
-    <finalName>${project.name}</finalName>
+    <finalName>${project.name}_${project.version}</finalName>
     <defaultGoal>clean package</defaultGoal>
 
     <!-- Resources -->
