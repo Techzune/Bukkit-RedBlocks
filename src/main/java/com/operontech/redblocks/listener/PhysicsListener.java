@@ -22,10 +22,9 @@ public class PhysicsListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockRedstone(final BlockRedstoneEvent event) {
 		final Block block = event.getBlock();
-		if (block == null) {
-			return;
+		if (block != null) {
+			plugin.doBlockUpdate(block);
 		}
-		plugin.doBlockUpdate(block);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
