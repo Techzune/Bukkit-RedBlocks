@@ -114,7 +114,7 @@ public class RedBlocksMain extends JavaPlugin {
 			if (array.size() > 0) {
 				final JSONObject latest = (JSONObject) array.get(array.size() - 1);
 				final String version = ((String) latest.get("name")).replaceAll("[a-zA-Z ]", "");
-				if (!getDescription().getVersion().equals(version)) {
+				if (!getDescription().getVersion().endsWith("SNAPSHOT") && !getDescription().getVersion().equals(version)) {
 					console.info(ChatColor.GREEN + "An update is available from BukkitDev: " + ChatColor.DARK_GREEN + version);
 					return true;
 				}
