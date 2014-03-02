@@ -542,9 +542,6 @@ public class RedBlocksMain extends JavaPlugin {
 			return true;
 		}
 		final Claim claim = ((GriefPrevention) plugin).dataStore.getClaimAt(loc, true, null);
-		if (claim == null) {
-			return true;
-		}
-		return claim.allowEdit(player) == null;
+		return (claim == null) || (claim.allowEdit(player) == null);
 	}
 }
