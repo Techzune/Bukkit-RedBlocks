@@ -8,8 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
-import org.bukkit.event.block.BlockRedstoneEvent;
 
+import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.RedBlocksMain;
 
 public class PhysicsListener implements Listener {
@@ -19,17 +19,12 @@ public class PhysicsListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onBlockRedstone(final BlockRedstoneEvent event) {
-		final Block block = event.getBlock();
-		if (block != null) {
-			plugin.doBlockUpdate(block);
-		}
-	}
-
+	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPhysics(final BlockPhysicsEvent event) {
-		if ((event.getChangedType() == Material.BED_BLOCK) || (event.getChangedType() == Material.SIGN) || (event.getChangedType() == Material.SIGN_POST) || (event.getChangedType() == Material.REDSTONE_WIRE) || (event.getChangedType() == Material.NETHER_WARTS)) {
+		if (event.getBlock().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) {
+			plugin.doBlockUpdate(event.getBlock());
+		} else if ((event.getChangedType() == Material.BED_BLOCK) || (event.getChangedType() == Material.SIGN) || (event.getChangedType() == Material.SIGN_POST) || (event.getChangedType() == Material.REDSTONE_WIRE) || (event.getChangedType() == Material.NETHER_WARTS)) {
 			if (event.getBlock().getType() == Material.AIR) {
 				if (plugin.getStorage().getRedBlockParent(event.getBlock()) != null) {
 					event.setCancelled(true);

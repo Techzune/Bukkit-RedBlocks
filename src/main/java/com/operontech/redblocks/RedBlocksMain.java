@@ -20,7 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -418,22 +417,17 @@ public class RedBlocksMain extends JavaPlugin {
 				if (block == null) {
 					return;
 				}
-				final int blockId = config.getInt(ConfigValue.redblocks_blockID);
-				for (final Block b : surroundingBlocks(block)) {
-					if (b.getTypeId() == blockId) {
-						final RedBlock rb = getStorage().getRedBlock(b);
-						if ((rb == null) || isBeingEdited(rb) || rb.isInTimeout()) {
-							return;
-						}
-						final boolean bp = b.getBlockPower() > 0;
-						if ((bp && !rb.isInverted()) || (!bp && rb.isInverted())) {
-							disableRedBlock(rb, false);
-							startTimeout(rb);
-						} else {
-							enableRedBlock(rb, false);
-							startTimeout(rb);
-						}
-					}
+				final RedBlock rb = getStorage().getRedBlock(block);
+				if ((rb == null) || isBeingEdited(rb) || rb.isInTimeout()) {
+					return;
+				}
+				final boolean bp = block.getBlockPower() > 0;
+				if ((bp && !rb.isInverted()) || (!bp && rb.isInverted())) {
+					disableRedBlock(rb, false);
+					startTimeout(rb);
+				} else {
+					enableRedBlock(rb, false);
+					startTimeout(rb);
 				}
 			}
 		}, 2L);
@@ -552,18 +546,5 @@ public class RedBlocksMain extends JavaPlugin {
 			return true;
 		}
 		return claim.allowEdit(player) == null;
-	}
-
-	private ArrayList<Block> surroundingBlocks(final Block block) {
-		final ArrayList<Block> blocks = new ArrayList<Block>();
-		blocks.add(block.getRelative(BlockFace.UP));
-		blocks.add(block.getRelative(BlockFace.UP).getRelative(BlockFace.UP));
-		blocks.add(block.getRelative(BlockFace.DOWN));
-		blocks.add(block.getRelative(BlockFace.EAST));
-		blocks.add(block.getRelative(BlockFace.NORTH));
-		blocks.add(block.getRelative(BlockFace.SOUTH));
-		blocks.add(block.getRelative(BlockFace.WEST));
-		blocks.add(block);
-		return blocks;
 	}
 }
