@@ -2,11 +2,12 @@
 
 Version 2.2.1
   > Removed Original RedBlock Storage (Replaced With HashMap Instead Of Set; Converts Automatically)
-  > Changed Message Formats and Colors in the Console and Chat
+  > Changed Message Formats And Colors In The Console And Chat
+  > Changed Redstone Events To Physics Events For Efficiency
   > Reduced CPU Usage on Redstone Updates (Uses Sorted RedBlock List)
-  > Performance Improvements for Block Addition and Removal
   > Converted to a Maven Project
   > Git Access on BitBucket
+  > Massive Performance Improvements
 
 Version 2.2.0
  Configuration Version: 1.5
