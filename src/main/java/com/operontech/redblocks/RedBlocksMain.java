@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -238,14 +237,8 @@ public class RedBlocksMain extends JavaPlugin {
 	public void removeBlock(final Player p, final RedBlock rb, final Block b) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_REMOVED, p);
 		getServer().getPluginManager().callEvent(event);
-		if (!event.isCancelled()) {
-			if (rb.remove(b)) {
-				String name = "Environment";
-				if (p != null) {
-					name = p.getName();
-				}
-				notifyEditors(rb, ChatColor.DARK_AQUA + name + ChatColor.GOLD + " Removed A Block | " + rb.getBlockCount() + " Blocks");
-			}
+		if (!event.isCancelled() && (rb.remove(b))) {
+			notifyEditors(rb, ChatColor.DARK_AQUA + (p != null ? p.getName() : "Environment") + ChatColor.GOLD + " Removed A Block | " + rb.getBlockCount() + " Blocks");
 		}
 	}
 
@@ -332,9 +325,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public void redBlockLost(final RedBlock rb) {
 		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
-		final Iterator<Player> iter = editMode.keySet().iterator();
-		while (iter.hasNext()) {
-			final Player p = iter.next();
+		for (final Player p : editMode.keySet()) {
 			if (getBlockEditing(p) == rb) {
 				removeEditor(p);
 			}
@@ -464,19 +455,6 @@ public class RedBlocksMain extends JavaPlugin {
 		}
 	}
 
-	private ArrayList<Block> surroundingBlocks(final Block block) {
-		final ArrayList<Block> blocks = new ArrayList<Block>();
-		blocks.add(block.getRelative(BlockFace.UP));
-		blocks.add(block.getRelative(BlockFace.UP).getRelative(BlockFace.UP));
-		blocks.add(block.getRelative(BlockFace.DOWN));
-		blocks.add(block.getRelative(BlockFace.EAST));
-		blocks.add(block.getRelative(BlockFace.NORTH));
-		blocks.add(block.getRelative(BlockFace.SOUTH));
-		blocks.add(block.getRelative(BlockFace.WEST));
-		blocks.add(block);
-		return blocks;
-	}
-
 	/**
 	 * Checks if the player is editing a RedBlock.
 	 * @param p the player to check
@@ -561,8 +539,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if ((plugin == null) || !(plugin instanceof WorldGuardPlugin)) {
 			return true;
 		}
-		final WorldGuardPlugin wg = (WorldGuardPlugin) plugin;
-		return wg.canBuild(player, loc);
+		return ((WorldGuardPlugin) plugin).canBuild(player, loc);
 	}
 
 	private boolean canBuildGriefPrevention(final Player player, final Location loc) {
@@ -570,11 +547,23 @@ public class RedBlocksMain extends JavaPlugin {
 		if ((plugin == null) || !(plugin instanceof GriefPrevention)) {
 			return true;
 		}
-		final GriefPrevention gp = (GriefPrevention) plugin;
-		final Claim claim = gp.dataStore.getClaimAt(loc, true, null);
+		final Claim claim = ((GriefPrevention) plugin).dataStore.getClaimAt(loc, true, null);
 		if (claim == null) {
 			return true;
 		}
 		return claim.allowEdit(player) == null;
+	}
+
+	private ArrayList<Block> surroundingBlocks(final Block block) {
+		final ArrayList<Block> blocks = new ArrayList<Block>();
+		blocks.add(block.getRelative(BlockFace.UP));
+		blocks.add(block.getRelative(BlockFace.UP).getRelative(BlockFace.UP));
+		blocks.add(block.getRelative(BlockFace.DOWN));
+		blocks.add(block.getRelative(BlockFace.EAST));
+		blocks.add(block.getRelative(BlockFace.NORTH));
+		blocks.add(block.getRelative(BlockFace.SOUTH));
+		blocks.add(block.getRelative(BlockFace.WEST));
+		blocks.add(block);
+		return blocks;
 	}
 }
