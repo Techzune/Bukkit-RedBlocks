@@ -88,9 +88,7 @@ public class Storage {
 		ObjectOutputStream blocksWriter = null;
 		try {
 			final File blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
-			if (!blocks.exists()) {
-				blocks.createNewFile();
-			}
+			blocks.createNewFile();
 			blocksWriter = new ObjectOutputStream(new FileOutputStream(blocks));
 			blocksWriter.writeObject(rbSorted);
 			blocksWriter.flush();
