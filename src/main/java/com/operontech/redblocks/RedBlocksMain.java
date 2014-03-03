@@ -58,7 +58,7 @@ public class RedBlocksMain extends JavaPlugin {
 		storage = new Storage(this);
 		clistener = new CommandListener(this);
 		if ((new File(getDataFolder() + File.separator + "blocks.dat").exists() && new File(getDataFolder() + File.separator + "options.dat").exists()) || new File(getDataFolder() + File.separator + "blocks.dat").exists()) {
-			console.severe("You must run RedBlocks version 2.2 or earlier first!");
+			console.severe("You must run RedBlocks with a version earlier than 2.2 to convert your RedBlocks!");
 			console.severe("If you don't, you'll lose your RedBlocks!");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
