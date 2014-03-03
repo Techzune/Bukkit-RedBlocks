@@ -1,13 +1,15 @@
 <--- Changelog for RedBlocks --->
 
 Version 2.2.1
+  > Added BLOCK_UPDATE Event
+  > Added Lever Data Update Detection
   > Removed Original RedBlock Storage (Replaced With HashMap Instead Of Set; Converts Automatically)
   > Changed Message Formats And Colors In The Console And Chat
   > Changed Redstone Events To Physics Events For Efficiency
   > Reduced CPU Usage on Redstone Updates (Uses Sorted RedBlock List)
   > Converted to a Maven Project
   > Git Access on BitBucket
-  > Massive Performance Improvements
+  > Substantial Performance Improvements
 
 Version 2.2.0
  Configuration Version: 1.5
