@@ -168,13 +168,7 @@ public class BlockListener implements Listener {
 				if (plugin.isEditing(event.getPlayer())) {
 					final RedBlock rb = plugin.getBlockEditing(event.getPlayer());
 					if (rb.contains(event.getClickedBlock())) {
-						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-							@Override
-							public void run() {
-								rb.getChild(event.getClickedBlock()).setData(event.getClickedBlock().getData());
-								plugin.notifyEditors(rb, event.getPlayer().getName() + " changed the data of a " + event.getClickedBlock().getType());
-							}
-						}, 2L);
+						plugin.updateBlock(event.getPlayer(), plugin.getBlockEditing(event.getPlayer()), event.getClickedBlock());
 					}
 				}
 			}

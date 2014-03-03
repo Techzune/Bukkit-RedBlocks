@@ -204,6 +204,25 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
+	 * Updates the data of a block in a RedBlock
+	 */
+	public void updateBlock(final Player p, final RedBlock rb, final Block b) {
+		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_UPDATED, p);
+		getServer().getPluginManager().callEvent(event);
+		if (!event.isCancelled()) {
+			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+				@Override
+				public void run() {
+					if (!event.isCancelled()) {
+						rb.getChild(b).setData(b.getData());
+						notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Updated A Block's Data | " + b.getType());
+					}
+				}
+			}, 2L);
+		}
+	}
+
+	/**
 	 * Adds a block to a RedBlock.
 	 * @param p the player that placed the block
 	 * @param rb the RedBlock to add the block to
@@ -216,11 +235,13 @@ public class RedBlocksMain extends JavaPlugin {
 			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				@Override
 				public void run() {
-					if (rb.add(b)) {
-						notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
-					}
-					if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
-						addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()));
+					if (!event.isCancelled()) {
+						if (rb.add(b)) {
+							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
+						}
+						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
+							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()));
+						}
 					}
 				}
 			}, 2L);
