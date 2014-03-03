@@ -15,15 +15,18 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.operontech.redblocks.ConfigValue;
+import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.storage.RedBlock;
 
 @SuppressWarnings("deprecation")
 public class BlockListener implements Listener {
 	private final RedBlocksMain plugin;
+	private final ConsoleConnection console;
 
-	public BlockListener(final RedBlocksMain plugin) {
+	public BlockListener(final RedBlocksMain plugin, final ConsoleConnection console) {
 		this.plugin = plugin;
+		this.console = console;
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -36,7 +39,7 @@ public class BlockListener implements Listener {
 			}
 			final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !plugin.hasPermission(event.getPlayer(), "bypass.maxBlocksPer")) {
-				plugin.getConsoleConnection().error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
+				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
 			} else {
 				plugin.addBlock(event.getPlayer(), rb, event.getBlock());
@@ -57,17 +60,17 @@ public class BlockListener implements Listener {
 					plugin.removeEditor(p);
 				}
 				if (plugin.isBeingEdited(plugin.getStorage().getRedBlock(b))) {
-					plugin.getConsoleConnection().error(p, "You can't destroy a RedBlock that is being edited!");
+					console.error(p, "You can't destroy a RedBlock that is being edited!");
 					event.setCancelled(true);
 					return;
 				}
 				plugin.destroyRedBlock(b);
 				b.breakNaturally();
 				p.getInventory().remove(plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem));
-				plugin.getConsoleConnection().notify(p, "RedBlock Eliminated");
+				console.notify(p, "RedBlock Eliminated");
 				return;
 			} else {
-				plugin.getConsoleConnection().error(p, "You do not have permission to destroy RedBlocks");
+				console.error(p, "You do not have permission to destroy RedBlocks");
 			}
 		}
 		final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
@@ -75,7 +78,7 @@ public class BlockListener implements Listener {
 			// Stop Editing
 			if (isRedBlock) {
 				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
-					plugin.getConsoleConnection().error(p, "You are already editing a RedBlock! Type " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
+					console.error(p, "You are already editing a RedBlock! Type " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
 					event.setCancelled(true);
 					return;
 				}
@@ -96,7 +99,7 @@ public class BlockListener implements Listener {
 			// Protection
 			if ((parent != null) && !plugin.hasPermission(p, "bypassProtect")) {
 				if (parent.isProtected()) {
-					plugin.getConsoleConnection().error(p, "That block is protected by a RedBlock!");
+					console.error(p, "That block is protected by a RedBlock!");
 					event.setCancelled(true);
 				}
 				return;
@@ -107,7 +110,7 @@ public class BlockListener implements Listener {
 					plugin.addEditor(p, b);
 					event.setCancelled(true);
 				} else {
-					plugin.getConsoleConnection().error(p, "You don't have the permissiosn to edit RedBlocks");
+					console.error(p, "You don't have the permissiosn to edit RedBlocks");
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
 				// Create RedBlock
@@ -117,10 +120,10 @@ public class BlockListener implements Listener {
 						event.setCancelled(true);
 						return;
 					} else {
-						plugin.getConsoleConnection().error(p, "That block is controlled by another RedBlock!");
+						console.error(p, "That block is controlled by another RedBlock!");
 					}
 				} else {
-					plugin.getConsoleConnection().error(p, "You don't have the permissions to create RedBlocks.");
+					console.error(p, "You don't have the permissions to create RedBlocks.");
 				}
 			}
 		}
@@ -142,7 +145,7 @@ public class BlockListener implements Listener {
 					plugin.addEditor(p, b);
 					return;
 				} else {
-					plugin.getConsoleConnection().error(p, "You do not have the permissions to edit RedBlocks.");
+					console.error(p, "You do not have the permissions to edit RedBlocks.");
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
 				// Create RedBlock
@@ -152,10 +155,10 @@ public class BlockListener implements Listener {
 						event.setCancelled(true);
 						return;
 					} else {
-						plugin.getConsoleConnection().error(p, "That block is controlled by another RedBlock!");
+						console.error(p, "That block is controlled by another RedBlock!");
 					}
 				} else {
-					plugin.getConsoleConnection().error(p, "You don't have the permissions to create RedBlocks.");
+					console.error(p, "You don't have the permissions to create RedBlocks.");
 				}
 			}
 		}

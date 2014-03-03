@@ -63,7 +63,7 @@ public class RedBlocksMain extends JavaPlugin {
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
+		getServer().getPluginManager().registerEvents(new BlockListener(this, console), this);
 		getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		if (config.canUpdate()) {
