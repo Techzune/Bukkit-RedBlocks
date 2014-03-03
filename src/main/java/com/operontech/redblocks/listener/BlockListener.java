@@ -164,7 +164,7 @@ public class BlockListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_ON) || (event.getClickedBlock().getType() == Material.DIODE_BLOCK_OFF)) {
+			if ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_ON) || ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_OFF) || (event.getClickedBlock().getType() == Material.LEVER))) {
 				if (plugin.isEditing(event.getPlayer())) {
 					final RedBlock rb = plugin.getBlockEditing(event.getPlayer());
 					if (rb.contains(event.getClickedBlock())) {
@@ -172,6 +172,7 @@ public class BlockListener implements Listener {
 							@Override
 							public void run() {
 								rb.getChild(event.getClickedBlock()).setData(event.getClickedBlock().getData());
+								plugin.notifyEditors(rb, event.getPlayer().getName() + " changed the data of a " + event.getClickedBlock().getType());
 							}
 						}, 2L);
 					}
