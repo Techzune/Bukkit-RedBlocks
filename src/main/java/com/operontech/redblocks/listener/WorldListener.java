@@ -61,7 +61,7 @@ public class WorldListener implements Listener {
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if (event.hasBlock()) {
 			if ((event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
-				final RedBlock rb = plugin.getBlockEditing(event.getPlayer());
+				final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
 				if ((rb != null) && rb.contains(event.getClickedBlock())) {
 					rb.remove(event.getClickedBlock());
 				}

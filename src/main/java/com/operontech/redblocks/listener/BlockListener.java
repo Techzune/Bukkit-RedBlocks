@@ -30,11 +30,11 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(final BlockPlaceEvent event) {
 		plugin.doBlockUpdate(event.getBlock());
 		if (plugin.isEditing(event.getPlayer())) {
-			final Block redb = plugin.getBlockEditing(event.getPlayer()).getBlock();
+			final Block redb = plugin.getRedBlockEditing(event.getPlayer()).getBlock();
 			if (redb.isEmpty()) {
 				redb.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
-			final RedBlock rb = plugin.getBlockEditing(event.getPlayer());
+			final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !plugin.hasPermission(event.getPlayer(), "bypass.maxBlocksPer")) {
 				plugin.getConsoleConnection().error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
@@ -53,7 +53,7 @@ public class BlockListener implements Listener {
 		if (isRedBlock && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
 			// Destroy RedBlock
 			if (plugin.hasPermission(p, "createanddestroy")) {
-				if (plugin.isEditing(p) && plugin.getBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
+				if (plugin.isEditing(p) && plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
 					plugin.removeEditor(p);
 				}
 				if (plugin.isBeingEdited(plugin.getStorage().getRedBlock(b))) {
@@ -74,7 +74,7 @@ public class BlockListener implements Listener {
 		if (plugin.isEditing(p)) {
 			// Stop Editing
 			if (isRedBlock) {
-				if (!plugin.getBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
+				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
 					plugin.getConsoleConnection().error(p, "You are already editing a RedBlock! Type " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
 					event.setCancelled(true);
 					return;
@@ -84,12 +84,12 @@ public class BlockListener implements Listener {
 				return;
 			}
 			// Remove Command Block
-			final Block controlledRB = plugin.getBlockEditing(p).getBlock();
+			final Block controlledRB = plugin.getRedBlockEditing(p).getBlock();
 			if (controlledRB.isEmpty()) {
 				controlledRB.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
-			if (plugin.getBlockEditing(p).contains(b)) {
-				plugin.removeBlock(p, plugin.getBlockEditing(p), b);
+			if (plugin.getRedBlockEditing(p).contains(b)) {
+				plugin.removeBlock(p, plugin.getRedBlockEditing(p), b);
 				return;
 			}
 		} else {
@@ -166,9 +166,9 @@ public class BlockListener implements Listener {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_ON) || ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_OFF) || (event.getClickedBlock().getType() == Material.LEVER))) {
 				if (plugin.isEditing(event.getPlayer())) {
-					final RedBlock rb = plugin.getBlockEditing(event.getPlayer());
+					final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
 					if (rb.contains(event.getClickedBlock())) {
-						plugin.updateBlock(event.getPlayer(), plugin.getBlockEditing(event.getPlayer()), event.getClickedBlock());
+						plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
 					}
 				}
 			}

@@ -186,7 +186,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public void removeEditor(final Player p, final boolean blockUpdate) {
 		if (isEditing(p)) {
-			final RedBlock rb = getBlockEditing(p);
+			final RedBlock rb = getRedBlockEditing(p);
 			final Block b = rb.getBlock();
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.LOST_EDITOR, p);
 			getServer().getPluginManager().callEvent(event);
@@ -346,7 +346,7 @@ public class RedBlocksMain extends JavaPlugin {
 	public void redBlockLost(final RedBlock rb) {
 		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
 		for (final Player p : editMode.keySet()) {
-			if (getBlockEditing(p) == rb) {
+			if (getRedBlockEditing(p) == rb) {
 				removeEditor(p);
 			}
 		}
@@ -489,11 +489,11 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the Block of the RedBlock that is being edited by a player.
-	 * @param p the player to get the editing block of
-	 * @return the Block of the REdBlock
+	 * Gets the RedBlock that is being edited by a player.
+	 * @param p the player to get the editing RedBlock of
+	 * @return the REdBlock
 	 */
-	public RedBlock getBlockEditing(final Player p) {
+	public RedBlock getRedBlockEditing(final Player p) {
 		return editMode.get(p);
 	}
 
