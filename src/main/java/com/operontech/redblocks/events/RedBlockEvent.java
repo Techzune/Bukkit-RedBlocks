@@ -34,8 +34,9 @@ public class RedBlockEvent extends Event {
 	}
 
 	/**
+	 * Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
 	 * 
-	 * @param bool
+	 * @param bool true if you wish to cancel this event
 	 */
 	public void setCancelled(final boolean bool) {
 		cancelled = bool;
@@ -51,27 +52,27 @@ public class RedBlockEvent extends Event {
 	}
 
 	/**
-	 * Gets the player.
+	 * Gets the player involved in this event.
 	 *
-	 * @return the player
+	 * @return the player involved
 	 */
 	public Player getPlayer() {
 		return p;
 	}
 
 	/**
-	 * Gets the cause.
+	 * Gets the cause of the event being triggered.
 	 *
-	 * @return the cause
+	 * @return the cause of the event
 	 */
 	public RedBlockCause getCause() {
 		return cause;
 	}
 
 	/**
-	 * Gets the RedBlock
+	 * Gets the RedBlock involved in the event.
 	 *
-	 * @return the RedBlock
+	 * @return the RedBlock invovled
 	 */
 	public RedBlock getRedBlock() {
 		return rb;
