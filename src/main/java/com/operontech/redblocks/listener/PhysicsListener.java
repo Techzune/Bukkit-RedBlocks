@@ -1,6 +1,5 @@
 package com.operontech.redblocks.listener;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,12 +23,6 @@ public class PhysicsListener implements Listener {
 	public void onPhysics(final BlockPhysicsEvent event) {
 		if (event.getBlock().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) {
 			plugin.doBlockUpdate(event.getBlock());
-		} else if ((event.getChangedType() == Material.BED_BLOCK) || (event.getChangedType() == Material.SIGN) || (event.getChangedType() == Material.SIGN_POST) || (event.getChangedType() == Material.REDSTONE_WIRE) || (event.getChangedType() == Material.NETHER_WARTS)) {
-			if (event.getBlock().getType() == Material.AIR) {
-				if (plugin.getStorage().getRedBlockParent(event.getBlock()) != null) {
-					event.setCancelled(true);
-				}
-			}
 		}
 	}
 
