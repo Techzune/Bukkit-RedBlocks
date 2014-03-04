@@ -111,6 +111,7 @@ public class BlockListener implements Listener {
 					event.setCancelled(true);
 				} else {
 					console.error(p, "You don't have the permissiosn to edit RedBlocks");
+					event.setCancelled(true);
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
 				// Create RedBlock
