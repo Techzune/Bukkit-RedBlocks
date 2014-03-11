@@ -29,6 +29,88 @@ public class BlockListener implements Listener {
 		this.console = console;
 	}
 
+	/**
+	 * Initiates an interaction event for blocks (Block Break and Damage)
+	 * @param p the player of the event
+	 * @param b the block of the event
+	 * @return if the event was cancelled
+	 */
+	private boolean blockBreakDamaged(final Player p, final Block b) {
+		plugin.doBlockUpdate(b);
+		final boolean isRedBlock = plugin.getStorage().containsRedBlock(b);
+		if (isRedBlock && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
+			// Destroy RedBlock
+			if (plugin.hasPermission(p, "createanddestroy")) {
+				return !plugin.destroyRedBlock(b, p);
+			} else {
+				console.error(p, "You do not have permission to destroy RedBlocks!");
+				return false;
+			}
+		}
+		if (plugin.isEditing(p)) {
+
+			// Stop Editing a RedBlock
+			if (isRedBlock) {
+				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
+					console.error(p, "You are already editing a RedBlock!", "Say " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
+					return true;
+				}
+				plugin.removeEditor(p);
+				return true;
+			}
+
+			// Verify RedBlock TypeID Integrity and Remove RedBlock
+			final Block controlledRB = plugin.getRedBlockEditing(p).getBlock();
+			if (controlledRB.isEmpty()) {
+				controlledRB.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
+			}
+			if (plugin.getRedBlockEditing(p).contains(b)) {
+				plugin.removeBlock(p, plugin.getRedBlockEditing(p), b);
+				return false;
+			}
+
+		} else {
+
+			RedBlock parent = null;
+			if (plugin.isActiveBlock(b)) {
+				parent = plugin.getStorage().getRedBlockParent(b);
+			}
+
+			//  Verify Protection of Block
+			if ((parent != null) && !plugin.hasPermission(p, "bypassProtect")) {
+				if (parent.isProtected()) {
+					console.error(p, "That block is protected by a RedBlock!");
+					return true;
+				}
+			}
+
+			// Begin Editing of RedBlock and Create RedBlock (If Necessary)
+			if (isRedBlock) {
+				if (plugin.hasPermission(p, "use")) {
+					plugin.addEditor(p, b);
+					return true;
+				} else {
+					console.error(p, "You don't have the permissiosn to edit RedBlocks!");
+					return true;
+				}
+			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
+				if (plugin.hasPermission(p, "createanddestroy")) {
+					if (parent == null) {
+						plugin.createRedBlock(p, b);
+						return true;
+					} else {
+						console.error(p, "That block is controlled by another RedBlock!");
+						return true;
+					}
+				} else {
+					console.error(p, "You don't have the permissions to create RedBlocks!");
+					return false;
+				}
+			}
+		}
+		return false;
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlace(final BlockPlaceEvent event) {
 		plugin.doBlockUpdate(event.getBlock());
@@ -49,131 +131,21 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(final BlockBreakEvent event) {
-		plugin.doBlockUpdate(event.getBlock());
-		final Player p = event.getPlayer();
-		final Block b = event.getBlock();
-		final boolean isRedBlock = plugin.getStorage().containsRedBlock(b);
-		if (isRedBlock && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
-			// Destroy RedBlock
-			if (plugin.hasPermission(p, "createanddestroy")) {
-				if (plugin.isEditing(p) && plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
-					plugin.removeEditor(p);
-				}
-				if (plugin.isBeingEdited(plugin.getStorage().getRedBlock(b))) {
-					console.error(p, "You can't destroy a RedBlock that is being edited!");
-					event.setCancelled(true);
-					return;
-				}
-				plugin.destroyRedBlock(b);
-				b.breakNaturally();
-				p.getInventory().remove(plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem));
-				console.notify(p, "RedBlock Eliminated");
-				return;
-			} else {
-				console.error(p, "You do not have permission to destroy RedBlocks");
-			}
-		}
-		final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
-		if (plugin.isEditing(p)) {
-			// Stop Editing
-			if (isRedBlock) {
-				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
-					console.error(p, "You are already editing a RedBlock! Type " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
-					event.setCancelled(true);
-					return;
-				}
-				plugin.removeEditor(p);
-				event.setCancelled(true);
-				return;
-			}
-			// Remove Command Block
-			final Block controlledRB = plugin.getRedBlockEditing(p).getBlock();
-			if (controlledRB.isEmpty()) {
-				controlledRB.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
-			}
-			if (plugin.getRedBlockEditing(p).contains(b)) {
-				plugin.removeBlock(p, plugin.getRedBlockEditing(p), b);
-				return;
-			}
-		} else {
-			// Protection
-			if ((parent != null) && !plugin.hasPermission(p, "bypassProtect")) {
-				if (parent.isProtected()) {
-					console.error(p, "That block is protected by a RedBlock!");
-					event.setCancelled(true);
-				}
-				return;
-			}
-			// Start Editing
-			if (isRedBlock) {
-				if (plugin.hasPermission(p, "use")) {
-					plugin.addEditor(p, b);
-					event.setCancelled(true);
-				} else {
-					console.error(p, "You don't have the permissiosn to edit RedBlocks");
-					event.setCancelled(true);
-				}
-			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
-				// Create RedBlock
-				if (plugin.hasPermission(p, "createanddestroy")) {
-					if (parent == null) {
-						plugin.createRedBlock(p, b);
-						event.setCancelled(true);
-						return;
-					} else {
-						console.error(p, "That block is controlled by another RedBlock!");
-					}
-				} else {
-					console.error(p, "You don't have the permissions to create RedBlocks.");
-				}
-			}
-		}
+		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock()));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockDamage(final BlockDamageEvent event) {
-		final Player p = event.getPlayer();
-		final Block b = event.getBlock();
-		final boolean isRedBlock = plugin.getStorage().containsRedBlock(b);
-		if (isRedBlock && plugin.isBeingEdited(plugin.getStorage().getRedBlock(b))) {
-			// Stop Editing
-			plugin.removeEditor(p);
-			return;
-		} else {
-			// Start Editing
-			if (isRedBlock) {
-				if (plugin.hasPermission(p, "use")) {
-					plugin.addEditor(p, b);
-					return;
-				} else {
-					console.error(p, "You do not have the permissions to edit RedBlocks.");
-				}
-			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
-				// Create RedBlock
-				if (plugin.hasPermission(p, "createanddestroy")) {
-					if (plugin.getStorage().getRedBlockParent(b) == null) {
-						plugin.createRedBlock(p, b);
-						event.setCancelled(true);
-						return;
-					} else {
-						console.error(p, "That block is controlled by another RedBlock!");
-					}
-				} else {
-					console.error(p, "You don't have the permissions to create RedBlocks.");
-				}
-			}
-		}
+		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock()));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_ON) || ((event.getClickedBlock().getType() == Material.DIODE_BLOCK_OFF) || (event.getClickedBlock().getType() == Material.LEVER))) {
-				if (plugin.isEditing(event.getPlayer())) {
-					final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
-					if (rb.contains(event.getClickedBlock())) {
-						plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
-					}
+			if (plugin.isEditing(event.getPlayer())) {
+				final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
+				if (rb.contains(event.getClickedBlock()) && (rb.getChild(event.getClickedBlock()).getData() != event.getClickedBlock().getData())) {
+					plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
 				}
 			}
 		}

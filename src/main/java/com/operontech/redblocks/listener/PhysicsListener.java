@@ -29,7 +29,7 @@ public class PhysicsListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPistonExtend(final BlockPistonExtendEvent e) {
 		for (final Block b : e.getBlocks()) {
-			if (plugin.getStorage().getRedBlockParent(b) != null) {
+			if (plugin.isActiveBlock(b)) {
 				e.setCancelled(true);
 			}
 		}
@@ -37,7 +37,7 @@ public class PhysicsListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPistonPull(final BlockPistonRetractEvent e) {
-		if (e.isSticky() && !e.getRetractLocation().getBlock().isEmpty() && (plugin.getStorage().getRedBlockParent(e.getRetractLocation().getBlock()) != null)) {
+		if (e.isSticky() && !e.getRetractLocation().getBlock().isEmpty() && (plugin.isActiveBlock((e.getRetractLocation().getBlock())))) {
 			e.setCancelled(true);
 		}
 	}

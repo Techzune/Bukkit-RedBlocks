@@ -23,6 +23,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Bed;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,9 +34,11 @@ import org.json.simple.JSONValue;
 import com.operontech.redblocks.events.RedBlockCause;
 import com.operontech.redblocks.events.RedBlockEvent;
 import com.operontech.redblocks.listener.BlockListener;
+import com.operontech.redblocks.listener.CommandListener;
 import com.operontech.redblocks.listener.PhysicsListener;
 import com.operontech.redblocks.listener.WorldListener;
 import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockChild;
 import com.operontech.redblocks.storage.Storage;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.bukkit.selections.Selection;
@@ -49,6 +52,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, RedBlock> editMode = new HashMap<Player, RedBlock>();
+	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
 	@Override
@@ -103,6 +107,7 @@ public class RedBlocksMain extends JavaPlugin {
 		config = null;
 		clistener = null;
 		editMode = null;
+		activeBlocks = null;
 	}
 
 	private boolean checkForUpdate() {
@@ -155,7 +160,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (!isEditing(p)) {
 			final RedBlock rb = storage.getRedBlock(b);
 			if (rb.isInTimeout()) {
-				console.error(p, "That RedBlock is under redstone timeout. Stop all redstone powering the RedBlock and try again in a few seconds!");
+				console.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
 				return;
 			}
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
@@ -273,6 +278,9 @@ public class RedBlocksMain extends JavaPlugin {
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
 			rb.enable(force);
+			for (final RedBlockChild rbc : rb.getBlocks()) {
+				activeBlocks.add(rbc.getLocation().toString());
+			}
 			if (config.getBool(ConfigValue.gc_onEnableRedBlock)) {
 				System.gc();
 			}
@@ -291,6 +299,9 @@ public class RedBlocksMain extends JavaPlugin {
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
 			rb.disable(force);
+			for (final RedBlockChild rbc : rb.getBlocks()) {
+				activeBlocks.remove(rbc.getLocation().toString());
+			}
 			if (config.getBool(ConfigValue.gc_onDisableRedBlock)) {
 				System.gc();
 			}
@@ -302,17 +313,38 @@ public class RedBlocksMain extends JavaPlugin {
 	 * Deletes a RedBlock.
 	 * @param b the block of the RedBlock
 	 */
-	public void destroyRedBlock(final Block b) {
+	public boolean removeRedBlock(final Block b, final boolean breakBlock) {
 		final RedBlock rb = storage.getRedBlock(b);
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DESTROYED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
 			enableRedBlock(rb, true);
 			storage.removeRedBlock(b);
+			if (breakBlock) {
+				b.breakNaturally();
+			}
 			if (config.getBool(ConfigValue.gc_onDestroyRedBlock)) {
 				System.gc();
 			}
+			return true;
 		}
+		return false;
+	}
+
+	public boolean destroyRedBlock(final Block b, final Player p) {
+		if (editMode.containsKey(p) && editMode.get(p).getLocation().toString().equals(b.getLocation().toString())) {
+			removeEditor(p);
+		}
+		if (editMode.containsValue(storage.getRedBlock(b))) {
+			console.error(p, "You can't destroy a RedBlock that is being edited!");
+			return false;
+		}
+		if (removeRedBlock(b, true)) {
+			p.getInventory().removeItem(new ItemStack(config.getInt(ConfigValue.redblocks_destroyItem), 1));
+			console.notify(p, "RedBlock Eliminated");
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -505,6 +537,14 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public boolean hasPermission(final CommandSender p, final String perm) {
 		return p.isOp() || p.hasPermission("redblocks." + perm);
+	}
+
+	public boolean isActiveBlock(final Location l) {
+		return activeBlocks.contains(l.toString());
+	}
+
+	public boolean isActiveBlock(final Block b) {
+		return isActiveBlock(b.getLocation());
 	}
 
 	/**

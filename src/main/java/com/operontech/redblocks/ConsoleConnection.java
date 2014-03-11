@@ -61,7 +61,7 @@ public class ConsoleConnection {
 	 * @param player player to receive the message
 	 * @param msg the message
 	 */
-	public void msg(final CommandSender player, final String msg) {
+	public void msg(final CommandSender player, final String... msg) {
 		player.sendMessage(msg);
 	}
 
@@ -71,10 +71,12 @@ public class ConsoleConnection {
 	 * Uses GREEN <!> RedBlocks tag.
 	 * Uses DARK_GREEN as text color.
 	 * @param player player to receive the message
-	 * @param msg the message
+	 * @param msg the message(s)
 	 */
-	public void notify(final CommandSender player, final String msg) {
-		msg(player, ChatColor.GREEN + "<!> " + "[" + plugin.getName() + "] " + ChatColor.DARK_GREEN + msg);
+	public void notify(final CommandSender player, final String... msgs) {
+		for (final String msg : msgs) {
+			msg(player, ChatColor.GREEN + "<!> " + "[" + plugin.getName() + "] " + ChatColor.DARK_GREEN + msg);
+		}
 	}
 
 	/**
@@ -83,9 +85,12 @@ public class ConsoleConnection {
 	 * Uses RED <!> RedBlocks tag.
 	 * Uses RED as text color.
 	 * @param player player to receive the message
-	 * @param msg the message
+	 * @param msg the message(s)
+	 * @param string 
 	 */
-	public void error(final CommandSender player, final String msg) {
-		msg(player, ChatColor.RED + "<!> " + "[" + plugin.getName() + "] " + msg);
+	public void error(final CommandSender player, final String... msgs) {
+		for (final String msg : msgs) {
+			msg(player, ChatColor.RED + "<!> " + "[" + plugin.getName() + "] " + msg);
+		}
 	}
 }

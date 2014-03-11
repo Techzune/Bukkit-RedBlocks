@@ -32,14 +32,12 @@ public class WorldListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onItemSpawn(final ItemSpawnEvent event) {
 		final Block b = event.getEntity().getLocation().getBlock();
-		final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
-		if (parent != null) {
+		if ((plugin.isActiveBlock(b))) {
+			final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
 			if (plugin.isBeingEdited(parent)) {
 				plugin.removeBlock(null, parent, b);
-				event.setCancelled(true);
-			} else {
-				event.setCancelled(true);
 			}
+			event.setCancelled(true);
 		}
 	}
 
@@ -59,12 +57,10 @@ public class WorldListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if (event.hasBlock()) {
-			if ((event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
-				final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
-				if ((rb != null) && rb.contains(event.getClickedBlock())) {
-					rb.remove(event.getClickedBlock());
-				}
+		if ((event.hasBlock()) && (event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
+			final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
+			if ((rb != null) && rb.contains(event.getClickedBlock())) {
+				rb.remove(event.getClickedBlock());
 			}
 		}
 	}

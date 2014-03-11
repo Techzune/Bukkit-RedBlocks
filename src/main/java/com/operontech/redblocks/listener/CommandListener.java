@@ -1,4 +1,4 @@
-package com.operontech.redblocks;
+package com.operontech.redblocks.listener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.operontech.redblocks.ConsoleConnection;
+import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.storage.RedBlock;
 
 public class CommandListener {
@@ -25,11 +27,7 @@ public class CommandListener {
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (plugin.hasPermission(s, "reload")) {
-						String saveCondition = "Failed";
-						if (plugin.reloadPlugin()) {
-							saveCondition = "Succeeded";
-						}
-						console.notify(s, "RedBlocks Reloading: " + saveCondition);
+						console.notify(s, "RedBlocks Reloading: " + ((plugin.reloadPlugin()) ? "Succeeded" : ChatColor.RED + "Failed to Save"));
 					}
 				}
 				if (s instanceof Player) {
@@ -38,15 +36,11 @@ public class CommandListener {
 						final RedBlock rb = plugin.getRedBlockEditing(p);
 						if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("a")) {
 							if (plugin.getWE() == null) {
-								console.error(s, "World-Edit is not installed on this server!");
+								console.error(s, "RedBlocks could not find World-Edit!");
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								String type = null;
-								if (args.length > 1) {
-									type = args[1];
-								}
-								plugin.useWorldEdit(rb, p, type, false);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? null : args[1], false);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 							}
@@ -56,11 +50,7 @@ public class CommandListener {
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								String type = null;
-								if (args.length > 1) {
-									type = args[1];
-								}
-								plugin.useWorldEdit(rb, p, type, true);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? null : args[1], true);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 							}
@@ -95,7 +85,12 @@ public class CommandListener {
 								if (plugin.hasPermission(p, "optionsOwner")) {
 									if (s.getServer().getPlayer(args[2]) == null) {
 										changeOwner.remove(s);
-										console.error(s, "Player not found.");
+										console.error(s, "That player could not be found.");
+										return true;
+									}
+									if (rb.getOwner() != p.getName()) {
+										console.error(s, "You must be current owner of the RedBlock to do that!");
+										return true;
 									}
 									if (changeOwner.containsKey(s) && (changeOwner.get(s) == s.getServer().getPlayer(args[2]))) {
 										console.notify(s, "RedBlock Option Set | owner: " + rb.setOwner(s.getServer().getPlayer(args[2]).getName()));
@@ -151,8 +146,8 @@ public class CommandListener {
 			console.msg(s, ChatColor.GREEN + "Protect Blocks:" + ChatColor.LIGHT_PURPLE + " /rb options protect [true/false]");
 		}
 		if (plugin.hasPermission(s, "optionsOwner")) {
-			console.msg(s, ChatColor.GREEN + "Change Owner:" + ChatColor.LIGHT_PURPLE + " /rb options owner [NAME]");
-			console.msg(s, ChatColor.RED + "    Warning: This cannot be undone. The player must be online.");
+			console.msg(s, ChatColor.GREEN + "RedBlock Owner:" + ChatColor.LIGHT_PURPLE + " /rb options owner [NAME]");
+			console.msg(s, ChatColor.RED + "    Warning: This cannot be undone. Both players must be online.");
 		}
 	}
 }
