@@ -28,6 +28,7 @@ public class RedBlockAnimated implements Serializable {
 	private boolean blocksActive;
 	private boolean inTimeout = false;
 	private boolean changed = false;
+
 	// RedBlockChild & Time to Pause
 	private final Map<RedBlockChild, Integer> listOfBlocks = new TreeMap<RedBlockChild, Integer>();
 
