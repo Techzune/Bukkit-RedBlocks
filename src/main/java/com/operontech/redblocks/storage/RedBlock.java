@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+@Deprecated
 public class RedBlock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -63,7 +64,6 @@ public class RedBlock implements Serializable {
 	 * @param b the block to be added
 	 * @return if the block was added
 	 */
-	@SuppressWarnings("deprecation")
 	public boolean add(final Block b) {
 		fixNulls();
 		return add(b.getTypeId(), b.getData(), b.getLocation());
@@ -222,7 +222,6 @@ public class RedBlock implements Serializable {
 	 * @param remove if true, the blocks in the list will be removed from the RedBlock, but if false, they will be added
 	 * @return the amount of blocks added/removed
 	 */
-	@SuppressWarnings("deprecation")
 	public int blockListAction(final List<Block> block, final boolean remove) {
 		fixNulls();
 		final Set<RedBlockChild> rbc = new HashSet<RedBlockChild>();
