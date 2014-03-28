@@ -46,20 +46,35 @@ public class Storage {
 	 * If the file is using the old rbList (Set) format, it will be converted to the rbSorted (HashMap) format.
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void loadRedBlocks() {
 		ObjectInputStream blocksReader = null;
 		try {
-			final File blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
+			File blocks = new File(plugin.getDataFolder() + File.separator + "redblocksAnimated.dat");
+			Object readObject;
 			if (blocks.exists() && (blocks.length() != 0)) {
 				blocksReader = new ObjectInputStream(new FileInputStream(blocks));
-				final Object readObject = blocksReader.readObject();
-				if (readObject instanceof HashMap<?, ?>) {
-					rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
-					console.info("RedBlocks Loaded Successfully!");
-				} else {
-					rbSorted = convertSetToHashMap((Set<RedBlockAnimated>) readObject);
-					console.info("RedBlocks Converted and Loaded Successfully!");
+				readObject = blocksReader.readObject();
+				rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
+				console.info("RedBlocks Loaded Successfully!");
+			} else {
+				blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
+				if (blocks.exists()) {
+					blocksReader = new ObjectInputStream(new FileInputStream(blocks));
+					readObject = blocksReader.readObject();
+					final HashMap<String, RedBlock> oldRBSorted;
+					console.info("Old RedBlocks - Preparing To Convert...");
+					if (readObject instanceof HashMap<?, ?>) {
+						oldRBSorted = (HashMap<String, RedBlock>) readObject;
+					} else {
+						oldRBSorted = convertSetToHashMap((Set<RedBlock>) readObject);
+					}
+					console.info("Old RedBlocks - Loaded To Convert...");
+					rbSorted = new HashMap<String, RedBlockAnimated>();
+					for (final RedBlock rb : oldRBSorted.values()) {
+						rbSorted.put(rb.getLocation().toString(), new RedBlockAnimated(rb));
+					}
+					console.info("Old RedBlocks - Converted and Loaded Successfully!");
 				}
 			}
 		} catch (final Exception ex) {
@@ -86,7 +101,7 @@ public class Storage {
 	public boolean saveRedBlocks() {
 		ObjectOutputStream blocksWriter = null;
 		try {
-			final File blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
+			final File blocks = new File(plugin.getDataFolder() + File.separator + "redblocksAnimated.dat");
 			blocks.createNewFile();
 			blocksWriter = new ObjectOutputStream(new FileOutputStream(blocks));
 			blocksWriter.writeObject(rbSorted);
@@ -220,9 +235,10 @@ public class Storage {
 		return invSerializer;
 	}
 
-	private HashMap<String, RedBlockAnimated> convertSetToHashMap(final Set<RedBlockAnimated> oldSet) {
-		final HashMap<String, RedBlockAnimated> newSet = new HashMap<String, RedBlockAnimated>();
-		for (final RedBlockAnimated rb : oldSet) {
+	@SuppressWarnings("deprecation")
+	private HashMap<String, RedBlock> convertSetToHashMap(final Set<RedBlock> oldSet) {
+		final HashMap<String, RedBlock> newSet = new HashMap<String, RedBlock>();
+		for (final RedBlock rb : oldSet) {
 			newSet.put(rb.getLocation().toString(), rb);
 		}
 		return newSet;
