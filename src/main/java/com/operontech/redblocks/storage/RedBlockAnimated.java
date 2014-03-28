@@ -67,6 +67,19 @@ public class RedBlockAnimated implements Serializable {
 		this.inverted = inverted;
 	}
 
+	@SuppressWarnings("deprecation")
+	public RedBlockAnimated(final RedBlock rb) {
+		location = Util.convertLocationToString(rb.getLocation());
+		type = Material.getMaterial(rb.getTypeId());
+		data = rb.getData();
+		owner = rb.getOwner();
+		protect = rb.isProtected();
+		inverted = rb.isInverted();
+		for (final RedBlockChild child : rb.getBlocks()) {
+			listOfBlocks.put(child, 0);
+		}
+	}
+
 	/**
 	 * Enables all of the RedBlockChilds in the RedBlock's database of blocks.
 	 * @param force if true, the blocks will cause block updates when enabled forcibly
