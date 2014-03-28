@@ -1,5 +1,10 @@
 <--- Changelog for RedBlocks --->
 
+Version 2.3
+  > Deprecated RedBlock
+  > Added and Implemented RedBlockAnimated
+  > Revamped Various Processes for Efficiency
+
 Version 2.2.1
   > Added BLOCK_UPDATE Event
   > Added Lever Data Update Detection
