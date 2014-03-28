@@ -13,7 +13,7 @@ import org.bukkit.event.world.WorldSaveEvent;
 
 import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.RedBlocksMain;
-import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 
 public class WorldListener implements Listener {
 	private final RedBlocksMain plugin;
@@ -33,7 +33,7 @@ public class WorldListener implements Listener {
 	public void onItemSpawn(final ItemSpawnEvent event) {
 		final Block b = event.getEntity().getLocation().getBlock();
 		if ((plugin.isActiveBlock(b))) {
-			final RedBlock parent = plugin.getStorage().getRedBlockParent(b);
+			final RedBlockAnimated parent = plugin.getStorage().getRedBlockParent(b);
 			if (plugin.isBeingEdited(parent)) {
 				plugin.removeBlock(null, parent, b);
 			}
@@ -58,7 +58,7 @@ public class WorldListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if ((event.hasBlock()) && (event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
-			final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
+			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
 			if ((rb != null) && rb.contains(event.getClickedBlock())) {
 				rb.remove(event.getClickedBlock());
 			}

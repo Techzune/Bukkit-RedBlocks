@@ -37,7 +37,7 @@ import com.operontech.redblocks.listener.BlockListener;
 import com.operontech.redblocks.listener.CommandListener;
 import com.operontech.redblocks.listener.PhysicsListener;
 import com.operontech.redblocks.listener.WorldListener;
-import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 import com.operontech.redblocks.storage.RedBlockChild;
 import com.operontech.redblocks.storage.Storage;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -51,7 +51,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private ConsoleConnection console;
 	private Configuration config;
 	private CommandListener clistener;
-	private Map<Player, RedBlock> editMode = new HashMap<Player, RedBlock>();
+	private Map<Player, RedBlockAnimated> editMode = new HashMap<Player, RedBlockAnimated>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
@@ -78,7 +78,7 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final Entry<Player, RedBlock> e : editMode.entrySet()) {
+		for (final Entry<Player, RedBlockAnimated> e : editMode.entrySet()) {
 			editMode.remove(e.getKey());
 		}
 		if (initialized) {
@@ -135,15 +135,15 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Sends a message to the editors of the RedBlock.
+	 * Sends a message to the editors of the RedBlockAnimated.
 	 * 
 	 * Includes: "<!> RedBlocks: "
 	 * @param rb the RedBlock
 	 * @param msg the message
 	 */
-	public void notifyEditors(final RedBlock rb, final String msg) {
+	public void notifyEditors(final RedBlockAnimated rb, final String msg) {
 		if (editMode.containsValue(rb)) {
-			for (final Entry<Player, RedBlock> e : editMode.entrySet()) {
+			for (final Entry<Player, RedBlockAnimated> e : editMode.entrySet()) {
 				if (e.getValue() == rb) {
 					console.notify(e.getKey(), msg);
 				}
@@ -152,15 +152,15 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Adds an editor to a RedBlock.
+	 * Adds an editor to a RedBlockAnimated.
 	 * @param p the player to be added
 	 * @param b the block to be added
 	 */
 	public void addEditor(final Player p, final Block b) {
 		if (!isEditing(p)) {
-			final RedBlock rb = storage.getRedBlock(b);
-			if (rb.isInTimeout()) {
-				console.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
+			final RedBlockAnimated rb = storage.getRedBlock(b);
+			if (rb.getTimeoutState()) {
+				console.error(p, "That RedBlockAnimated is under redstone timeout.", "Stop all redstone powering the RedBlockAnimated and try again in a few seconds.");
 				return;
 			}
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
@@ -171,13 +171,13 @@ public class RedBlocksMain extends JavaPlugin {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
 				editMode.put(p, rb);
-				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlock | " + rb.getBlockCount() + " Blocks");
+				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlockAnimated | " + rb.getBlockCount() + " Blocks");
 			}
 		}
 	}
 
 	/**
-	 * Removes an editor from a RedBlock.
+	 * Removes an editor from a RedBlockAnimated.
 	 * @param p the player to be removed
 	 */
 	public void removeEditor(final Player p) {
@@ -185,13 +185,13 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Removes an editor from a RedBlock.
+	 * Removes an editor from a RedBlockAnimated.
 	 * @param p the player to be removed
-	 * @param blockUpdate if true, the RedBlock will check for redstone updates
+	 * @param blockUpdate if true, the RedBlockAnimated will check for redstone updates
 	 */
 	public void removeEditor(final Player p, final boolean blockUpdate) {
 		if (isEditing(p)) {
-			final RedBlock rb = getRedBlockEditing(p);
+			final RedBlockAnimated rb = getRedBlockEditing(p);
 			final Block b = rb.getBlock();
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.LOST_EDITOR, p);
 			getServer().getPluginManager().callEvent(event);
@@ -199,7 +199,7 @@ public class RedBlocksMain extends JavaPlugin {
 				if (blockUpdate) {
 					doBlockUpdate(b);
 				}
-				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
+				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlockAnimated | " + rb.getBlockCount() + " Blocks");
 				editMode.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
@@ -211,7 +211,7 @@ public class RedBlocksMain extends JavaPlugin {
 	/**
 	 * Updates the data of a block in a RedBlock
 	 */
-	public void updateBlock(final Player p, final RedBlock rb, final Block b) {
+	public void updateBlock(final Player p, final RedBlockAnimated rb, final Block b) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_UPDATED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -228,12 +228,12 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Adds a block to a RedBlock.
+	 * Adds a block to a RedBlockAnimated.
 	 * @param p the player that placed the block
-	 * @param rb the RedBlock to add the block to
+	 * @param rb the RedBlockAnimated to add the block to
 	 * @param b the block to be added
 	 */
-	public void addBlock(final Player p, final RedBlock rb, final Block b) {
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -254,12 +254,12 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Removes a block from a RedBlock.
+	 * Removes a block from a RedBlockAnimated.
 	 * @param p the player that removed the block
-	 * @param rb the RedBlock that is losing a block
+	 * @param rb the RedBlockAnimated that is losing a block
 	 * @param b the block to be removed
 	 */
-	public void removeBlock(final Player p, final RedBlock rb, final Block b) {
+	public void removeBlock(final Player p, final RedBlockAnimated rb, final Block b) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_REMOVED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled() && (rb.remove(b))) {
@@ -268,12 +268,12 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Enables a RedBlock.
-	 * @param rb the RedBlock to be enabled
-	 * @param force if true, the RedBlock will ignore if the RedBlock is already enabled and enable it again
-	 * @return if the RedBlock was enabled
+	 * Enables a RedBlockAnimated.
+	 * @param rb the RedBlockAnimated to be enabled
+	 * @param force if true, the RedBlockAnimated will ignore if the RedBlockAnimated is already enabled and enable it again
+	 * @return if the RedBlockAnimated was enabled
 	 */
-	public boolean enableRedBlock(final RedBlock rb, final boolean force) {
+	public boolean enableRedBlock(final RedBlockAnimated rb, final boolean force) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.ENABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
@@ -285,16 +285,16 @@ public class RedBlocksMain extends JavaPlugin {
 				System.gc();
 			}
 		}
-		return rb.isEnabled();
+		return rb.getActiveState();
 	}
 
 	/**
-	 * Disabled a RedBlock.
-	 * @param rb the RedBlock to be disabled
-	 * @param force if true, the RedBlock will ignore if the RedBlock is already disabled and disable it again
-	 * @return if the RedBlock was disabled
+	 * Disabled a RedBlockAnimated.
+	 * @param rb the RedBlockAnimated to be disabled
+	 * @param force if true, the RedBlockAnimated will ignore if the RedBlockAnimated is already disabled and disable it again
+	 * @return if the RedBlockAnimated was disabled
 	 */
-	public boolean disableRedBlock(final RedBlock rb, final boolean force) {
+	public boolean disableRedBlock(final RedBlockAnimated rb, final boolean force) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DISABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
@@ -306,15 +306,15 @@ public class RedBlocksMain extends JavaPlugin {
 				System.gc();
 			}
 		}
-		return !rb.isEnabled();
+		return !rb.getActiveState();
 	}
 
 	/**
-	 * Deletes a RedBlock.
+	 * Deletes a RedBlockAnimated.
 	 * @param b the block of the RedBlock
 	 */
 	public boolean removeRedBlock(final Block b, final boolean breakBlock) {
-		final RedBlock rb = storage.getRedBlock(b);
+		final RedBlockAnimated rb = storage.getRedBlock(b);
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DESTROYED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
@@ -336,25 +336,25 @@ public class RedBlocksMain extends JavaPlugin {
 			removeEditor(p);
 		}
 		if (editMode.containsValue(storage.getRedBlock(b))) {
-			console.error(p, "You can't destroy a RedBlock that is being edited!");
+			console.error(p, "You can't destroy a RedBlockAnimated that is being edited!");
 			return false;
 		}
 		if (removeRedBlock(b, true)) {
 			p.getInventory().removeItem(new ItemStack(config.getInt(ConfigValue.redblocks_destroyItem), 1));
-			console.notify(p, "RedBlock Eliminated");
+			console.notify(p, "RedBlockAnimated Eliminated");
 			return true;
 		}
 		return false;
 	}
 
 	/**
-	 * Created a new RedBlock.
+	 * Created a new RedBlockAnimated.
 	 * @param p the owner of the RedBlock
 	 * @param b the block of the RedBlock
 	 */
 	public void createRedBlock(final Player p, final Block b) {
 		int number = 0;
-		for (final RedBlock rb : storage.getRedBlocks().values()) {
+		for (final RedBlockAnimated rb : storage.getRedBlocks().values()) {
 			if (rb.getOwner().equalsIgnoreCase(p.getName())) {
 				number++;
 			}
@@ -372,11 +372,11 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Notifies the editors of that the RedBlock was lost.
-	 * @param rb the RedBlock that was lost
+	 * Notifies the editors of that the RedBlockAnimated was lost.
+	 * @param rb the RedBlockAnimated that was lost
 	 */
-	public void redBlockLost(final RedBlock rb) {
-		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
+	public void redBlockLost(final RedBlockAnimated rb) {
+		notifyEditors(rb, ChatColor.RED + "Your RedBlockAnimated was lost/destroyed.");
 		for (final Player p : editMode.keySet()) {
 			if (getRedBlockEditing(p) == rb) {
 				removeEditor(p);
@@ -385,13 +385,13 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Runs the WorldEditCommand process on a RedBlock.
-	 * @param rb the RedBlock receiving the WorldEditCommand process
+	 * Runs the WorldEditCommand process on a RedBlockAnimated.
+	 * @param rb the RedBlockAnimated receiving the WorldEditCommand process
 	 * @param p the player that has the selection
 	 * @param type the type of block to be added, can be null (use colon for data values)
 	 * @param remove if true, the blocks in the selection will be removed, if false, blocks in the selection will be added
 	 */
-	public void useWorldEdit(final RedBlock rb, final Player p, final String type, final boolean remove) {
+	public void useWorldEdit(final RedBlockAnimated rb, final Player p, final String type, final boolean remove) {
 		final Selection reg = getWE().getSelection(p);
 		int t = 0;
 		int d = 0;
@@ -450,9 +450,9 @@ public class RedBlocksMain extends JavaPlugin {
 			}
 		}
 		if (remove) {
-			notifyEditors(rb, rb.blockListAction(cache, true) + " Blocks Removed By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
+			notifyEditors(rb, rb.removeBlockList(cache) + " Blocks Removed By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
 		} else {
-			notifyEditors(rb, rb.blockListAction(cache, false) + " Blocks Added By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
+			notifyEditors(rb, rb.addBlockList(cache) + " Blocks Added By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
 		}
 		if (config.getBool(ConfigValue.gc_onWorldEdit)) {
 			System.gc();
@@ -470,12 +470,12 @@ public class RedBlocksMain extends JavaPlugin {
 				if (block == null) {
 					return;
 				}
-				final RedBlock rb = getStorage().getRedBlock(block);
-				if ((rb == null) || isBeingEdited(rb) || rb.isInTimeout()) {
+				final RedBlockAnimated rb = getStorage().getRedBlock(block);
+				if ((rb == null) || isBeingEdited(rb) || rb.getTimeoutState()) {
 					return;
 				}
 				final boolean bp = block.getBlockPower() > 0;
-				if ((bp && !rb.isInverted()) || (!bp && rb.isInverted())) {
+				if ((bp && !rb.getOptionInverted()) || (!bp && rb.getOptionInverted())) {
 					disableRedBlock(rb, false);
 					startTimeout(rb);
 				} else {
@@ -487,23 +487,23 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Starts the Redstone timeout timer on a RedBlock.
+	 * Starts the Redstone timeout timer on a RedBlockAnimated.
 	 * @param rb the RedBlock
 	 */
-	public void startTimeout(final RedBlock rb) {
-		if (!rb.isInTimeout()) {
-			rb.setTimeout(true);
+	public void startTimeout(final RedBlockAnimated rb) {
+		if (!rb.getTimeoutState()) {
+			rb.setTimeoutState(true);
 			getServer().getScheduler().runTaskLaterAsynchronously(this, new Runnable() {
 				@Override
 				public void run() {
-					rb.setTimeout(false);
+					rb.setTimeoutState(false);
 				}
 			}, ((config.getInt(ConfigValue.redblocks_redstoneTimeout) / 1000) * 20) + 2L);
 		}
 	}
 
 	/**
-	 * Checks if the player is editing a RedBlock.
+	 * Checks if the player is editing a RedBlockAnimated.
 	 * @param p the player to check
 	 * @return if the player is editing a RedBlock
 	 */
@@ -512,25 +512,25 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Checks if a RedBlock is being edited.
-	 * @param rb the RedBlock to check
-	 * @return if the RedBlock is being edited
+	 * Checks if a RedBlockAnimated is being edited.
+	 * @param redBlockAnimated the RedBlockAnimated to check
+	 * @return if the RedBlockAnimated is being edited
 	 */
-	public boolean isBeingEdited(final RedBlock rb) {
-		return editMode.containsValue(rb);
+	public boolean isBeingEdited(final RedBlockAnimated redBlockAnimated) {
+		return editMode.containsValue(redBlockAnimated);
 	}
 
 	/**
-	 * Gets the RedBlock that is being edited by a player.
-	 * @param p the player to get the editing RedBlock of
+	 * Gets the RedBlockAnimated that is being edited by a player.
+	 * @param p the player to get the editing RedBlockAnimated of
 	 * @return the REdBlock
 	 */
-	public RedBlock getRedBlockEditing(final Player p) {
+	public RedBlockAnimated getRedBlockEditing(final Player p) {
 		return editMode.get(p);
 	}
 
 	/**
-	 * Checks if a player is op or has a RedBlock permission.
+	 * Checks if a player is op or has a RedBlockAnimated permission.
 	 * @param p the player to check
 	 * @param perm the permission node
 	 * @return if the player is op or has permission
@@ -564,7 +564,7 @@ public class RedBlocksMain extends JavaPlugin {
 	}
 
 	/**
-	 * Gets the RedBlock Storage.
+	 * Gets the RedBlockAnimated Storage.
 	 * @return RedBlock's Storage
 	 */
 	public Storage getStorage() {

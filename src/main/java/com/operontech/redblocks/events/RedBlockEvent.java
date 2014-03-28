@@ -5,24 +5,24 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import com.operontech.redblocks.RedBlocksMain;
-import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 
 public class RedBlockEvent extends Event {
 	private static final HandlerList handlers = new HandlerList();
 	private final RedBlocksMain plugin;
 	private final RedBlockCause cause;
-	private final RedBlock rb;
+	private final RedBlockAnimated rb;
 	private final Player p;
 	private boolean cancelled = false;
 
-	public RedBlockEvent(final RedBlocksMain plugin, final RedBlock rb, final RedBlockCause cause) {
+	public RedBlockEvent(final RedBlocksMain plugin, final RedBlockAnimated rb, final RedBlockCause cause) {
 		this.plugin = plugin;
 		this.rb = rb;
 		this.cause = cause;
 		p = null;
 	}
 
-	public RedBlockEvent(final RedBlocksMain plugin, final RedBlock rb, final RedBlockCause cause, final Player p) {
+	public RedBlockEvent(final RedBlocksMain plugin, final RedBlockAnimated rb, final RedBlockCause cause, final Player p) {
 		this.plugin = plugin;
 		this.rb = rb;
 		this.cause = cause;
@@ -43,9 +43,9 @@ public class RedBlockEvent extends Event {
 	}
 
 	/**
-	 * Checks if is the RedBlock being edited.
+	 * Checks if is the RedBlockAnimated being edited.
 	 *
-	 * @return true if the RedBlock is being edited
+	 * @return true if the RedBlockAnimated is being edited
 	 */
 	public boolean isBlockBeingEdited() {
 		return plugin.isBeingEdited(rb);
@@ -70,11 +70,11 @@ public class RedBlockEvent extends Event {
 	}
 
 	/**
-	 * Gets the RedBlock involved in the event.
+	 * Gets the RedBlockAnimated involved in the event.
 	 *
-	 * @return the RedBlock invovled
+	 * @return the RedBlockAnimated involved
 	 */
-	public RedBlock getRedBlock() {
+	public RedBlockAnimated getRedBlock() {
 		return rb;
 	}
 

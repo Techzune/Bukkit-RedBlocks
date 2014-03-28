@@ -17,7 +17,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
-import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 
 @SuppressWarnings("deprecation")
 public class BlockListener implements Listener {
@@ -37,8 +37,8 @@ public class BlockListener implements Listener {
 	 */
 	private boolean blockBreakDamaged(final Player p, final Block b) {
 		plugin.doBlockUpdate(b);
-		final boolean isRedBlock = plugin.getStorage().containsRedBlock(b);
-		if (isRedBlock && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
+		final boolean isRedBlockAnimated = plugin.getStorage().containsRedBlock(b);
+		if (isRedBlockAnimated && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
 			// Destroy RedBlock
 			if (plugin.hasPermission(p, "createanddestroy")) {
 				return !plugin.destroyRedBlock(b, p);
@@ -50,7 +50,7 @@ public class BlockListener implements Listener {
 		if (plugin.isEditing(p)) {
 
 			// Stop Editing a RedBlock
-			if (isRedBlock) {
+			if (isRedBlockAnimated) {
 				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
 					console.error(p, "You are already editing a RedBlock!", "Say " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
 					return true;
@@ -59,7 +59,7 @@ public class BlockListener implements Listener {
 				return true;
 			}
 
-			// Verify RedBlock TypeID Integrity and Remove RedBlock
+			// Verify RedBlockAnimated TypeID Integrity and Remove RedBlock
 			final Block controlledRB = plugin.getRedBlockEditing(p).getBlock();
 			if (controlledRB.isEmpty()) {
 				controlledRB.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
@@ -71,21 +71,21 @@ public class BlockListener implements Listener {
 
 		} else {
 
-			RedBlock parent = null;
+			RedBlockAnimated parent = null;
 			if (plugin.isActiveBlock(b)) {
 				parent = plugin.getStorage().getRedBlockParent(b);
 			}
 
 			//  Verify Protection of Block
 			if ((parent != null) && !plugin.hasPermission(p, "bypassProtect")) {
-				if (parent.isProtected()) {
+				if (parent.getOptionProtected()) {
 					console.error(p, "That block is protected by a RedBlock!");
 					return true;
 				}
 			}
 
-			// Begin Editing of RedBlock and Create RedBlock (If Necessary)
-			if (isRedBlock) {
+			// Begin Editing of RedBlockAnimated and Create RedBlockAnimated (If Necessary)
+			if (isRedBlockAnimated) {
 				if (plugin.hasPermission(p, "use")) {
 					plugin.addEditor(p, b);
 					return true;
@@ -119,7 +119,7 @@ public class BlockListener implements Listener {
 			if (redb.isEmpty()) {
 				redb.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
-			final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
+			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !plugin.hasPermission(event.getPlayer(), "bypass.maxBlocksPer")) {
 				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
@@ -143,7 +143,7 @@ public class BlockListener implements Listener {
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (plugin.isEditing(event.getPlayer())) {
-				final RedBlock rb = plugin.getRedBlockEditing(event.getPlayer());
+				final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
 				if (rb.contains(event.getClickedBlock()) && (rb.getChild(event.getClickedBlock()).getData() != event.getClickedBlock().getData())) {
 					plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
 				}

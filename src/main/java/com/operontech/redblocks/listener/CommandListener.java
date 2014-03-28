@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
-import com.operontech.redblocks.storage.RedBlock;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 
 public class CommandListener {
 	private final RedBlocksMain plugin;
@@ -33,7 +33,7 @@ public class CommandListener {
 				if (s instanceof Player) {
 					final Player p = (Player) s;
 					if (plugin.isEditing(p)) {
-						final RedBlock rb = plugin.getRedBlockEditing(p);
+						final RedBlockAnimated rb = plugin.getRedBlockEditing(p);
 						if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("a")) {
 							if (plugin.getWE() == null) {
 								console.error(s, "RedBlocks could not find World-Edit!");

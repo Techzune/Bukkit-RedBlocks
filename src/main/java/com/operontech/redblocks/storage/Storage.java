@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import com.operontech.redblocks.ConsoleConnection;
@@ -22,7 +21,7 @@ public class Storage {
 	private RedBlocksMain plugin;
 	private ConsoleConnection console;
 	private InventorySerializer invSerializer;
-	private HashMap<String, RedBlock> rbSorted = new HashMap<String, RedBlock>();
+	private HashMap<String, RedBlockAnimated> rbSorted = new HashMap<String, RedBlockAnimated>();
 
 	public Storage(final RedBlocksMain plugin) {
 		this.plugin = plugin;
@@ -56,10 +55,10 @@ public class Storage {
 				blocksReader = new ObjectInputStream(new FileInputStream(blocks));
 				final Object readObject = blocksReader.readObject();
 				if (readObject instanceof HashMap<?, ?>) {
-					rbSorted = (HashMap<String, RedBlock>) readObject;
+					rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
 					console.info("RedBlocks Loaded Successfully!");
 				} else {
-					rbSorted = convertSetToHashMap((Set<RedBlock>) readObject);
+					rbSorted = convertSetToHashMap((Set<RedBlockAnimated>) readObject);
 					console.info("RedBlocks Converted and Loaded Successfully!");
 				}
 			}
@@ -76,7 +75,7 @@ public class Storage {
 			console.warning("An error occured while closing the RedBlocks file input stream.");
 		}
 		if (rbSorted == null) {
-			rbSorted = new HashMap<String, RedBlock>();
+			rbSorted = new HashMap<String, RedBlockAnimated>();
 		}
 	}
 
@@ -112,51 +111,37 @@ public class Storage {
 
 	/**
 	 * Gets the database of RedBlocks.
-	 * @return the HashMap (Key: Location String, Value: RedBlock) of RedBlocks
+	 * @return the HashMap (Key: Location String, Value: RedBlockAnimated) of RedBlocks
 	 */
-	public HashMap<String, RedBlock> getRedBlocks() {
+	public HashMap<String, RedBlockAnimated> getRedBlocks() {
 		return rbSorted;
 	}
 
 	/**
-	 * Searches the sorted RedBlock list for a RedBlock with a matching location.
+	 * Searches the sorted RedBlockAnimated list for a RedBlockAnimated with a matching location.
 	 *
 	 * @param b the block to search for
-	 * @return the RedBlock (if it was found)
+	 * @return the RedBlockAnimated (if it was found)
 	 */
-	public RedBlock getRedBlock(final Block b) {
+	public RedBlockAnimated getRedBlock(final Block b) {
 		return rbSorted.get(b.getLocation().toString());
 	}
 
 	/**
-	 * Creates a RedBlock and adds it to the database of RedBlocks.
-	 *
-	 * @param loc the location of the RedBlock
-	 * @param typeId the typeId of the RedBlock
-	 * @param data the block data of the RedBlock
-	 * @param p the owner of the RedBlock
-	 * @return the created RedBlock
-	 */
-	public RedBlock createRedBlock(final Location loc, final int typeId, final byte data, final String p) {
-		final RedBlock rb = new RedBlock(loc, typeId, data, p, true, false);
-		rbSorted.put(loc.toString(), rb);
-		return rb;
-	}
-
-	/**
-	 * Creates a RedBlock and adds it to the database of RedBlocks.
+	 * Creates a RedBlockAnimated and adds it to the database of RedBlocks.
 	 *
 	 * @param p the owner of the RedBlock
 	 * @param b the block of the RedBlock
 	 * @return the created RedBlock
 	 */
-	@SuppressWarnings("deprecation")
-	public RedBlock createRedBlock(final String p, final Block b) {
-		return createRedBlock(b.getLocation(), b.getTypeId(), b.getData(), p);
+	public RedBlockAnimated createRedBlock(final String p, final Block b) {
+		final RedBlockAnimated rb = new RedBlockAnimated(b, p, true, false);
+		rbSorted.put(rb.getLocation().toString(), rb);
+		return rb;
 	}
 
 	/**
-	 * Removes a RedBlock from the database of RedBlocks.
+	 * Removes a RedBlockAnimated from the database of RedBlocks.
 	 *
 	 * @param b the block to remove
 	 * @return if it was removed
@@ -166,23 +151,23 @@ public class Storage {
 	}
 
 	/**
-	 * Checks if the database contains a RedBlock.
+	 * Checks if the database contains a RedBlockAnimated.
 	 * 
 	 * @param b the block to search for
-	 * @return if the RedBlock was found
+	 * @return if the RedBlockAnimated was found
 	 */
 	public boolean containsRedBlock(final Block b) {
 		return (rbSorted.containsKey(b.getLocation().toString()));
 	}
 
 	/**
-	 * Searches for the RedBlock in control of that block.
-	 * @param b the block to search for the RedBlock of
-	 * @return the RedBlock that owns it (if found)
+	 * Searches for the RedBlockAnimated in control of that block.
+	 * @param b the block to search for the RedBlockAnimated of
+	 * @return the RedBlockAnimated that owns it (if found)
 	 */
-	public RedBlock getRedBlockParent(final Block b) {
-		final Collection<RedBlock> rbc = rbSorted.values();
-		for (final RedBlock rb : rbc) {
+	public RedBlockAnimated getRedBlockParent(final Block b) {
+		final Collection<RedBlockAnimated> rbc = rbSorted.values();
+		for (final RedBlockAnimated rb : rbc) {
 			if (rb.contains(b)) {
 				return rb;
 			}
@@ -191,10 +176,10 @@ public class Storage {
 	}
 
 	/**
-	 * Runs a cleaning process that removes clutter in the RedBlock database, then resorts the HashMap.
+	 * Runs a cleaning process that removes clutter in the RedBlockAnimated database, then resorts the HashMap.
 	 * 
 	 * Removes empty RedBlocks.
-	 * Removes children of the RedBlock if it they're AIR.
+	 * Removes children of the RedBlockAnimated if it they're AIR.
 	 * 
 	 */
 	public void cleanupRedBlocks() {
@@ -203,7 +188,7 @@ public class Storage {
 		int blocksRemoved = 0;
 		List<RedBlockChild> list;
 		Set<RedBlockChild> children;
-		for (final Entry<String, RedBlock> entry : rbSorted.entrySet()) {
+		for (final Entry<String, RedBlockAnimated> entry : rbSorted.entrySet()) {
 			if (!plugin.isBeingEdited(entry.getValue())) {
 				if (entry.getValue().getBlockCount() == 0) {
 					rbSorted.remove(entry.getKey());
@@ -216,7 +201,7 @@ public class Storage {
 							list.add(child);
 						}
 					}
-					blocksRemoved += entry.getValue().removeList(list);
+					blocksRemoved += entry.getValue().removeChildList(list);
 				}
 			}
 		}
@@ -235,9 +220,9 @@ public class Storage {
 		return invSerializer;
 	}
 
-	private HashMap<String, RedBlock> convertSetToHashMap(final Set<RedBlock> oldSet) {
-		final HashMap<String, RedBlock> newSet = new HashMap<String, RedBlock>();
-		for (final RedBlock rb : oldSet) {
+	private HashMap<String, RedBlockAnimated> convertSetToHashMap(final Set<RedBlockAnimated> oldSet) {
+		final HashMap<String, RedBlockAnimated> newSet = new HashMap<String, RedBlockAnimated>();
+		for (final RedBlockAnimated rb : oldSet) {
 			newSet.put(rb.getLocation().toString(), rb);
 		}
 		return newSet;

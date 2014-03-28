@@ -234,18 +234,32 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Searches for the RedBlockChild in the RedBlock's database of blocks
 	 * @param rbc the RedBlockChild to search for
-	 * @return the RedBlockChild that was found
+	 * @return if the RedBlockChild was found
 	 */
-	public RedBlockChild contains(final RedBlockChild rbc) {
-		return (listOfBlocks.containsKey(rbc) ? rbc : null);
+	public boolean contains(final RedBlockChild rbc) {
+		return (listOfBlocks.containsKey(rbc));
 	}
 
 	/**
 	 * Searches for the block in the RedBlock's database of blocks
 	 * @param b the block to search for
+	 * @return if the RedBlockChild of the block was found
+	 */
+	public boolean contains(final Block b) {
+		for (final RedBlockChild rbc : listOfBlocks.keySet()) {
+			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Searches for the block in the RedBlock's database of blocks and gets the RedBlockChild
+	 * @param b the block to search for
 	 * @return the RedBlockChild of the block that was found
 	 */
-	public RedBlockChild contains(final Block b) {
+	public RedBlockChild getChild(final Block b) {
 		for (final RedBlockChild rbc : listOfBlocks.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return rbc;
@@ -438,6 +452,10 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	public Map<RedBlockChild, Integer> getDatabase() {
 		return listOfBlocks;
+	}
+
+	public Block getBlock() {
+		return getLocation().getBlock();
 	}
 
 	/**
