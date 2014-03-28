@@ -2,7 +2,6 @@ package com.operontech.redblocks.storage;
 
 import java.io.Serializable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Beacon;
@@ -18,6 +17,8 @@ import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 import org.bukkit.event.inventory.InventoryType;
 
+import com.operontech.redblocks.Util;
+
 public class RedBlockChild implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int typeId;
@@ -30,7 +31,7 @@ public class RedBlockChild implements Serializable {
 	public RedBlockChild(final int typeId, final byte data, final Location location) {
 		this.typeId = typeId;
 		this.data = data;
-		this.location = convertLocation(location);
+		this.location = Util.convertLocationToString(location);
 	}
 
 	/**
@@ -176,12 +177,7 @@ public class RedBlockChild implements Serializable {
 	 * @return the location
 	 */
 	public Location getLocation() {
-		final String str2loc[] = location.split("\\:");
-		final Location loc = new Location(Bukkit.getServer().getWorld(str2loc[0]), 0, 0, 0);
-		loc.setX(Double.parseDouble(str2loc[1]));
-		loc.setY(Double.parseDouble(str2loc[2]));
-		loc.setZ(Double.parseDouble(str2loc[3]));
-		return loc;
+		return Util.convertStringToLocation(location);
 	}
 
 	/**
@@ -236,9 +232,5 @@ public class RedBlockChild implements Serializable {
 	 */
 	public void setLocation(final Location location) {
 		this.location = location.toString();
-	}
-
-	private String convertLocation(final Location loc) {
-		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
 	}
 }
