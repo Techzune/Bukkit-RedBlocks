@@ -83,20 +83,44 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Enables all of the RedBlockChilds in the RedBlock's database of blocks.
 	 * @param force if true, the blocks will cause block updates when enabled forcibly
+	 * @param doAnimations if true, the RedBlock will pause for animations
 	 */
-	public void enable(final boolean force) {
+	public void enable(final boolean force, final boolean doAnimations) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (!blocksActive || force) {
-			for (final Entry<RedBlockChild, Integer> entry : listOfBlocks.entrySet()) {
-				entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
-				chunks.add(entry.getKey().getLocation().getChunk());
-			}
-			for (final Chunk chunk : chunks) {
-				chunk.load();
-				chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
-			}
-			blocksActive = true;
+			final Thread enableThread = new Thread() {
+				@Override
+				public void run() {
+					for (final Entry<RedBlockChild, Integer> entry : listOfBlocks.entrySet()) {
+						if (doAnimations) {
+							try {
+								Thread.sleep(entry.getValue());
+							} catch (final InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
+						chunks.add(entry.getKey().getLocation().getChunk());
+					}
+					for (final Chunk chunk : chunks) {
+						chunk.load();
+						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+					}
+					blocksActive = true;
+
+				}
+			};
+			enableThread.start();
 		}
+	}
+
+	/**
+	 * Enables all of the RedBlockChilds in the RedBlock's database of blocks.
+	 * Will execute and pause for animations.
+	 * @param force if true, the blocks will cause block updates when enabled forcibly
+	 */
+	public void enable(final boolean force) {
+		enable(force, true);
 	}
 
 	/**
