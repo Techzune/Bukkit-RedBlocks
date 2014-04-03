@@ -232,8 +232,10 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param p the player that placed the block
 	 * @param rb the RedBlockAnimated to add the block to
 	 * @param b the block to be added
+	 * @param eWaitTime the milliseconds to wait on enable for the particular block
+	 * @param dWaitTime the milliseconds to wait on disable for the particular block
 	 */
-	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final int eWaitTime, final int dWaitTime) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -241,16 +243,26 @@ public class RedBlocksMain extends JavaPlugin {
 				@Override
 				public void run() {
 					if (!event.isCancelled()) {
-						if (rb.add(b)) {
+						if (rb.add(b, eWaitTime, dWaitTime)) {
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
 						}
 						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
-							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()));
+							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), eWaitTime, dWaitTime);
 						}
 					}
 				}
 			}, 2L);
 		}
+	}
+
+	/**
+	 * Adds a block to a RedBlockAnimated.
+	 * @param p the player that placed the block
+	 * @param rb the RedBlockAnimated to add the block to
+	 * @param b the block to be added
+	 */
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
+		addBlock(p, rb, b, 0, 0);
 	}
 
 	/**

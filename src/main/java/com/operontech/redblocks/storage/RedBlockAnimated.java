@@ -1,6 +1,8 @@
 package com.operontech.redblocks.storage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +32,7 @@ public class RedBlockAnimated implements Serializable {
 	private boolean changed = false;
 
 	// RedBlockChild & Time to Pause
-	private final Map<RedBlockChild, Integer> listOfBlocks = new TreeMap<RedBlockChild, Integer>();
+	private final Map<RedBlockChild, ArrayList<Integer>> listOfBlocks = new TreeMap<RedBlockChild, ArrayList<Integer>>();
 
 	/**
 	 * Creates a RedBlock.
@@ -76,7 +78,7 @@ public class RedBlockAnimated implements Serializable {
 		protect = rb.isProtected();
 		inverted = rb.isInverted();
 		for (final RedBlockChild child : rb.getBlocks()) {
-			listOfBlocks.put(child, 0);
+			listOfBlocks.put(child, (ArrayList<Integer>) Arrays.asList(0, 0));
 		}
 	}
 
@@ -91,10 +93,10 @@ public class RedBlockAnimated implements Serializable {
 			final Thread enableThread = new Thread() {
 				@Override
 				public void run() {
-					for (final Entry<RedBlockChild, Integer> entry : listOfBlocks.entrySet()) {
+					for (final Entry<RedBlockChild, ArrayList<Integer>> entry : listOfBlocks.entrySet()) {
 						if (doAnimations) {
 							try {
-								Thread.sleep(entry.getValue());
+								Thread.sleep(entry.getValue().get(0));
 							} catch (final InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -130,7 +132,7 @@ public class RedBlockAnimated implements Serializable {
 	public void disable(final boolean force) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (blocksActive || force) {
-			for (final Entry<RedBlockChild, Integer> entry : listOfBlocks.entrySet()) {
+			for (final Entry<RedBlockChild, ArrayList<Integer>> entry : listOfBlocks.entrySet()) {
 				entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
 				chunks.add(entry.getKey().getLocation().getChunk());
 			}
@@ -145,15 +147,12 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Adds a RedBlockChild to the RedBlock's database of blocks.
 	 * @param child the child to be added
+	 * @param eWaitTime the time to wait when enabling the block
+	 * @param dWaitTime the time to wait when removing the block
 	 * @return the 
 	 */
-	@SuppressWarnings("deprecation")
-	public boolean add(final RedBlockChild child) {
-		if (Util.isSpecialBlock(Material.getMaterial(child.getTypeId()))) {
-			return !listOfBlocks.put(child, 0).equals(child);
-		} else {
-			return !listOfBlocks.put(child, 0).equals(child);
-		}
+	public boolean add(final RedBlockChild child, final int eWaitTime, final int dWaitTime) {
+		return !listOfBlocks.put(child, (ArrayList<Integer>) Arrays.asList(eWaitTime, dWaitTime)).equals(child);
 	}
 
 	/**
@@ -161,11 +160,13 @@ public class RedBlockAnimated implements Serializable {
 	 * 
 	 * Converts it to a RedBlockChild before adding it.
 	 * @param b the block to be converted then added
+	 * @param eWaitTime the time to wait when enabling the block
+	 * @param dWaitTime the time to wait when removing the block
 	 * @return the converted RedBlockChild
 	 */
 	@SuppressWarnings("deprecation")
-	public boolean add(final Block b) {
-		return add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()));
+	public boolean add(final Block b, final int eWaitTime, final int dWaitTime) {
+		return add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()), eWaitTime, dWaitTime);
 	}
 
 	/**
@@ -176,7 +177,7 @@ public class RedBlockAnimated implements Serializable {
 	public int addChildList(final List<RedBlockChild> list) {
 		int i = 0;
 		for (final RedBlockChild child : list) {
-			if (add(child)) {
+			if (add(child, 0, 0)) {
 				i++;
 			}
 		}
@@ -191,7 +192,7 @@ public class RedBlockAnimated implements Serializable {
 	public int addBlockList(final List<Block> list) {
 		int i = 0;
 		for (final Block child : list) {
-			if (add(child)) {
+			if (add(child, 0, 0)) {
 				i++;
 			}
 		}
@@ -290,6 +291,22 @@ public class RedBlockAnimated implements Serializable {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Sets the wait time (milliseconds) for the activation of the block.
+	 * @param child 
+	 * @param waitTime
+	 * @return
+	 */
+	public boolean setWaitTimeForChild(final RedBlockChild child, final int waitTime) {
+		if (contains(child)) {
+			final ArrayList<Integer> newList = listOfBlocks.get(child);
+			newList.set(0, waitTime);
+			listOfBlocks.put(child, newList);
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -474,7 +491,7 @@ public class RedBlockAnimated implements Serializable {
 	 * Gets the Map of the RedBlock's database of blocks.
 	 * @return the Map
 	 */
-	public Map<RedBlockChild, Integer> getDatabase() {
+	public Map<RedBlockChild, ArrayList<Integer>> getDatabase() {
 		return listOfBlocks;
 	}
 
