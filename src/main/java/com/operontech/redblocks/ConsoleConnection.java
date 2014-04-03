@@ -16,7 +16,6 @@ public class ConsoleConnection {
 
 	/**
 	 * Initiates a new console connection.
-	 *
 	 * @param plugin the plugin
 	 * @param server the server
 	 */
@@ -57,7 +56,6 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to a player.
-	 * 
 	 * @param player player to receive the message
 	 * @param msg the message
 	 */

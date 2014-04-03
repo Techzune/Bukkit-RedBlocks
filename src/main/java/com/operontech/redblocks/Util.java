@@ -10,19 +10,43 @@ import org.bukkit.Material;
 public class Util {
 	private static final List<Material> specialBList = Arrays.asList(Material.ACTIVATOR_RAIL, Material.ANVIL, Material.BED_BLOCK, Material.BROWN_MUSHROOM, Material.CACTUS, Material.CAKE_BLOCK, Material.CROPS, Material.DETECTOR_RAIL, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.FLOWER_POT, Material.ITEM_FRAME, Material.SUGAR_CANE_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON, Material.PAINTING, Material.POWERED_RAIL, Material.WOOD_DOOR, Material.IRON_DOOR_BLOCK);
 
+	/**
+	 * Checks if the typeId provided is declared "special"
+	 * 
+	 * A block that is defined "special" is one that requires a block under it to exist.
+	 * @param typeId the typeId to check
+	 * @return if the typeId was declared "special"
+	 */
 	@SuppressWarnings("deprecation")
 	public static boolean isSpecialBlock(final int typeId) {
 		return isSpecialBlock(Material.getMaterial(typeId));
 	}
 
+	/**
+	 * Checks if the Material provided is declared "special"
+	 * 
+	 * A block that is defined "special" is one that requires a block under it to exist.
+	 * @param m the material to check
+	 * @return if the material was declared "special"
+	 */
 	public static boolean isSpecialBlock(final Material m) {
 		return specialBList.contains(m);
 	}
 
+	/**
+	 * Converts a Location to a String that can be converted back using convertStringToLocation(locationAsString)
+	 * @param loc the location to convert to a string
+	 * @return the location as a string
+	 */
 	public static String convertLocationToString(final Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
 	}
 
+	/**
+	 * Converts a Location as a String (converted by convertLocationToString(location)) back into a Location
+	 * @param str the Location as a String to be converted back into a Location
+	 * @return the Location from the String, null if conversion failed
+	 */
 	public static Location convertStringToLocation(final String str) {
 		final String splitString[] = str.split("\\:");
 		final Location loc = new Location(Bukkit.getServer().getWorld(splitString[0]), 0, 0, 0);

@@ -134,7 +134,6 @@ public class Storage {
 
 	/**
 	 * Searches the sorted RedBlockAnimated list for a RedBlockAnimated with a matching location.
-	 *
 	 * @param b the block to search for
 	 * @return the RedBlockAnimated (if it was found)
 	 */
@@ -144,7 +143,6 @@ public class Storage {
 
 	/**
 	 * Creates a RedBlockAnimated and adds it to the database of RedBlocks.
-	 *
 	 * @param p the owner of the RedBlock
 	 * @param b the block of the RedBlock
 	 * @return the created RedBlock
@@ -157,7 +155,6 @@ public class Storage {
 
 	/**
 	 * Removes a RedBlockAnimated from the database of RedBlocks.
-	 *
 	 * @param b the block to remove
 	 * @return if it was removed
 	 */
@@ -167,7 +164,6 @@ public class Storage {
 
 	/**
 	 * Checks if the database contains a RedBlockAnimated.
-	 * 
 	 * @param b the block to search for
 	 * @return if the RedBlockAnimated was found
 	 */
@@ -192,10 +188,8 @@ public class Storage {
 
 	/**
 	 * Runs a cleaning process that removes clutter in the RedBlockAnimated database, then resorts the HashMap.
-	 * 
 	 * Removes empty RedBlocks.
 	 * Removes children of the RedBlockAnimated if it they're AIR.
-	 * 
 	 */
 	public void cleanupRedBlocks() {
 		console.info("Cleaning up the RedBlocks database...");
@@ -228,7 +222,6 @@ public class Storage {
 
 	/**
 	 * Gets the InventorySerializer.
-	 *
 	 * @return the InventorySerializer
 	 */
 	public InventorySerializer getInventorySerializer() {

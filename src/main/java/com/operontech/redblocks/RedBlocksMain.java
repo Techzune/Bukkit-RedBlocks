@@ -210,6 +210,9 @@ public class RedBlocksMain extends JavaPlugin {
 
 	/**
 	 * Updates the data of a block in a RedBlock
+	 * @param p the player that updated the block's data
+	 * @param rb the RedBlock that was updated
+	 * @param b the Block that was updated
 	 */
 	public void updateBlock(final Player p, final RedBlockAnimated rb, final Block b) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_UPDATED, p);
@@ -324,6 +327,7 @@ public class RedBlocksMain extends JavaPlugin {
 	/**
 	 * Deletes a RedBlockAnimated.
 	 * @param b the block of the RedBlock
+	 * @param breakBlock if the the RedBlock should be broken physically
 	 */
 	public boolean removeRedBlock(final Block b, final boolean breakBlock) {
 		final RedBlockAnimated rb = storage.getRedBlock(b);
@@ -343,6 +347,12 @@ public class RedBlocksMain extends JavaPlugin {
 		return false;
 	}
 
+	/**
+	 * Initiates the destruction of RedBlock by a player
+	 * @param b the block of the RedBlock to be destroyed
+	 * @param p the player that used the tool to destroy the RedBlock
+	 * @return if the RedBlock was destroyed
+	 */
 	public boolean destroyRedBlock(final Block b, final Player p) {
 		if (editMode.containsKey(p) && editMode.get(p).getLocation().toString().equals(b.getLocation().toString())) {
 			removeEditor(p);
@@ -551,10 +561,20 @@ public class RedBlocksMain extends JavaPlugin {
 		return p.isOp() || p.hasPermission("redblocks." + perm);
 	}
 
+	/**
+	 * Checks if the block at the location is listed as "active"
+	 * @param l the location of the block to check
+	 * @return if the block at the location is active
+	 */
 	public boolean isActiveBlock(final Location l) {
 		return activeBlocks.contains(l.toString());
 	}
 
+	/**
+	 * Checks if the block is listed as "active"
+	 * @param b the block to check
+	 * @return if the block is active
+	 */
 	public boolean isActiveBlock(final Block b) {
 		return isActiveBlock(b.getLocation());
 	}

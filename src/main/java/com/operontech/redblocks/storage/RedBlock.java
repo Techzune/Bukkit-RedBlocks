@@ -41,7 +41,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Adds a block to the RedBlock.
-	 *
 	 * @param typeId the typeID of the block
 	 * @param data the data of the block
 	 * @param loc the location of the block
@@ -60,7 +59,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Adds a block to the RedBlock.
-	 *
 	 * @param b the block to be added
 	 * @return if the block was added
 	 */
@@ -71,7 +69,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Removes a block from the RedBlock.
-	 *
 	 * @param b the block to be removed
 	 * @return if the block was removed
 	 */
@@ -96,7 +93,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Removes a RedBlockChild from the RedBlock.
-	 *
 	 * @param b the block to be removed
 	 * @return if the block was removed
 	 */
@@ -107,7 +103,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Removes a RedBlockChild in a list from the RedBlock.
-	 *
 	 * @param children the children
 	 * @return the number of blocks removed
 	 */
@@ -135,7 +130,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Enables the children of the RedBlock.
-	 *
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already enabled and enable it again
 	 */
 	public void enable(final boolean force) {
@@ -163,7 +157,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Disables the children of the RedBlock.
-	 *
 	 * @param force if true, the RedBlock will ignore if the RedBlock is already disabled and disable it again
 	 */
 	public void disable(final boolean force) {
@@ -192,7 +185,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Checks if the RedBlock controls a block.
-	 *
 	 * @param b the block to check for
 	 * @return if the RedBlock contains that block
 	 */
@@ -217,7 +209,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Adds or Removes multiple blocks by using List<Block>.
-	 *
 	 * @param block the list of blocks
 	 * @param remove if true, the blocks in the list will be removed from the RedBlock, but if false, they will be added
 	 * @return the amount of blocks added/removed
@@ -265,7 +256,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets a set of the RedBlockChilds controlled by the RedBlock.
-	 *
 	 * @return the set of RedBlockChilds
 	 */
 	public Set<RedBlockChild> getBlocks() {
@@ -277,7 +267,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets a RedBlockChild controlled by the RedBlock.
-	 *
 	 * @param b the block to get
 	 * @return the RedBlockChild
 	 */
@@ -301,7 +290,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the RedBlock's location.
-	 *
 	 * @return the location
 	 */
 	public Location getLocation() {
@@ -315,7 +303,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Sets the Inverted property.
-	 *
 	 * @param bool the new Inverted property setting
 	 * @return the resulting property
 	 */
@@ -326,7 +313,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Sets the Protected property.
-	 *
 	 * @param bool the new Protected property setting
 	 * @return the resulting property
 	 */
@@ -337,7 +323,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Sets the Owner property.
-	 *
 	 * @param str the str
 	 * @return the resulting property
 	 */
@@ -348,7 +333,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Sets if the RedBlock is under Redstone Timeout.
-	 *
 	 * @param bool the desired Redstone Timeout setting
 	 * @return the property
 	 */
@@ -359,7 +343,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Checks if the RedBlock is already enabled.
-	 *
 	 * @return if the RedBlock is enabled
 	 */
 	public boolean isEnabled() {
@@ -368,7 +351,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the Block of the RedBlock.
-	 *
 	 * @return the Block of the RedBlock
 	 */
 	public Block getBlock() {
@@ -377,7 +359,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the number of blocks controlled by the RedBlock.
-	 *
 	 * @return the number of blocks
 	 */
 	public int getBlockCount() {
@@ -386,7 +367,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the typeId of the RedBlock.
-	 *
 	 * @return the typeId of the RedBlock
 	 */
 	public int getTypeId() {
@@ -395,7 +375,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the data of the RedBlock.
-	 *
 	 * @return the data of the RedBlock
 	 */
 	public byte getData() {
@@ -404,7 +383,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the Owner property.
-	 *
 	 * @return the Owner property
 	 */
 	public String getOwner() {
@@ -413,7 +391,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the Protected property.
-	 *
 	 * @return the protected property
 	 */
 	public boolean isProtected() {
@@ -422,7 +399,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the Inverted property.
-	 *
 	 * @return the Inverted property
 	 */
 	public boolean isInverted() {
@@ -431,7 +407,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the inTimeOut property.
-	 *
 	 * @return the inTimeOut property
 	 */
 	public boolean isInTimeout() {
@@ -440,7 +415,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the changed property.
-	 *
 	 * @return the changed property
 	 */
 	public boolean hasChanged() {
@@ -449,7 +423,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Sets the changed property.
-	 *
 	 * @param bool the new changed property
 	 */
 	public void setChanged(final boolean bool) {
@@ -458,7 +431,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Convert location.
-	 *
 	 * @param loc the loc
 	 * @return the string
 	 */
@@ -480,7 +452,6 @@ public class RedBlock implements Serializable {
 
 	/**
 	 * Gets the special blocks.
-	 *
 	 * @return the special blocks
 	 */
 	private List<Material> getSpecialBlocks() {

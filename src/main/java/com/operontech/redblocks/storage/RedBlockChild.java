@@ -36,7 +36,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the block in the world to the child's specifications and inserts inventory data.
-	 * 
 	 * @param blockUpdate
 	 */
 	@SuppressWarnings("deprecation")
@@ -91,7 +90,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Stores the inventory data of the block then sets it to AIR.
-	 * 
 	 * @param blockUpdate
 	 */
 	@SuppressWarnings("deprecation")
@@ -146,7 +144,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the type id.
-	 *
 	 * @return the type id
 	 */
 	public int getTypeId() {
@@ -155,7 +152,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the data.
-	 *
 	 * @return the data
 	 */
 	public byte getData() {
@@ -164,7 +160,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the block.
-	 *
 	 * @return the block
 	 */
 	public Block getBlock() {
@@ -173,7 +168,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the location.
-	 *
 	 * @return the location
 	 */
 	public Location getLocation() {
@@ -182,7 +176,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the inventory right.
-	 *
 	 * @return the inventory right
 	 */
 	public String getInventoryRight() {
@@ -191,7 +184,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the sign data.
-	 *
 	 * @return the sign data
 	 */
 	public String[] getSignData() {
@@ -200,7 +192,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the sign data.
-	 *
 	 * @param str the new sign data
 	 */
 	public void setSignData(final String[] str) {
@@ -209,7 +200,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the data.
-	 *
 	 * @param data the new data
 	 */
 	public void setData(final byte data) {
@@ -218,7 +208,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the type id.
-	 *
 	 * @param typeId the new type id
 	 */
 	public void setTypeId(final int typeId) {
@@ -227,7 +216,6 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the location.
-	 *
 	 * @param location the new location
 	 */
 	public void setLocation(final Location location) {
