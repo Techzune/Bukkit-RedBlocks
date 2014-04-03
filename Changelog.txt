@@ -3,6 +3,7 @@
 Version 2.3
   > Deprecated RedBlock
   > Added and Implemented RedBlockAnimated
+  > Initial Implementations of Wait Times
   > Revamped Various Processes for Efficiency
 
 Version 2.2.1
