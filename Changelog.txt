@@ -5,6 +5,7 @@ Version 2.3
   > Added and Implemented RedBlockAnimated
   > Initial Implementations of Wait Times
   > Revamped Various Processes for Efficiency
+  > Removed saveOnWorld Event
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event

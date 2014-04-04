@@ -9,9 +9,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.world.WorldSaveEvent;
 
-import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 
@@ -20,13 +18,6 @@ public class WorldListener implements Listener {
 
 	public WorldListener(final RedBlocksMain plugin) {
 		this.plugin = plugin;
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onWorldSave(final WorldSaveEvent e) {
-		if (plugin.getConfiguration().getBool(ConfigValue.saveOnWorld)) {
-			plugin.getStorage().saveRedBlocks();
-		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)

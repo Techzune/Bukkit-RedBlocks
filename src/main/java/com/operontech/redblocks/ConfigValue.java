@@ -5,8 +5,6 @@ public enum ConfigValue {
 			"configVersion"),
 	updateCheck(
 			"updateCheck"),
-	saveOnWorld(
-			"saveOnWorld"),
 	rules_maxBlocksPer(
 			"rules.maxBlocksPer"),
 	rules_maxRedBlocksPer(
