@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -16,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import com.operontech.redblocks.UUIDFetcher;
 import com.operontech.redblocks.Util;
 
 public class RedBlockAnimated implements Serializable {
@@ -25,6 +27,7 @@ public class RedBlockAnimated implements Serializable {
 	private Material type;
 	private byte data;
 	private String owner;
+	private UUID ownerUUID;
 	private boolean protect;
 	private boolean inverted;
 	private boolean blocksActive;
@@ -39,13 +42,13 @@ public class RedBlockAnimated implements Serializable {
 	 * @param location the location of the physical block
 	 * @param type the material of the physical block
 	 * @param data the byte data of the physical block
-	 * @param owner the owner of the RedBlock
+	 * @param owner the UUID of the owner of the RedBlock
 	 * @param protect the "protect" option
 	 * @param inverted the "inverted" option
 	 */
-	public RedBlockAnimated(final Location location, final Material type, final byte data, final String owner, final boolean protect, final boolean inverted) {
+	public RedBlockAnimated(final Location location, final Material type, final byte data, final UUID owner, final boolean protect, final boolean inverted) {
 		this.location = Util.convertLocationToString(location);
-		this.owner = owner;
+		ownerUUID = owner;
 		this.protect = protect;
 		this.inverted = inverted;
 		this.type = type;
@@ -55,16 +58,16 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Creates a RedBlock.
 	 * @param b the physical block for the RedBlock
-	 * @param owner the owner of the RedBlock
+	 * @param owner the UUID of the owner of the RedBlock
 	 * @param protect the "protect" option
 	 * @param inverted the "inverted" option
 	 */
 	@SuppressWarnings("deprecation")
-	public RedBlockAnimated(final Block b, final String owner, final boolean protect, final boolean inverted) {
+	public RedBlockAnimated(final Block b, final UUID owner, final boolean protect, final boolean inverted) {
 		location = Util.convertLocationToString(b.getLocation());
 		type = b.getType();
 		data = b.getData();
-		this.owner = owner;
+		ownerUUID = owner;
 		this.protect = protect;
 		this.inverted = inverted;
 	}
@@ -75,6 +78,7 @@ public class RedBlockAnimated implements Serializable {
 		type = Material.getMaterial(rb.getTypeId());
 		data = rb.getData();
 		owner = rb.getOwner();
+		ownerUUID = UUIDFetcher.getUUIDOf(rb.getOwner());
 		protect = rb.isProtected();
 		inverted = rb.isInverted();
 		for (final RedBlockChild child : rb.getBlocks()) {
@@ -299,10 +303,26 @@ public class RedBlockAnimated implements Serializable {
 	 * @param waitTime
 	 * @return
 	 */
-	public boolean setWaitTimeForChild(final RedBlockChild child, final int waitTime) {
+	public boolean setPlaceDelayForChild(final RedBlockChild child, final int placeDelay) {
 		if (contains(child)) {
 			final ArrayList<Integer> newList = listOfBlocks.get(child);
-			newList.set(0, waitTime);
+			newList.set(listOfBlocks.get(child).get(0), placeDelay);
+			listOfBlocks.put(child, newList);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Sets the wait time (milliseconds) for the activation of the block.
+	 * @param child 
+	 * @param waitTime
+	 * @return
+	 */
+	public boolean setBreakDelayForChild(final RedBlockChild child, final int breakDelay) {
+		if (contains(child)) {
+			final ArrayList<Integer> newList = listOfBlocks.get(child);
+			newList.set(breakDelay, listOfBlocks.get(child).get(1));
 			listOfBlocks.put(child, newList);
 			return true;
 		}
@@ -448,11 +468,14 @@ public class RedBlockAnimated implements Serializable {
 	}
 
 	/**
-	 * Gets name of the RedBlock's owner.
+	 * Gets UUID of the RedBlock's owner.
 	 * @return the owner's name
 	 */
-	public String getOwner() {
-		return owner;
+	public UUID getOwnerUUID() {
+		if (ownerUUID == null) {
+			ownerUUID = UUIDFetcher.getUUIDOf(owner);
+		}
+		return ownerUUID;
 	}
 
 	/**

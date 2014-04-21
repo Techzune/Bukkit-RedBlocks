@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.storage.RedBlockAnimated;
+import com.operontech.redblocks.storage.RedBlockChild;
 
 public class CommandListener {
 	private final RedBlocksMain plugin;
@@ -60,6 +61,10 @@ public class CommandListener {
 							} else {
 								console.error(s, "You must be editing a RedBlock to do that!");
 							}
+						} else if (args[0].equalsIgnoreCase("pauseOne") || args[0].equalsIgnoreCase("p")) {
+							// TODO
+						} else if (args[0].equalsIgnoreCase("pauseMulti") || args[0].equalsIgnoreCase("pm")) {
+							// TODO
 						} else if (args[0].equalsIgnoreCase("options") || args[0].equalsIgnoreCase("o")) {
 							if (args.length <= 2) {
 								sendCOptions(s);
@@ -88,7 +93,7 @@ public class CommandListener {
 										console.error(s, "That player could not be found.");
 										return true;
 									}
-									if (rb.getOwner() != p.getName()) {
+									if (rb.getOwnerUUID().equals(p.getUniqueId())) {
 										console.error(s, "You must be current owner of the RedBlock to do that!");
 										return true;
 									}
@@ -124,11 +129,24 @@ public class CommandListener {
 		return false;
 	}
 
+	private void setPlaceTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
+		rb.setPlaceDelayForChild(child, timeDelay);
+		s.sendMessage("Place Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
+	}
+
+	private void setBreakTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
+		rb.setBreakDelayForChild(child, timeDelay);
+		s.sendMessage("Break Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
+	}
+
 	private void sendCMenu(final CommandSender s) {
 		console.msg(s, ChatColor.GOLD + "   >>>>> RedBlocks Menu <<<<<   ");
 		if (plugin.hasPermission(s, "reload")) {
 			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:" + ChatColor.LIGHT_PURPLE + " /rb reload");
 		}
+		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE + " /rb stop");
+		console.msg(s, ChatColor.GREEN + "Set Pause For Single Child Block:" + ChatColor.LIGHT_PURPLE + " /rb p <place/break> <MILLISECONDS>");
+		console.msg(s, ChatColor.GREEN + "Set Pause For Multiple Child Blocks:" + ChatColor.LIGHT_PURPLE + " /rb pm <place/break> <MILLISECONDS>");
 		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE + " /rb stop");
 		console.msg(s, ChatColor.GREEN + "Edit Options:" + ChatColor.LIGHT_PURPLE + " /rb options <OPTION> <VALUE>");
 		if (plugin.hasPermission(s, "worldedit") && (plugin.getWE() != null)) {

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.block.Block;
 
@@ -143,11 +144,11 @@ public class Storage {
 
 	/**
 	 * Creates a RedBlockAnimated and adds it to the database of RedBlocks.
-	 * @param p the owner of the RedBlock
+	 * @param p the UUID of the owner of the RedBlock
 	 * @param b the block of the RedBlock
 	 * @return the created RedBlock
 	 */
-	public RedBlockAnimated createRedBlock(final String p, final Block b) {
+	public RedBlockAnimated createRedBlock(final UUID p, final Block b) {
 		final RedBlockAnimated rb = new RedBlockAnimated(b, p, true, false);
 		rbSorted.put(rb.getLocation().toString(), rb);
 		return rb;

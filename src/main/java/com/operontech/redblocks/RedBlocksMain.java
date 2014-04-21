@@ -377,7 +377,7 @@ public class RedBlocksMain extends JavaPlugin {
 	public void createRedBlock(final Player p, final Block b) {
 		int number = 0;
 		for (final RedBlockAnimated rb : storage.getRedBlocks().values()) {
-			if (rb.getOwner().equalsIgnoreCase(p.getName())) {
+			if (rb.getOwnerUUID().equals(p.getUniqueId())) {
 				number++;
 			}
 		}
@@ -388,7 +388,7 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, storage.getRedBlock(b), RedBlockCause.CREATED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
-			storage.createRedBlock(p.getName(), b);
+			storage.createRedBlock(p.getUniqueId(), b);
 			addEditor(p, b);
 		}
 	}
