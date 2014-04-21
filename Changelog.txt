@@ -7,7 +7,7 @@ Version 2.3
   > Revamped Various Processes for Efficiency
   > Removed saveOnWorld Event
   > Implementation of UUIDs
-  ... Implement Insertion of Time Delays
+  ...> Implement Insertion of Time Delays
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event
