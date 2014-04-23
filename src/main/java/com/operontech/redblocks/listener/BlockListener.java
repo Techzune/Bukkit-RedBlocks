@@ -141,13 +141,18 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (plugin.isEditing(event.getPlayer())) {
-				final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
-				if (rb.contains(event.getClickedBlock()) && (rb.getChild(event.getClickedBlock()).getData() != event.getClickedBlock().getData())) {
-					plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
+		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+			@Override
+			public void run() {
+				if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+					if (plugin.isEditing(event.getPlayer())) {
+						final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
+						if (rb.contains(event.getClickedBlock()) && (rb.getChild(event.getClickedBlock()).getData() != event.getClickedBlock().getData())) {
+							plugin.updateBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getClickedBlock());
+						}
+					}
 				}
 			}
-		}
+		}, 2L);
 	}
 }
