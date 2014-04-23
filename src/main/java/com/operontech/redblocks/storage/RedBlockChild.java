@@ -19,7 +19,7 @@ import org.bukkit.event.inventory.InventoryType;
 
 import com.operontech.redblocks.Util;
 
-public class RedBlockChild implements Serializable {
+public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	private static final long serialVersionUID = 1L;
 	private int typeId;
 	private byte data;
@@ -220,5 +220,18 @@ public class RedBlockChild implements Serializable {
 	 */
 	public void setLocation(final Location location) {
 		this.location = location.toString();
+	}
+
+	@Override
+	public int compareTo(final RedBlockChild o) {
+		int compare = Double.compare(o.getLocation().getBlockY(), getLocation().getBlockY());
+		if (compare != 0) {
+			return compare;
+		}
+		compare = Double.compare(o.getLocation().getBlockX(), getLocation().getBlockX());
+		if (compare != 0) {
+			return compare;
+		}
+		return Double.compare(o.getLocation().getBlockZ(), getLocation().getBlockZ());
 	}
 }

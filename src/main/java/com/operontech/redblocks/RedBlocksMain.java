@@ -160,7 +160,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (!isEditing(p)) {
 			final RedBlockAnimated rb = storage.getRedBlock(b);
 			if (rb.getTimeoutState()) {
-				console.error(p, "That RedBlockAnimated is under redstone timeout.", "Stop all redstone powering the RedBlockAnimated and try again in a few seconds.");
+				console.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
 				return;
 			}
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
@@ -171,7 +171,7 @@ public class RedBlocksMain extends JavaPlugin {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
 				editMode.put(p, rb);
-				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlockAnimated | " + rb.getBlockCount() + " Blocks");
+				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 			}
 		}
 	}
@@ -199,7 +199,7 @@ public class RedBlocksMain extends JavaPlugin {
 				if (blockUpdate) {
 					doBlockUpdate(b);
 				}
-				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlockAnimated | " + rb.getBlockCount() + " Blocks");
+				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 				editMode.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
@@ -292,10 +292,10 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.ENABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
-			rb.enable(force);
 			for (final RedBlockChild rbc : rb.getBlocks()) {
 				activeBlocks.add(rbc.getLocation().toString());
 			}
+			rb.enable(force);
 			if (config.getBool(ConfigValue.gc_onEnableRedBlock)) {
 				System.gc();
 			}
@@ -358,12 +358,12 @@ public class RedBlocksMain extends JavaPlugin {
 			removeEditor(p);
 		}
 		if (editMode.containsValue(storage.getRedBlock(b))) {
-			console.error(p, "You can't destroy a RedBlockAnimated that is being edited!");
+			console.error(p, "You can't destroy a RedBlock that is being edited!");
 			return false;
 		}
 		if (removeRedBlock(b, true)) {
 			p.getInventory().removeItem(new ItemStack(config.getInt(ConfigValue.redblocks_destroyItem), 1));
-			console.notify(p, "RedBlockAnimated Eliminated");
+			console.notify(p, "RedBlock Eliminated");
 			return true;
 		}
 		return false;
@@ -398,7 +398,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param rb the RedBlockAnimated that was lost
 	 */
 	public void redBlockLost(final RedBlockAnimated rb) {
-		notifyEditors(rb, ChatColor.RED + "Your RedBlockAnimated was lost/destroyed.");
+		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
 		for (final Player p : editMode.keySet()) {
 			if (getRedBlockEditing(p) == rb) {
 				removeEditor(p);

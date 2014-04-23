@@ -1,7 +1,6 @@
 package com.operontech.redblocks.storage;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,7 @@ public class RedBlockAnimated implements Serializable {
 	private boolean changed = false;
 
 	// RedBlockChild & Time to Pause
-	private final Map<RedBlockChild, ArrayList<Integer>> listOfBlocks = new TreeMap<RedBlockChild, ArrayList<Integer>>();
+	private final Map<RedBlockChild, List<Integer>> listOfBlocks = new TreeMap<RedBlockChild, List<Integer>>();
 
 	/**
 	 * Creates a RedBlock.
@@ -82,7 +81,7 @@ public class RedBlockAnimated implements Serializable {
 		protect = rb.isProtected();
 		inverted = rb.isInverted();
 		for (final RedBlockChild child : rb.getBlocks()) {
-			listOfBlocks.put(child, (ArrayList<Integer>) Arrays.asList(0, 0));
+			listOfBlocks.put(child, Arrays.asList(0, 0));
 		}
 	}
 
@@ -97,8 +96,8 @@ public class RedBlockAnimated implements Serializable {
 			final Thread enableThread = new Thread() {
 				@Override
 				public void run() {
-					for (final Entry<RedBlockChild, ArrayList<Integer>> entry : listOfBlocks.entrySet()) {
-						if (doAnimations) {
+					for (final Entry<RedBlockChild, List<Integer>> entry : listOfBlocks.entrySet()) {
+						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
 								Thread.sleep(entry.getValue().get(0));
 							} catch (final InterruptedException e) {
@@ -113,7 +112,6 @@ public class RedBlockAnimated implements Serializable {
 						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
 					}
 					blocksActive = true;
-
 				}
 			};
 			enableThread.start();
@@ -132,20 +130,43 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Disables all of the RedBlockChilds in the RedBlock's database of blocks.
 	 * @param force if true, the blocks will cause block updates when disabled forcibly
+	 * @param doAnimations if true, the RedBlock will pause for animations
 	 */
-	public void disable(final boolean force) {
+	public void disable(final boolean force, final boolean doAnimations) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (blocksActive || force) {
-			for (final Entry<RedBlockChild, ArrayList<Integer>> entry : listOfBlocks.entrySet()) {
-				entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
-				chunks.add(entry.getKey().getLocation().getChunk());
-			}
-			for (final Chunk chunk : chunks) {
-				chunk.load();
-				chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
-			}
-			blocksActive = false;
+			final Thread disableThread = new Thread() {
+				@Override
+				public void run() {
+					for (final Entry<RedBlockChild, List<Integer>> entry : listOfBlocks.entrySet()) {
+						if (doAnimations && (entry.getValue().get(0) > 0)) {
+							try {
+								Thread.sleep(entry.getValue().get(0));
+							} catch (final InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+						entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
+						chunks.add(entry.getKey().getLocation().getChunk());
+					}
+					for (final Chunk chunk : chunks) {
+						chunk.load();
+						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
+					}
+					blocksActive = false;
+				}
+			};
+			disableThread.start();
 		}
+	}
+
+	/**
+	 * Disables all of the RedBlockChilds in the RedBlock's database of blocks.
+	 * Will execute and pause for animations.
+	 * @param force if true, the blocks will cause block updates when disabled forcibly
+	 */
+	public void disable(final boolean force) {
+		disable(force, true);
 	}
 
 	/**
@@ -156,7 +177,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the 
 	 */
 	public boolean add(final RedBlockChild child, final int eWaitTime, final int dWaitTime) {
-		return !listOfBlocks.put(child, (ArrayList<Integer>) Arrays.asList(eWaitTime, dWaitTime)).equals(child);
+		return listOfBlocks.put(child, Arrays.asList(eWaitTime, dWaitTime)) == null;
 	}
 
 	/**
@@ -305,7 +326,7 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	public boolean setPlaceDelayForChild(final RedBlockChild child, final int placeDelay) {
 		if (contains(child)) {
-			final ArrayList<Integer> newList = listOfBlocks.get(child);
+			final List<Integer> newList = listOfBlocks.get(child);
 			newList.set(listOfBlocks.get(child).get(0), placeDelay);
 			listOfBlocks.put(child, newList);
 			return true;
@@ -321,7 +342,7 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	public boolean setBreakDelayForChild(final RedBlockChild child, final int breakDelay) {
 		if (contains(child)) {
-			final ArrayList<Integer> newList = listOfBlocks.get(child);
+			final List<Integer> newList = listOfBlocks.get(child);
 			newList.set(breakDelay, listOfBlocks.get(child).get(1));
 			listOfBlocks.put(child, newList);
 			return true;
@@ -514,7 +535,7 @@ public class RedBlockAnimated implements Serializable {
 	 * Gets the Map of the RedBlock's database of blocks.
 	 * @return the Map
 	 */
-	public Map<RedBlockChild, ArrayList<Integer>> getDatabase() {
+	public Map<RedBlockChild, List<Integer>> getDatabase() {
 		return listOfBlocks;
 	}
 
