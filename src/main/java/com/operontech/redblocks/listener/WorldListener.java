@@ -22,7 +22,7 @@ public class WorldListener implements Listener {
 		final Block b = event.getEntity().getLocation().getBlock();
 		if (plugin.isActiveBlock(b)) {
 			final RedBlockAnimated parent = plugin.getStorage().getRedBlockParent(b);
-			if (plugin.isBeingEdited(parent)) {
+			if (plugin.isBeingEdited(parent) && b.isEmpty()) {
 				plugin.removeBlock(null, parent, b);
 			}
 			event.setCancelled(true);
