@@ -1,13 +1,10 @@
 package com.operontech.redblocks.listener;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.operontech.redblocks.RedBlocksMain;
@@ -23,7 +20,7 @@ public class WorldListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onItemSpawn(final ItemSpawnEvent event) {
 		final Block b = event.getEntity().getLocation().getBlock();
-		if ((plugin.isActiveBlock(b))) {
+		if (plugin.isActiveBlock(b)) {
 			final RedBlockAnimated parent = plugin.getStorage().getRedBlockParent(b);
 			if (plugin.isBeingEdited(parent)) {
 				plugin.removeBlock(null, parent, b);
@@ -43,16 +40,6 @@ public class WorldListener implements Listener {
 					}
 				}
 			}, 20L);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if ((event.hasBlock()) && (event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
-			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
-			if ((rb != null) && rb.contains(event.getClickedBlock())) {
-				rb.remove(event.getClickedBlock());
-			}
 		}
 	}
 }

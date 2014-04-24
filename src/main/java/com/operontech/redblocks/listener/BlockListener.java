@@ -141,6 +141,12 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
+		if ((event.hasBlock()) && (event.getClickedBlock().getType() == Material.FIRE) && (event.getAction() == Action.LEFT_CLICK_BLOCK) && plugin.isEditing(event.getPlayer())) {
+			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
+			if ((rb != null) && rb.contains(event.getClickedBlock())) {
+				rb.remove(event.getClickedBlock());
+			}
+		}
 		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
 			@Override
 			public void run() {
