@@ -70,12 +70,12 @@ public class Storage {
 					} else {
 						oldRBSorted = convertSetToHashMap((Set<RedBlock>) readObject);
 					}
-					console.info("Old RedBlocks - Loaded To Convert...");
+					console.info(oldRBSorted.values().size() + " Old RedBlocks - Loaded To Convert...");
 					rbSorted = new HashMap<String, RedBlockAnimated>();
 					for (final RedBlock rb : oldRBSorted.values()) {
 						rbSorted.put(rb.getLocation().toString(), new RedBlockAnimated(rb));
 					}
-					console.info("Old RedBlocks - Converted and Loaded Successfully!");
+					console.info(rbSorted.entrySet().size() + " Old RedBlocks - Converted and Loaded Successfully!");
 				}
 			}
 		} catch (final Exception ex) {
