@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Chunk;
@@ -97,7 +98,7 @@ public class RedBlockAnimated implements Serializable {
 			final Thread enableThread = new Thread() {
 				@Override
 				public void run() {
-					final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
@@ -114,6 +115,7 @@ public class RedBlockAnimated implements Serializable {
 						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
 					}
 					blocksActive = true;
+					cacheMap = null;
 				}
 			};
 			enableThread.start();
@@ -140,7 +142,7 @@ public class RedBlockAnimated implements Serializable {
 			final Thread disableThread = new Thread() {
 				@Override
 				public void run() {
-					final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
@@ -157,6 +159,7 @@ public class RedBlockAnimated implements Serializable {
 						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
 					}
 					blocksActive = false;
+					cacheMap = null;
 					listener.threadFinished();
 				}
 			};
@@ -245,13 +248,14 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the block was found and removed
 	 */
 	public boolean remove(final Block b) {
-		final Set<RedBlockChild> rbcKeys = listOfBlocks.keySet();
+		Set<RedBlockChild> rbcKeys = new TreeSet<RedBlockChild>(listOfBlocks.keySet());
 		for (final RedBlockChild rbc : rbcKeys) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				listOfBlocks.remove(rbc);
 				return true;
 			}
 		}
+		rbcKeys = null;
 		return false;
 	}
 
@@ -300,12 +304,13 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the RedBlockChild of the block was found
 	 */
 	public boolean contains(final Block b) {
-		final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+		Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
 		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return true;
 			}
 		}
+		cacheMap = null;
 		return false;
 	}
 
@@ -315,12 +320,13 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the RedBlockChild of the block that was found
 	 */
 	public RedBlockChild getChild(final Block b) {
-		final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+		Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
 		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return rbc;
 			}
 		}
+		cacheMap = null;
 		return null;
 	}
 
