@@ -16,6 +16,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import com.operontech.redblocks.RedBlocksMain.RBDisableListener;
 import com.operontech.redblocks.UUIDFetcher;
 import com.operontech.redblocks.Util;
 
@@ -96,7 +97,8 @@ public class RedBlockAnimated implements Serializable {
 			final Thread enableThread = new Thread() {
 				@Override
 				public void run() {
-					for (final Entry<RedBlockChild, List<Integer>> entry : listOfBlocks.entrySet()) {
+					final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
 								Thread.sleep(entry.getValue().get(0));
@@ -132,13 +134,14 @@ public class RedBlockAnimated implements Serializable {
 	 * @param force if true, the blocks will cause block updates when disabled forcibly
 	 * @param doAnimations if true, the RedBlock will pause for animations
 	 */
-	public void disable(final boolean force, final boolean doAnimations) {
+	public void disable(final boolean force, final boolean doAnimations, final RBDisableListener listener) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (blocksActive || force) {
 			final Thread disableThread = new Thread() {
 				@Override
 				public void run() {
-					for (final Entry<RedBlockChild, List<Integer>> entry : listOfBlocks.entrySet()) {
+					final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
 								Thread.sleep(entry.getValue().get(0));
@@ -154,6 +157,7 @@ public class RedBlockAnimated implements Serializable {
 						chunk.getWorld().refreshChunk(chunk.getX(), chunk.getZ());
 					}
 					blocksActive = false;
+					listener.threadFinished();
 				}
 			};
 			disableThread.start();
@@ -165,8 +169,8 @@ public class RedBlockAnimated implements Serializable {
 	 * Will execute and pause for animations.
 	 * @param force if true, the blocks will cause block updates when disabled forcibly
 	 */
-	public void disable(final boolean force) {
-		disable(force, true);
+	public void disable(final boolean force, final RBDisableListener listener) {
+		disable(force, true, listener);
 	}
 
 	/**
@@ -296,7 +300,8 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the RedBlockChild of the block was found
 	 */
 	public boolean contains(final Block b) {
-		for (final RedBlockChild rbc : listOfBlocks.keySet()) {
+		final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return true;
 			}
@@ -310,7 +315,8 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the RedBlockChild of the block that was found
 	 */
 	public RedBlockChild getChild(final Block b) {
-		for (final RedBlockChild rbc : listOfBlocks.keySet()) {
+		final Map<RedBlockChild, List<Integer>> cacheMap = listOfBlocks;
+		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return rbc;
 			}

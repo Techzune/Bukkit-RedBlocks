@@ -313,10 +313,15 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DISABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
-			rb.disable(force);
-			for (final RedBlockChild rbc : rb.getBlocks()) {
-				activeBlocks.remove(rbc.getLocation().toString());
-			}
+			final RBDisableListener listener = new RBDisableListener() {
+				@Override
+				public void threadFinished() {
+					for (final RedBlockChild rbc : rb.getBlocks()) {
+						activeBlocks.remove(rbc.getLocation().toString());
+					}
+				}
+			};
+			rb.disable(force, listener);
 			if (config.getBool(ConfigValue.gc_onDisableRedBlock)) {
 				System.gc();
 			}
@@ -636,5 +641,9 @@ public class RedBlocksMain extends JavaPlugin {
 		}
 		final Claim claim = ((GriefPrevention) plugin).dataStore.getClaimAt(loc, true, null);
 		return (claim == null) || (claim.allowEdit(player) == null);
+	}
+
+	public interface RBDisableListener {
+		public void threadFinished();
 	}
 }
