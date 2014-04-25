@@ -7,7 +7,9 @@ Version 2.3
   > Revamped Various Processes for Efficiency
   > Removed saveOnWorld Event
   > Implementation of UUIDs
-  ...> Implement Insertion of Time Delays
+  > Bug Fix: WorldEdit Command Arguments
+  > OCD Changes
+  ...> Insertion of RedBlockChild Delays
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event
