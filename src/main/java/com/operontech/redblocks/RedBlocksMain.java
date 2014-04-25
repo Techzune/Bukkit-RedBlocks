@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, RedBlockAnimated> editMode = new HashMap<Player, RedBlockAnimated>();
+	private Map<Player, ArrayList<Double>> delayTimes = new HashMap<Player, ArrayList<Double>>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
@@ -78,8 +80,9 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final Entry<Player, RedBlockAnimated> e : editMode.entrySet()) {
+		for (final Entry<Player, RedBlockAnimated> e : new HashMap<Player, RedBlockAnimated>(editMode).entrySet()) {
 			editMode.remove(e.getKey());
+			delayTimes.remove(e.getKey());
 		}
 		if (initialized) {
 			storage.saveRedBlocks();
@@ -108,6 +111,7 @@ public class RedBlocksMain extends JavaPlugin {
 		clistener = null;
 		editMode = null;
 		activeBlocks = null;
+		delayTimes = null;
 	}
 
 	private boolean checkForUpdate() {
@@ -201,11 +205,49 @@ public class RedBlocksMain extends JavaPlugin {
 				}
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 				editMode.remove(p);
+				delayTimes.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sets the delay for the disable and enabling for any RedBlockChilds placed in the future by the player.
+	 * @param p the player to set the delay for
+	 * @param enableDelay the delay of the enabling of a RedBlockChild
+	 * @param disableDelay the delay of the disabling of a RedBlockChild
+	 */
+	public void setPlayerDelay(final Player p, final double enableDelay, final double disableDelay) {
+		delayTimes.put(p, new ArrayList<Double>(Arrays.asList(enableDelay, disableDelay)));
+	}
+
+	/**
+	 * Sets the delay for the disable for any RedBlockChilds placed in the future by the player.
+	 * @param p the player to set the delay for
+	 * @param disableDelay the delay of the disabling of a RedBlockChild
+	 */
+	public void setPlayerDisableDelay(final Player p, final double disableDelay) {
+		setPlayerDelay(p, delayTimes.containsKey(p) ? delayTimes.get(p).get(0) : 0, disableDelay);
+	}
+
+	/**
+	 * Sets the delay for the enabling for any RedBlockChilds placed in the future by the player.
+	 * @param p the player to set the delay for
+	 * @param enableDelay the delay of the enabling of a RedBlockChild
+	 */
+	public void setPlayerEnableDelay(final Player p, final double enableDelay) {
+		setPlayerDelay(p, enableDelay, delayTimes.containsKey(p) ? delayTimes.get(p).get(1) : 0);
+	}
+
+	/**
+	 * Gets the delay times for any future RedBlockChilds the player places
+	 * @param p the player to get the delay times for
+	 * @return the delays (ENABLE, DISABLE)
+	 */
+	public ArrayList<Double> getPlayerDelayTimes(final Player p) {
+		return delayTimes.get(p);
 	}
 
 	/**

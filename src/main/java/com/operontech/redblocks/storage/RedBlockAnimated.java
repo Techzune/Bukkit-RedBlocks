@@ -35,7 +35,7 @@ public class RedBlockAnimated implements Serializable {
 	private boolean inTimeout = false;
 	private boolean changed = false;
 
-	// RedBlockChild & Time to Pause
+	// RedBlockChild & Delay Times (ENABLE,DISABLE)
 	private final Map<RedBlockChild, List<Integer>> listOfBlocks = new TreeMap<RedBlockChild, List<Integer>>();
 
 	/**
@@ -331,15 +331,15 @@ public class RedBlockAnimated implements Serializable {
 	}
 
 	/**
-	 * Sets the wait time (milliseconds) for the activation of the block.
-	 * @param child 
-	 * @param waitTime
-	 * @return
+	 * Sets the delay (milliseconds) for the enabling of the block.
+	 * @param child the RedBlockChild to delay
+	 * @param enableDelay the length of the delay in milliseconds
+	 * @return if the child existed
 	 */
-	public boolean setPlaceDelayForChild(final RedBlockChild child, final int placeDelay) {
+	public boolean setEnableDelayForChild(final RedBlockChild child, final int enableDelay) {
 		if (contains(child)) {
 			final List<Integer> newList = listOfBlocks.get(child);
-			newList.set(listOfBlocks.get(child).get(0), placeDelay);
+			newList.set(0, enableDelay);
 			listOfBlocks.put(child, newList);
 			return true;
 		}
@@ -347,15 +347,15 @@ public class RedBlockAnimated implements Serializable {
 	}
 
 	/**
-	 * Sets the wait time (milliseconds) for the activation of the block.
-	 * @param child 
-	 * @param waitTime
-	 * @return
+	 * Sets the delay (milliseconds) for the disabling of the RedBlockChild.
+	 * @param child the RedBlockChild to delay
+	 * @param disableDelay the length of the delay in milliseconds
+	 * @return if the child existed
 	 */
-	public boolean setBreakDelayForChild(final RedBlockChild child, final int breakDelay) {
+	public boolean setDisableDelayForChild(final RedBlockChild child, final int disableDelay) {
 		if (contains(child)) {
 			final List<Integer> newList = listOfBlocks.get(child);
-			newList.set(breakDelay, listOfBlocks.get(child).get(1));
+			newList.set(1, disableDelay);
 			listOfBlocks.put(child, newList);
 			return true;
 		}
