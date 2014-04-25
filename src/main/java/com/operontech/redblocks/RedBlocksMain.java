@@ -277,10 +277,10 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param p the player that placed the block
 	 * @param rb the RedBlockAnimated to add the block to
 	 * @param b the block to be added
-	 * @param eWaitTime the milliseconds to wait on enable for the particular block
-	 * @param dWaitTime the milliseconds to wait on disable for the particular block
+	 * @param enableDelay the delay for enabling the particular block
+	 * @param disableDelay the delay for disabling the particular block
 	 */
-	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final int eWaitTime, final int dWaitTime) {
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final int enableDelay, final int disableDelay) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -288,11 +288,11 @@ public class RedBlocksMain extends JavaPlugin {
 				@Override
 				public void run() {
 					if (!event.isCancelled()) {
-						if (rb.add(b, eWaitTime, dWaitTime)) {
+						if (rb.add(b, enableDelay, disableDelay)) {
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
 						}
 						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
-							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), eWaitTime, dWaitTime);
+							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), enableDelay, disableDelay);
 						}
 					}
 				}
@@ -495,8 +495,8 @@ public class RedBlocksMain extends JavaPlugin {
 		final Location max = reg.getMaximumPoint();
 		Block db = null;
 		final List<Block> cache = new ArrayList<Block>();
-		if (reg.getArea() > 5000) {
-			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please Wait! 5000+ Blocks are being added via WorldEdit by " + p.getName());
+		if (reg.getArea() > 10000) {
+			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please hold; 10000+ Blocks are being added via WorldEdit by " + p.getName());
 		}
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {

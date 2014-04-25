@@ -179,12 +179,12 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Adds a RedBlockChild to the RedBlock's database of blocks.
 	 * @param child the child to be added
-	 * @param eWaitTime the time to wait when enabling the block
-	 * @param dWaitTime the time to wait when removing the block
+	 * @param enableDelay the delay when enabling the block
+	 * @param disableDelay the delay when removing the block
 	 * @return the 
 	 */
-	public boolean add(final RedBlockChild child, final int eWaitTime, final int dWaitTime) {
-		return listOfBlocks.put(child, Arrays.asList(eWaitTime, dWaitTime)) == null;
+	public boolean add(final RedBlockChild child, final int enableDelay, final int disableDelay) {
+		return listOfBlocks.put(child, Arrays.asList(enableDelay, disableDelay)) == null;
 	}
 
 	/**
@@ -192,13 +192,13 @@ public class RedBlockAnimated implements Serializable {
 	 * 
 	 * Converts it to a RedBlockChild before adding it.
 	 * @param b the block to be converted then added
-	 * @param eWaitTime the time to wait when enabling the block
-	 * @param dWaitTime the time to wait when removing the block
+	 * @param enableDelay the delay when enabling the block
+	 * @param disableDelay the delay when disabling the block
 	 * @return the converted RedBlockChild
 	 */
 	@SuppressWarnings("deprecation")
-	public boolean add(final Block b, final int eWaitTime, final int dWaitTime) {
-		return add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()), eWaitTime, dWaitTime);
+	public boolean add(final Block b, final int enableDelay, final int disableDelay) {
+		return add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()), enableDelay, disableDelay);
 	}
 
 	/**
