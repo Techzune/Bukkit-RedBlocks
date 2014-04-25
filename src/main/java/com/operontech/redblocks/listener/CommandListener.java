@@ -41,7 +41,7 @@ public class CommandListener {
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? null : args[1], false);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 							}
@@ -51,7 +51,7 @@ public class CommandListener {
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? null : args[1], true);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 							}
@@ -130,12 +130,12 @@ public class CommandListener {
 	}
 
 	private void setPlaceTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
-		rb.setPlaceDelayForChild(child, timeDelay);
+		rb.setEnableDelayForChild(child, timeDelay);
 		s.sendMessage("Place Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
 	}
 
 	private void setBreakTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
-		rb.setBreakDelayForChild(child, timeDelay);
+		rb.setDisableDelayForChild(child, timeDelay);
 		s.sendMessage("Break Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
 	}
 
