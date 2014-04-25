@@ -62,8 +62,15 @@ public class CommandListener {
 								console.error(s, "You must be editing a RedBlock to do that!");
 							}
 						} else if (args[0].equalsIgnoreCase("pauseOne") || args[0].equalsIgnoreCase("p")) {
+							if (args.length > 2) {
+
+							}
 							// TODO
+
 						} else if (args[0].equalsIgnoreCase("pauseMulti") || args[0].equalsIgnoreCase("pm")) {
+							if (args.length > 2) {
+
+							}
 							// TODO
 						} else if (args[0].equalsIgnoreCase("options") || args[0].equalsIgnoreCase("o")) {
 							if (args.length <= 2) {
@@ -129,14 +136,14 @@ public class CommandListener {
 		return false;
 	}
 
-	private void setPlaceTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
-		rb.setEnableDelayForChild(child, timeDelay);
-		s.sendMessage("Place Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
+	private void setEnableDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int enableDelay) {
+		rb.setEnableDelayForChild(child, enableDelay);
+		s.sendMessage("Enable Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + enableDelay);
 	}
 
-	private void setBreakTimeDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int timeDelay) {
-		rb.setDisableDelayForChild(child, timeDelay);
-		s.sendMessage("Break Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + timeDelay);
+	private void setDisableDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int disableDelay) {
+		rb.setDisableDelayForChild(child, disableDelay);
+		s.sendMessage("Disable Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + disableDelay);
 	}
 
 	private void sendCMenu(final CommandSender s) {
