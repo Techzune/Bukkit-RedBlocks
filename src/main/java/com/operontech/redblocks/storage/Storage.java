@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import com.operontech.redblocks.ConsoleConnection;
@@ -207,7 +208,7 @@ public class Storage {
 					list = new ArrayList<RedBlockChild>();
 					children = entry.getValue().getBlocks();
 					for (final RedBlockChild child : children) {
-						if (child.getTypeId() == 0) {
+						if (child.getType() == Material.AIR) {
 							list.add(child);
 						}
 					}

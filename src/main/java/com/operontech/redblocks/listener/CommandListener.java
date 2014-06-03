@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
+import com.operontech.redblocks.Util;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 import com.operontech.redblocks.storage.RedBlockChild;
 
@@ -23,6 +24,7 @@ public class CommandListener {
 		console = plugin.getConsoleConnection();
 	}
 
+	@SuppressWarnings("deprecation")
 	public boolean onCommand(final CommandSender s, final Command cmd, final String label, final String[] args) {
 		if (cmd.getName().equalsIgnoreCase("redblocks") || cmd.getName().equalsIgnoreCase("rb")) {
 			if (args.length > 0) {
@@ -55,24 +57,28 @@ public class CommandListener {
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 							}
-						} else if (args[0].equalsIgnoreCase("stop") || args[0].equalsIgnoreCase("s")) {
+						} else if (multiString(args[0], "stop", "quit", "s")) {
 							if (plugin.isEditing(p)) {
 								plugin.removeEditor(p);
 							} else {
 								console.error(s, "You must be editing a RedBlock to do that!");
 							}
-						} else if (args[0].equalsIgnoreCase("pauseOne") || args[0].equalsIgnoreCase("p")) {
+						} else if (multiString(args[0], "pause", "p", "pauseonce", "po", "pausemulti", "pm")) {
 							if (args.length > 2) {
+								String tempText;
+								for (int i = 1; i < args.length; i++) {
+									tempText = args[i].toLowerCase();
+									if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
+										final String[] splitText = tempText.split(":");
+										if ((splitText.length <= 2) && !Util.isInteger(splitText[0]) && Util.isInteger(splitText[1])) {
 
+										}
+									} else if (tempText.equals("toggle") || tempText.equals("t")) {
+
+									}
+								}
 							}
-							// TODO
-
-						} else if (args[0].equalsIgnoreCase("pauseMulti") || args[0].equalsIgnoreCase("pm")) {
-							if (args.length > 2) {
-
-							}
-							// TODO
-						} else if (args[0].equalsIgnoreCase("options") || args[0].equalsIgnoreCase("o")) {
+						} else if (multiString(args[0], "options", "o")) {
 							if (args.length <= 2) {
 								sendCOptions(s);
 								return true;
@@ -174,5 +180,18 @@ public class CommandListener {
 			console.msg(s, ChatColor.GREEN + "RedBlock Owner:" + ChatColor.LIGHT_PURPLE + " /rb options owner [NAME]");
 			console.msg(s, ChatColor.RED + "    Warning: This cannot be undone. Both players must be online.");
 		}
+	}
+
+	private boolean multiString(final String mainString, final String... args) {
+		return multiEqualsString(mainString.toLowerCase(), args);
+	}
+
+	private boolean multiEqualsString(final String mainString, final String... args) {
+		for (final String arg : args) {
+			if (mainString.equals(arg)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

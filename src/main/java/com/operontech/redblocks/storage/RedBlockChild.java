@@ -22,14 +22,15 @@ import com.operontech.redblocks.Util;
 public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	private static final long serialVersionUID = 1L;
 	private int typeId;
+	private Material type;
 	private byte data;
 	private String location;
 	private String inventory;
 	private byte note;
 	private String[] signData = null;
 
-	public RedBlockChild(final int typeId, final byte data, final Location location) {
-		this.typeId = typeId;
+	public RedBlockChild(final Material type, final byte data, final Location location) {
+		this.type = type;
 		this.data = data;
 		this.location = Util.convertLocationToString(location);
 	}
@@ -40,10 +41,11 @@ public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	 */
 	@SuppressWarnings("deprecation")
 	public void enableBlock(final boolean blockUpdate) {
-		if ((typeId == Material.WATER.getId()) || (typeId == Material.LAVA.getId())) {
-			getBlock().setTypeIdAndData(typeId, data, true);
+		type = Material.getMaterial(typeId);
+		if ((type == Material.WATER) || (type == Material.LAVA)) {
+			getBlock().setTypeIdAndData(type.getId(), data, true);
 		} else {
-			getBlock().setTypeIdAndData(typeId, data, blockUpdate);
+			getBlock().setTypeIdAndData(type.getId(), data, blockUpdate);
 		}
 		if (inventory != null) {
 			try {
@@ -143,11 +145,11 @@ public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	}
 
 	/**
-	 * Gets the type id.
-	 * @return the type id
+	 * Gets the Material of the RedBlockChild.
+	 * @return the type
 	 */
-	public int getTypeId() {
-		return typeId;
+	public Material getType() {
+		return type;
 	}
 
 	/**
@@ -207,11 +209,11 @@ public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	}
 
 	/**
-	 * Sets the type id.
-	 * @param typeId the new type id
+	 * Sets the Material of the RedBlockChild.
+	 * @param typeId the new material
 	 */
-	public void setTypeId(final int typeId) {
-		this.typeId = typeId;
+	public void setType(final Material type) {
+		this.type = type;
 	}
 
 	/**

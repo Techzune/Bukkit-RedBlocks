@@ -58,4 +58,18 @@ public class Util {
 		loc.setZ(Double.parseDouble(splitString[3]));
 		return loc;
 	}
+
+	/**
+	 * Checks if the String is an Integer
+	 * @param str the String to check if is an Integer
+	 * @return if the String was an integer
+	 */
+	public static boolean isInteger(final String str) {
+		try {
+			Integer.parseInt(str);
+		} catch (final NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
 }

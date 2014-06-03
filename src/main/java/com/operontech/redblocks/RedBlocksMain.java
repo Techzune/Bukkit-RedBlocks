@@ -53,7 +53,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, RedBlockAnimated> editMode = new HashMap<Player, RedBlockAnimated>();
-	private Map<Player, ArrayList<Double>> delayTimes = new HashMap<Player, ArrayList<Double>>();
+	private Map<Player, ArrayList<Double>> delayTimes = new HashMap<Player, ArrayList<Double>>(); // ENABLEDELAY/DISABLEDELAY
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 

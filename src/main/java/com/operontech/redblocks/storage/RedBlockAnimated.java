@@ -107,7 +107,7 @@ public class RedBlockAnimated implements Serializable {
 								e.printStackTrace();
 							}
 						}
-						entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
+						entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getType()));
 						chunks.add(entry.getKey().getLocation().getChunk());
 					}
 					for (final Chunk chunk : chunks) {
@@ -151,7 +151,7 @@ public class RedBlockAnimated implements Serializable {
 								e.printStackTrace();
 							}
 						}
-						entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getTypeId()));
+						entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getType()));
 						chunks.add(entry.getKey().getLocation().getChunk());
 					}
 					for (final Chunk chunk : chunks) {
@@ -198,7 +198,7 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean add(final Block b, final int enableDelay, final int disableDelay) {
-		return add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()), enableDelay, disableDelay);
+		return add(new RedBlockChild(b.getType(), b.getData(), b.getLocation()), enableDelay, disableDelay);
 	}
 
 	/**

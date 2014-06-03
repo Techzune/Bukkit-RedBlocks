@@ -46,15 +46,15 @@ public class RedBlock implements Serializable {
 	 * @param loc the location of the block
 	 * @return if the block was added
 	 */
-	public boolean add(final int typeId, final byte data, final Location loc) {
+	public boolean add(final Material type, final byte data, final Location loc) {
 		fixNulls();
 		if (contains(loc.getBlock())) {
 			return false;
 		}
 		if (specialBList.contains(loc.getBlock().getType())) {
-			return specialBlocks.add(new RedBlockChild(typeId, data, loc));
+			return specialBlocks.add(new RedBlockChild(type, data, loc));
 		}
-		return blocks.add(new RedBlockChild(typeId, data, loc));
+		return blocks.add(new RedBlockChild(type, data, loc));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class RedBlock implements Serializable {
 	 */
 	public boolean add(final Block b) {
 		fixNulls();
-		return add(b.getTypeId(), b.getData(), b.getLocation());
+		return add(b.getType(), b.getData(), b.getLocation());
 	}
 
 	/**
@@ -243,11 +243,11 @@ public class RedBlock implements Serializable {
 		if (!remove) {
 			for (final Block b : block) {
 				if (specialBList.contains(b.getType())) {
-					specialBlocks.add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()));
+					specialBlocks.add(new RedBlockChild(b.getType(), b.getData(), b.getLocation()));
 					affected++;
 					continue;
 				}
-				blocks.add(new RedBlockChild(b.getTypeId(), b.getData(), b.getLocation()));
+				blocks.add(new RedBlockChild(b.getType(), b.getData(), b.getLocation()));
 				affected++;
 			}
 		}
