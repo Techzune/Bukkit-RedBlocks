@@ -12,7 +12,6 @@ import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.Util;
 import com.operontech.redblocks.storage.RedBlockAnimated;
-import com.operontech.redblocks.storage.RedBlockChild;
 
 public class CommandListener {
 	private final RedBlocksMain plugin;
@@ -140,16 +139,6 @@ public class CommandListener {
 			return true;
 		}
 		return false;
-	}
-
-	private void setEnableDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int enableDelay) {
-		rb.setEnableDelayForChild(child, enableDelay);
-		s.sendMessage("Enable Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + enableDelay);
-	}
-
-	private void setDisableDelay(final CommandSender s, final RedBlockAnimated rb, final RedBlockChild child, final int disableDelay) {
-		rb.setDisableDelayForChild(child, disableDelay);
-		s.sendMessage("Disable Delay For Block At: " + child.getBlock().getLocation().toVector().toString() + " has been set to " + disableDelay);
 	}
 
 	private void sendCMenu(final CommandSender s) {

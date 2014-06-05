@@ -35,7 +35,7 @@ public class WorldListener implements Listener {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				@Override
 				public void run() {
-					if (plugin.getServer().getPlayer(event.getPlayer().getName()) == null) {
+					if (plugin.getServer().getPlayer(event.getPlayer().getUniqueId()) == null) {
 						plugin.removeEditor(event.getPlayer());
 					}
 				}
