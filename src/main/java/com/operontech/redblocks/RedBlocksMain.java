@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +37,7 @@ import com.operontech.redblocks.listener.BlockListener;
 import com.operontech.redblocks.listener.CommandListener;
 import com.operontech.redblocks.listener.PhysicsListener;
 import com.operontech.redblocks.listener.WorldListener;
+import com.operontech.redblocks.playerdependent.PlayerSession;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 import com.operontech.redblocks.storage.RedBlockChild;
 import com.operontech.redblocks.storage.Storage;
@@ -52,8 +52,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private ConsoleConnection console;
 	private Configuration config;
 	private CommandListener clistener;
-	private Map<Player, RedBlockAnimated> editMode = new HashMap<Player, RedBlockAnimated>();
-	private Map<Player, ArrayList<Double>> delayTimes = new HashMap<Player, ArrayList<Double>>(); // ENABLEDELAY/DISABLEDELAY
+	private Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
@@ -80,10 +79,7 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		for (final Entry<Player, RedBlockAnimated> e : new HashMap<Player, RedBlockAnimated>(editMode).entrySet()) {
-			editMode.remove(e.getKey());
-			delayTimes.remove(e.getKey());
-		}
+		playerSessions.clear();
 		if (initialized) {
 			storage.saveRedBlocks();
 			storage.cleanupRedBlocks();
@@ -109,9 +105,8 @@ public class RedBlocksMain extends JavaPlugin {
 		console = null;
 		config = null;
 		clistener = null;
-		editMode = null;
+		playerSessions = null;
 		activeBlocks = null;
-		delayTimes = null;
 	}
 
 	private boolean checkForUpdate() {
@@ -146,11 +141,9 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param msg the message
 	 */
 	public void notifyEditors(final RedBlockAnimated rb, final String msg) {
-		if (editMode.containsValue(rb)) {
-			for (final Entry<Player, RedBlockAnimated> e : editMode.entrySet()) {
-				if (e.getValue() == rb) {
-					console.notify(e.getKey(), msg);
-				}
+		for (final Entry<Player, PlayerSession> e : playerSessions.entrySet()) {
+			if (e.getValue().getRedBlock() == rb) {
+				console.notify(e.getKey(), msg);
 			}
 		}
 	}
@@ -174,7 +167,10 @@ public class RedBlocksMain extends JavaPlugin {
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
-				editMode.put(p, rb);
+				if (!playerSessions.containsKey(p)) {
+					playerSessions.put(p, new PlayerSession(p.getUniqueId(), rb, b));
+				}
+				playerSessions.get(p).setRedBlock(rb, b);
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 			}
 		}
@@ -204,8 +200,7 @@ public class RedBlocksMain extends JavaPlugin {
 					doBlockUpdate(b);
 				}
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
-				editMode.remove(p);
-				delayTimes.remove(p);
+				playerSessions.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
 				}
@@ -220,16 +215,11 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param disableDelay the delay of the disabling of a RedBlockChild
 	 */
 	public void setPlayerDelay(final Player p, final double enableDelay, final double disableDelay) {
-		delayTimes.put(p, new ArrayList<Double>(Arrays.asList(enableDelay, disableDelay)));
-	}
-
-	/**
-	 * Sets the delay for the disable for any RedBlockChilds placed in the future by the player.
-	 * @param p the player to set the delay for
-	 * @param disableDelay the delay of the disabling of a RedBlockChild
-	 */
-	public void setPlayerDisableDelay(final Player p, final double disableDelay) {
-		setPlayerDelay(p, delayTimes.containsKey(p) ? delayTimes.get(p).get(0) : 0, disableDelay);
+		if (!playerSessions.containsKey(p)) {
+			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
+		}
+		playerSessions.get(p).setEnableDelay(enableDelay);
+		playerSessions.get(p).setDisableDelay(disableDelay);
 	}
 
 	/**
@@ -238,16 +228,36 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param enableDelay the delay of the enabling of a RedBlockChild
 	 */
 	public void setPlayerEnableDelay(final Player p, final double enableDelay) {
-		setPlayerDelay(p, enableDelay, delayTimes.containsKey(p) ? delayTimes.get(p).get(1) : 0);
+		if (!playerSessions.containsKey(p)) {
+			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
+		}
+		playerSessions.get(p).setDisableDelay(enableDelay);
 	}
 
 	/**
-	 * Gets the delay times for any future RedBlockChilds the player places
-	 * @param p the player to get the delay times for
-	 * @return the delays (ENABLE, DISABLE)
+	 * Sets the delay for the disable for any RedBlockChilds placed in the future by the player.
+	 * @param p the player to set the delay for
+	 * @param disableDelay the delay of the disabling of a RedBlockChild
 	 */
-	public ArrayList<Double> getPlayerDelayTimes(final Player p) {
-		return delayTimes.get(p);
+	public void setPlayerDisableDelay(final Player p, final double disableDelay) {
+		if (!playerSessions.containsKey(p)) {
+			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
+		}
+		playerSessions.get(p).setDisableDelay(disableDelay);
+	}
+
+	public Double getPlayerEnableDelay(final Player p) {
+		if (!playerSessions.containsKey(p)) {
+			return 0D;
+		}
+		return playerSessions.get(p).getEnableDelay();
+	}
+
+	public Double getPlayerDisableDelay(final Player p) {
+		if (!playerSessions.containsKey(p)) {
+			return 0D;
+		}
+		return playerSessions.get(p).getDisableDelay();
 	}
 
 	/**
@@ -401,10 +411,10 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return if the RedBlock was destroyed
 	 */
 	public boolean destroyRedBlock(final Block b, final Player p) {
-		if (editMode.containsKey(p) && editMode.get(p).getLocation().toString().equals(b.getLocation().toString())) {
+		if (playerSessions.containsKey(p) && playerSessions.get(p).getBlock().getLocation().toString().equals(b.getLocation().toString())) {
 			removeEditor(p);
 		}
-		if (editMode.containsValue(storage.getRedBlock(b))) {
+		if (playerSessions.containsValue(storage.getRedBlock(b))) {
 			console.error(p, "You can't destroy a RedBlock that is being edited!");
 			return false;
 		}
@@ -446,7 +456,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public void redBlockLost(final RedBlockAnimated rb) {
 		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
-		for (final Player p : editMode.keySet()) {
+		for (final Player p : playerSessions.keySet()) {
 			if (getRedBlockEditing(p) == rb) {
 				removeEditor(p);
 			}
@@ -577,7 +587,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return if the player is editing a RedBlock
 	 */
 	public boolean isEditing(final Player p) {
-		return editMode.containsKey(p);
+		return playerSessions.containsKey(p);
 	}
 
 	/**
@@ -586,7 +596,12 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return if the RedBlockAnimated is being edited
 	 */
 	public boolean isBeingEdited(final RedBlockAnimated redBlockAnimated) {
-		return editMode.containsValue(redBlockAnimated);
+		for (final PlayerSession ps : playerSessions.values()) {
+			if (ps.getRedBlock().equals(redBlockAnimated)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -595,7 +610,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return the REdBlock
 	 */
 	public RedBlockAnimated getRedBlockEditing(final Player p) {
-		return editMode.get(p);
+		return playerSessions.get(p).getRedBlock();
 	}
 
 	/**
