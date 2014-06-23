@@ -15,8 +15,10 @@ public class PlayerSession implements Serializable {
 	private RedBlockAnimated rb;
 	private Block rbBlock;
 
-	private Double enableDelay;
-	private Double disableDelay;
+	private int enableDelay;
+	private String enableDelayBlock;
+	private int disableDelay;
+	private String disableDelayBlock;
 
 	/**
 	 * Stores player data for the RedBlock
@@ -28,16 +30,26 @@ public class PlayerSession implements Serializable {
 		p = playerUUID;
 		rb = redblock;
 		rbBlock = block;
-		enableDelay = 0D;
-		disableDelay = 0D;
+		enableDelay = 0;
+		disableDelay = 0;
+		enableDelayBlock = "0:0";
+		disableDelayBlock = "0:0";
 	}
 
-	public void setEnableDelay(final Double placeDelay) {
-		this.enableDelay = placeDelay;
+	public void setEnableDelay(final int placeDelay) {
+		enableDelay = placeDelay;
 	}
 
-	public void setDisableDelay(final Double breakDelay) {
-		this.disableDelay = breakDelay;
+	public void setEnableDelayBlock(final int id, final int data) {
+		enableDelayBlock = id + ":" + data;
+	}
+
+	public void setDisableDelay(final int breakDelay) {
+		disableDelay = breakDelay;
+	}
+
+	public void setDisableDelayBlock(final int id, final int data) {
+		disableDelayBlock = id + ":" + data;
 	}
 
 	public void setRedBlock(final RedBlockAnimated redblock, final Block block) {
@@ -45,12 +57,28 @@ public class PlayerSession implements Serializable {
 		rbBlock = block;
 	}
 
-	public Double getEnableDelay() {
+	public int getEnableDelay() {
 		return enableDelay;
 	}
 
-	public Double getDisableDelay() {
+	public int getEnableDelayBlockId() {
+		return Integer.parseInt(enableDelayBlock.split(":")[0]);
+	}
+
+	public int getEnableDelayBlockData() {
+		return Integer.parseInt(enableDelayBlock.split(":")[1]);
+	}
+
+	public int getDisableDelay() {
 		return disableDelay;
+	}
+
+	public int getDisableDelayBlockId() {
+		return Integer.parseInt(disableDelayBlock.split(":")[0]);
+	}
+
+	public int getDisableDelayBlockData() {
+		return Integer.parseInt(disableDelayBlock.split(":")[1]);
 	}
 
 	public Player getPlayer() {

@@ -158,6 +158,7 @@ public class RedBlocksMain extends JavaPlugin {
 			final RedBlockAnimated rb = storage.getRedBlock(b);
 			if (rb.getTimeoutState()) {
 				console.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
+				rb.setTimeoutState(false);
 				return;
 			}
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
@@ -200,64 +201,15 @@ public class RedBlocksMain extends JavaPlugin {
 					doBlockUpdate(b);
 				}
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
+				if ((getPlayerSession(p).getDisableDelay() != 0) || (getPlayerSession(p).getEnableDelay() != 0)) {
+					console.notify(p, "You must redefine your place and break delays next time you edit a RedBlock.");
+				}
 				playerSessions.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
 				}
 			}
 		}
-	}
-
-	/**
-	 * Sets the delay for the disable and enabling for any RedBlockChilds placed in the future by the player.
-	 * @param p the player to set the delay for
-	 * @param enableDelay the delay of the enabling of a RedBlockChild
-	 * @param disableDelay the delay of the disabling of a RedBlockChild
-	 */
-	public void setPlayerDelay(final Player p, final double enableDelay, final double disableDelay) {
-		if (!playerSessions.containsKey(p)) {
-			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
-		}
-		playerSessions.get(p).setEnableDelay(enableDelay);
-		playerSessions.get(p).setDisableDelay(disableDelay);
-	}
-
-	/**
-	 * Sets the delay for the enabling for any RedBlockChilds placed in the future by the player.
-	 * @param p the player to set the delay for
-	 * @param enableDelay the delay of the enabling of a RedBlockChild
-	 */
-	public void setPlayerEnableDelay(final Player p, final double enableDelay) {
-		if (!playerSessions.containsKey(p)) {
-			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
-		}
-		playerSessions.get(p).setDisableDelay(enableDelay);
-	}
-
-	/**
-	 * Sets the delay for the disable for any RedBlockChilds placed in the future by the player.
-	 * @param p the player to set the delay for
-	 * @param disableDelay the delay of the disabling of a RedBlockChild
-	 */
-	public void setPlayerDisableDelay(final Player p, final double disableDelay) {
-		if (!playerSessions.containsKey(p)) {
-			playerSessions.put(p, new PlayerSession(p.getUniqueId(), null, null));
-		}
-		playerSessions.get(p).setDisableDelay(disableDelay);
-	}
-
-	public Double getPlayerEnableDelay(final Player p) {
-		if (!playerSessions.containsKey(p)) {
-			return 0D;
-		}
-		return playerSessions.get(p).getEnableDelay();
-	}
-
-	public Double getPlayerDisableDelay(final Player p) {
-		if (!playerSessions.containsKey(p)) {
-			return 0D;
-		}
-		return playerSessions.get(p).getDisableDelay();
 	}
 
 	/**
@@ -317,7 +269,11 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param b the block to be added
 	 */
 	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
-		addBlock(p, rb, b, 0, 0);
+		if (getPlayerSession(p) == null) {
+			addBlock(p, rb, b, 0, 0);
+		} else {
+			addBlock(p, rb, b, getPlayerSession(p).getEnableDelay(), getPlayerSession(p).getDisableDelay());
+		}
 	}
 
 	/**

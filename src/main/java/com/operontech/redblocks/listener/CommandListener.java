@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.Util;
+import com.operontech.redblocks.playerdependent.PlayerSession;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 
 public class CommandListener {
@@ -45,6 +46,7 @@ public class CommandListener {
 								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
+								return true;
 							}
 						} else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("r")) {
 							if (plugin.getWE() == null) {
@@ -55,27 +57,68 @@ public class CommandListener {
 								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
+								return true;
 							}
 						} else if (multiString(args[0], "stop", "quit", "s")) {
 							if (plugin.isEditing(p)) {
 								plugin.removeEditor(p);
 							} else {
 								console.error(s, "You must be editing a RedBlock to do that!");
+								return true;
 							}
-						} else if (multiString(args[0], "pause", "p", "pauseonce", "po", "pausemulti", "pm")) {
-							if (args.length > 2) {
-								String tempText;
-								for (int i = 1; i < args.length; i++) {
-									tempText = args[i].toLowerCase();
-									if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
-										final String[] splitText = tempText.split(":");
-										if ((splitText.length <= 2) && !Util.isInteger(splitText[0]) && Util.isInteger(splitText[1])) {
-
+						} else if (multiString(args[0], "delay", "d")) {
+							if (!plugin.isEditing(p)) {
+								console.error(s, "You must editing a RedBlock to do that!");
+								return true;
+							}
+							if (args.length >= 3) {
+								if (multiString(args[1], "place", "p", "break", "b")) {
+									final PlayerSession session = plugin.getPlayerSession(p);
+									String tempText;
+									if (Util.isInteger(args[2])) {
+										if (multiString(args[1], "place", "p")) {
+											session.setEnableDelay(Integer.parseInt(args[2]));
+											console.notify(s, "All future child blocks you place will delay on enabling for " + args[2] + " milliseconds.");
+										} else {
+											session.setDisableDelay(Integer.parseInt(args[2]));
+											console.notify(s, "All future child blocks you place will delay on disabling for " + args[2] + " milliseconds.");
 										}
-									} else if (tempText.equals("toggle") || tempText.equals("t")) {
-
 									}
+									if (args.length > 3) {
+										for (int i = 3; i < args.length; i++) {
+											tempText = args[i].toLowerCase();
+											if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
+												final String[] splitText = tempText.split(":");
+												if ((splitText.length == 2) && Util.isInteger(splitText[1])) {
+													if (multiString(args[1], "place", "p")) {
+														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), 0);
+														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1]);
+													} else {
+														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), 0);
+														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1]);
+													}
+												} else if ((splitText.length == 3) && Util.isInteger(splitText[1]) && Util.isInteger(splitText[2])) {
+													if (multiString(args[1], "place", "p")) {
+														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), Integer.parseInt(splitText[2]));
+														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1] + ":" + splitText[2]);
+													} else {
+														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), Integer.parseInt(splitText[2]));
+														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1] + ":" + splitText[2]);
+													}
+												} else {
+													sendCMenu(s);
+													return true;
+												}
+											}
+										}
+									}
+								} else {
+									sendCMenu(s);
+									return true;
 								}
+							} else {
+								sendCMenu(s);
+								return true;
 							}
 						} else if (multiString(args[0], "options", "o")) {
 							if (args.length <= 2) {
@@ -120,6 +163,7 @@ public class CommandListener {
 									console.notify(s, ChatColor.RED + "Warning! You cannot undo this action.");
 								} else {
 									console.error(s, "You do not have the permissions to change the owner of your RedBlock.");
+									return true;
 								}
 							} else {
 								sendCOptions(s);
@@ -151,6 +195,7 @@ public class CommandListener {
 		console.msg(s, ChatColor.GREEN + "Set Pause For Multiple Child Blocks:" + ChatColor.LIGHT_PURPLE + " /rb pm <place/break> <MILLISECONDS>");
 		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE + " /rb stop");
 		console.msg(s, ChatColor.GREEN + "Edit Options:" + ChatColor.LIGHT_PURPLE + " /rb options <OPTION> <VALUE>");
+		console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:" + ChatColor.LIGHT_PURPLE + " /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
 		if (plugin.hasPermission(s, "worldedit") && (plugin.getWE() != null)) {
 			console.msg(s, ChatColor.GREEN + "World-Edit: AddCommand Blocks:" + ChatColor.LIGHT_PURPLE + " /rb add [TYPE:DMG]");
 			console.msg(s, ChatColor.GREEN + "World-Edit: RemoveCommand Blocks:" + ChatColor.LIGHT_PURPLE + " /rb remove [TYPE:DMG]");

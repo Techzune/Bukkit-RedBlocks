@@ -72,4 +72,18 @@ public class Util {
 		}
 		return true;
 	}
+
+	/**
+	 * Checks if the String is a Double
+	 * @param str the String to check
+	 * @return if the String was a Double
+	 */
+	public static boolean isDouble(final String str) {
+		try {
+			Double.parseDouble(str);
+		} catch (final NumberFormatException e) {
+			return false;
+		}
+		return true;
+	}
 }

@@ -95,7 +95,7 @@ public class RedBlockAnimated implements Serializable {
 	public void enable(final boolean force, final boolean doAnimations) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (!blocksActive || force) {
-			final Thread enableThread = new Thread() {
+			final Thread thread = new Thread() {
 				@Override
 				public void run() {
 					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
@@ -104,7 +104,6 @@ public class RedBlockAnimated implements Serializable {
 							try {
 								Thread.sleep(entry.getValue().get(0));
 							} catch (final InterruptedException e) {
-								e.printStackTrace();
 							}
 						}
 						entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getType()));
@@ -118,7 +117,7 @@ public class RedBlockAnimated implements Serializable {
 					cacheMap = null;
 				}
 			};
-			enableThread.start();
+			thread.start();
 		}
 	}
 
@@ -139,7 +138,7 @@ public class RedBlockAnimated implements Serializable {
 	public void disable(final boolean force, final boolean doAnimations, final RBDisableListener listener) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (blocksActive || force) {
-			final Thread disableThread = new Thread() {
+			final Thread thread = new Thread() {
 				@Override
 				public void run() {
 					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
@@ -148,7 +147,6 @@ public class RedBlockAnimated implements Serializable {
 							try {
 								Thread.sleep(entry.getValue().get(0));
 							} catch (final InterruptedException e) {
-								e.printStackTrace();
 							}
 						}
 						entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getType()));
@@ -163,7 +161,7 @@ public class RedBlockAnimated implements Serializable {
 					listener.threadFinished();
 				}
 			};
-			disableThread.start();
+			thread.start();
 		}
 	}
 
