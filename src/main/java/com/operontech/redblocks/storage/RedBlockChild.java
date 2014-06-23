@@ -41,7 +41,9 @@ public class RedBlockChild implements Serializable, Comparable<RedBlockChild> {
 	 */
 	@SuppressWarnings("deprecation")
 	public void enableBlock(final boolean blockUpdate) {
-		type = Material.getMaterial(typeId);
+		if (type == null) {
+			type = Material.getMaterial(typeId);
+		}
 		if ((type == Material.WATER) || (type == Material.LAVA)) {
 			getBlock().setTypeIdAndData(type.getId(), data, true);
 		} else {
