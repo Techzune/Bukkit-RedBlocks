@@ -163,7 +163,7 @@ public class RedBlocksMain extends JavaPlugin {
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
 			getServer().getPluginManager().callEvent(event);
 			if (!event.isCancelled()) {
-				enableRedBlock(rb, true);
+				enableRedBlock(rb, !isBeingEdited(rb));
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
@@ -512,7 +512,7 @@ public class RedBlocksMain extends JavaPlugin {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 					db = reg.getWorld().getBlockAt(x, y, z);
-					if (db.getTypeId() == 0) {
+					if (db.getType() == Material.AIR) {
 						continue;
 					}
 					if ((t == 0) || (db.getTypeId() == t)) {
