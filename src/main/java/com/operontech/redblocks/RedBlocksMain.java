@@ -607,10 +607,18 @@ public class RedBlocksMain extends JavaPlugin {
 	/**
 	 * Gets the RedBlockAnimated that is being edited by a player.
 	 * @param p the player to get the editing RedBlockAnimated of
-	 * @return the REdBlock
+	 * @return the RedBlock
 	 */
 	public RedBlockAnimated getRedBlockEditing(final Player p) {
 		return playerSessions.get(p).getRedBlock();
+	}
+
+	/**
+	 * Gets the PlayerSession for the provided player.
+	 * @param p the player
+	 */
+	public PlayerSession getPlayerSession(final Player p) {
+		return playerSessions.get(p);
 	}
 
 	/**
