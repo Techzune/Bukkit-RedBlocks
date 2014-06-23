@@ -10,26 +10,26 @@ commands:
     usage: /redblocks
 permissions:
   redblocks.use:
-    description: Allows the player to edit EXISTING RedBlocks.
+    description: Allows the player to edit EXISTING RedBlocks
   redblocks.createanddestroy:
-    description: Allows the player to create and destroy RedBlocks.
+    description: Allows the player to create and destroy RedBlocks
   redblocks.animations:
-    description: Allows the player to edit RedBlock animations (delays).
+    description: Allows the player to edit RedBlock animations (delays)
   redblocks.reload:
-    description: Allows the player to reload RedBlock's configuration.
+    description: Allows the player to reload RedBlock's configuration
   redblocks.worldedit:
-    description: Allows the player to use WorldEdit with RedBlocks.
+    description: Allows the player to use WorldEdit with RedBlocks
   redblocks.bypass.protect:
-    description: Allows the player to bypass the block protection by RedBlocks.
+    description: Allows the player to bypass the block protection by RedBlocks
   redblocks.bypass.wemax:
-    description: Allows the player to bypass the maximum WorldEdit addition/deletion block count.
+    description: Allows the player to bypass the maximum WorldEdit addition/deletion block count
   redblocks.bypass.maxblocksper:
-    description: Allows the player to bypass the maximum blocks per RedBlock.
+    description: Allows the player to bypass the maximum blocks per RedBlock
   redblocks.bypass.maxredblocksper:
-    description: Allows the player to bypass the maximum RedBlocks per player.
+    description: Allows the player to bypass the maximum RedBlocks per player
   redblocks.options.protect:
-    description: Allows the player to edit the "protect" option of a RedBlock.
+    description: Allows the player to edit the "protect" option of a RedBlock
   redblocks.options.inverted:
-    description: Allows the player to edit the "inverted" option of a RedBlock.
+    description: Allows the player to edit the "inverted" option of a RedBlock
   redblocks.options.owner:
-    description: Allows the player to change the owner of a RedBlock.
+    description: Allows the player to change the owner of a RedBlock
