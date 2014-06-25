@@ -92,18 +92,18 @@ public class CommandListener {
 												if ((splitText.length == 2) && Util.isInteger(splitText[1])) {
 													if (multiString(args[1], "place", "p")) {
 														session.setEnableDelayBlock(splitText[1], "-1");
-														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1]);
+														console.notify(s, "Future placed blocks will delay enabling if they are block id " + ChatColor.GOLD + splitText[1]);
 													} else {
 														session.setDisableDelayBlock(splitText[1], "-1");
-														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1]);
+														console.notify(s, "Future placed blocks will delay disabling if they are block id " + ChatColor.GOLD + splitText[1]);
 													}
 												} else if ((splitText.length == 3) && Util.isInteger(splitText[1]) && Util.isInteger(splitText[2])) {
 													if (multiString(args[1], "place", "p")) {
 														session.setEnableDelayBlock(splitText[1], splitText[2]);
-														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1] + ":" + splitText[2]);
+														console.notify(s, "Future placed blocks will delay enabling if they are block id " + ChatColor.GOLD + splitText[1] + ":" + splitText[2]);
 													} else {
 														session.setDisableDelayBlock(splitText[1], splitText[2]);
-														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1] + ":" + splitText[2]);
+														console.notify(s, "Future placed blocks will delay disabling if they are block id " + ChatColor.GOLD + splitText[1] + ":" + splitText[2]);
 													}
 												} else {
 													sendCMenu(s);
@@ -128,7 +128,7 @@ public class CommandListener {
 							if (args[1].equalsIgnoreCase("inverted")) {
 								if (plugin.hasPermission(s, "optionsInverted")) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
-										console.notify(s, "RedBlock Option Set | inverted: " + rb.setInverted(Boolean.valueOf(args[2].toLowerCase())));
+										console.notify(s, "RedBlock Option Set | inverted: " + ChatColor.GOLD + rb.setInverted(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
 										sendCOptions(s);
 									}
@@ -136,7 +136,7 @@ public class CommandListener {
 							} else if (args[1].equalsIgnoreCase("protect")) {
 								if (plugin.hasPermission(s, "optionsProtect")) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
-										console.notify(s, "RedBlock Option Set | protect: " + rb.setProtected(Boolean.valueOf(args[2].toLowerCase())));
+										console.notify(s, "RedBlock Option Set | protect: " + ChatColor.GOLD + rb.setProtected(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
 										sendCOptions(s);
 									}
@@ -153,7 +153,7 @@ public class CommandListener {
 										return true;
 									}
 									if (changeOwner.containsKey(s) && (changeOwner.get(s) == s.getServer().getPlayer(args[2]))) {
-										console.notify(s, "RedBlock Option Set | owner: " + rb.setOwner(s.getServer().getPlayer(args[2]).getName()));
+										console.notify(s, "RedBlock Option Set | owner: " + ChatColor.GOLD + rb.setOwner(s.getServer().getPlayer(args[2]).getName()));
 										plugin.removeEditor(p);
 										changeOwner.remove(s);
 										return true;
@@ -188,31 +188,31 @@ public class CommandListener {
 	private void sendCMenu(final CommandSender s) {
 		console.msg(s, ChatColor.GOLD + "   >>>>> RedBlocks Menu <<<<<   ");
 		if (plugin.hasPermission(s, "reload")) {
-			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:" + ChatColor.LIGHT_PURPLE + " /rb reload");
+			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:", ChatColor.LIGHT_PURPLE + "     /rb reload");
 		}
-		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE + " /rb stop");
-		console.msg(s, ChatColor.GREEN + "Set Pause For Single Child Block:" + ChatColor.LIGHT_PURPLE + " /rb p <place/break> <MILLISECONDS>");
-		console.msg(s, ChatColor.GREEN + "Set Pause For Multiple Child Blocks:" + ChatColor.LIGHT_PURPLE + " /rb pm <place/break> <MILLISECONDS>");
-		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE + " /rb stop");
-		console.msg(s, ChatColor.GREEN + "Edit Options:" + ChatColor.LIGHT_PURPLE + " /rb options <OPTION> <VALUE>");
-		console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:" + ChatColor.LIGHT_PURPLE + " /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
+		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", ChatColor.LIGHT_PURPLE + "     /rb stop");
+		console.msg(s, ChatColor.GREEN + "Set Pause For Single Child Block:", ChatColor.LIGHT_PURPLE + "     /rb p <place/break> <MILLISECONDS>");
+		console.msg(s, ChatColor.GREEN + "Set Pause For Multiple Child Blocks:", ChatColor.LIGHT_PURPLE + "     /rb pm <place/break> <MILLISECONDS>");
+		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:" + ChatColor.LIGHT_PURPLE, "     /rb stop");
+		console.msg(s, ChatColor.GREEN + "Edit Options:" + ChatColor.LIGHT_PURPLE, "     /rb options <OPTION> <VALUE>");
+		console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:" + ChatColor.LIGHT_PURPLE, "     /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
 		if (plugin.hasPermission(s, "worldedit") && (plugin.getWE() != null)) {
-			console.msg(s, ChatColor.GREEN + "World-Edit: AddCommand Blocks:" + ChatColor.LIGHT_PURPLE + " /rb add [TYPE:DMG]");
-			console.msg(s, ChatColor.GREEN + "World-Edit: RemoveCommand Blocks:" + ChatColor.LIGHT_PURPLE + " /rb remove [TYPE:DMG]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: AddCommand Blocks:" + ChatColor.LIGHT_PURPLE, "     /rb add [TYPE:DMG]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: RemoveCommand Blocks:" + ChatColor.LIGHT_PURPLE, "     /rb remove [TYPE:DMG]");
 		}
 	}
 
 	private void sendCOptions(final CommandSender s) {
 		console.msg(s, ChatColor.GOLD + "   >>>>> Options for RedBlocks <<<<<   ");
 		if (plugin.hasPermission(s, "optionsInverted")) {
-			console.msg(s, ChatColor.GREEN + "Inverted Redstone:" + ChatColor.LIGHT_PURPLE + " /rb options inverted [default/true/false]");
+			console.msg(s, ChatColor.GREEN + "Inverted Redstone:" + ChatColor.LIGHT_PURPLE, "     /rb options inverted [default/true/false]");
 		}
 		if (plugin.hasPermission(s, "optionsProtect")) {
-			console.msg(s, ChatColor.GREEN + "Protect Blocks:" + ChatColor.LIGHT_PURPLE + " /rb options protect [true/false]");
+			console.msg(s, ChatColor.GREEN + "Protect Blocks:" + ChatColor.LIGHT_PURPLE, "     /rb options protect [true/false]");
 		}
 		if (plugin.hasPermission(s, "optionsOwner")) {
-			console.msg(s, ChatColor.GREEN + "RedBlock Owner:" + ChatColor.LIGHT_PURPLE + " /rb options owner [NAME]");
-			console.msg(s, ChatColor.RED + "    Warning: This cannot be undone. Both players must be online.");
+			console.msg(s, ChatColor.GREEN + "RedBlock Owner:" + ChatColor.LIGHT_PURPLE, "     /rb options owner [NAME]");
+			console.msg(s, ChatColor.RED + "     Warning: This cannot be undone. Both players must be online.");
 		}
 	}
 
