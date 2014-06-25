@@ -60,17 +60,8 @@ public class CommandListener {
 								return true;
 							}
 						} else if (multiString(args[0], "stop", "quit", "s")) {
-							if (plugin.isEditing(p)) {
-								plugin.removeEditor(p);
-							} else {
-								console.error(s, "You must be editing a RedBlock to do that!");
-								return true;
-							}
+							plugin.removeEditor(p);
 						} else if (multiString(args[0], "delay", "d")) {
-							if (!plugin.isEditing(p)) {
-								console.error(s, "You must editing a RedBlock to do that!");
-								return true;
-							}
 							if (args.length >= 3) {
 								if (multiString(args[1], "place", "p", "break", "b")) {
 									final PlayerSession session = plugin.getPlayerSession(p);
