@@ -91,10 +91,10 @@ public class CommandListener {
 												final String[] splitText = tempText.split(":");
 												if ((splitText.length == 2) && Util.isInteger(splitText[1])) {
 													if (multiString(args[1], "place", "p")) {
-														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), 0);
+														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), -1);
 														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1]);
 													} else {
-														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), 0);
+														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), -1);
 														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1]);
 													}
 												} else if ((splitText.length == 3) && Util.isInteger(splitText[1]) && Util.isInteger(splitText[2])) {
