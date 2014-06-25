@@ -86,4 +86,29 @@ public class Util {
 		}
 		return true;
 	}
+
+	/**
+	 * Checks if the mainString matches any of the following arguments. (Not Case-Sensitive)
+	 * @param mainString the primary string to match with the following arguments
+	 * @param args possible matches to the mainString
+	 * @return if mainString matched any of the following arguments
+	 */
+	public static boolean multiString(final String mainString, final String... args) {
+		return multiEqualsString(mainString.toLowerCase(), args);
+	}
+
+	/**
+	 * Checks if the mainString matches any of the following arguments. (Case-Sensitive)
+	 * @param mainString the primary string to match with the following arguments
+	 * @param args possible matches to the mainString
+	 * @return if mainString matched any of the following arguments
+	 */
+	public static boolean multiEqualsString(final String mainString, final String... args) {
+		for (final String arg : args) {
+			if (mainString.equals(arg)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

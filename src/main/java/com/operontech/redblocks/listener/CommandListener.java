@@ -59,15 +59,15 @@ public class CommandListener {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 								return true;
 							}
-						} else if (multiString(args[0], "stop", "quit", "s")) {
+						} else if (Util.multiString(args[0], "stop", "quit", "s")) {
 							plugin.removeEditor(p);
-						} else if (multiString(args[0], "delay", "d")) {
+						} else if (Util.multiString(args[0], "delay", "d")) {
 							if (args.length >= 3) {
-								if (multiString(args[1], "place", "p", "break", "b")) {
+								if (Util.multiString(args[1], "place", "p", "break", "b")) {
 									final PlayerSession session = plugin.getPlayerSession(p);
 									String tempText;
 									if (Util.isInteger(args[2])) {
-										if (multiString(args[1], "place", "p")) {
+										if (Util.multiString(args[1], "place", "p")) {
 											session.setEnableDelay(args[2]);
 											console.notify(s, "All future child blocks you place will delay on enabling for " + args[2] + " milliseconds.");
 										} else {
@@ -81,7 +81,7 @@ public class CommandListener {
 											if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
 												final String[] splitText = tempText.split(":");
 												if ((splitText.length == 2) && Util.isInteger(splitText[1])) {
-													if (multiString(args[1], "place", "p")) {
+													if (Util.multiString(args[1], "place", "p")) {
 														session.setEnableDelayBlock(splitText[1], "-1");
 														console.notify(s, "Future placed blocks will delay enabling if they are block id " + ChatColor.GOLD + splitText[1]);
 													} else {
@@ -89,7 +89,7 @@ public class CommandListener {
 														console.notify(s, "Future placed blocks will delay disabling if they are block id " + ChatColor.GOLD + splitText[1]);
 													}
 												} else if ((splitText.length == 3) && Util.isInteger(splitText[1]) && Util.isInteger(splitText[2])) {
-													if (multiString(args[1], "place", "p")) {
+													if (Util.multiString(args[1], "place", "p")) {
 														session.setEnableDelayBlock(splitText[1], splitText[2]);
 														console.notify(s, "Future placed blocks will delay enabling if they are block id " + ChatColor.GOLD + splitText[1] + ":" + splitText[2]);
 													} else {
@@ -111,7 +111,7 @@ public class CommandListener {
 								sendCMenu(s);
 								return true;
 							}
-						} else if (multiString(args[0], "options", "o")) {
+						} else if (Util.multiString(args[0], "options", "o")) {
 							if (args.length <= 2) {
 								sendCOptions(s);
 								return true;
@@ -205,18 +205,5 @@ public class CommandListener {
 			console.msg(s, ChatColor.GREEN + "RedBlock Owner:" + ChatColor.LIGHT_PURPLE, "     /rb options owner [NAME]");
 			console.msg(s, ChatColor.RED + "     Warning: This cannot be undone. Both players must be online.");
 		}
-	}
-
-	private boolean multiString(final String mainString, final String... args) {
-		return multiEqualsString(mainString.toLowerCase(), args);
-	}
-
-	private boolean multiEqualsString(final String mainString, final String... args) {
-		for (final String arg : args) {
-			if (mainString.equals(arg)) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
