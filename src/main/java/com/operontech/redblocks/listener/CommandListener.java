@@ -77,10 +77,10 @@ public class CommandListener {
 									String tempText;
 									if (Util.isInteger(args[2])) {
 										if (multiString(args[1], "place", "p")) {
-											session.setEnableDelay(Integer.parseInt(args[2]));
+											session.setEnableDelay(args[2]);
 											console.notify(s, "All future child blocks you place will delay on enabling for " + args[2] + " milliseconds.");
 										} else {
-											session.setDisableDelay(Integer.parseInt(args[2]));
+											session.setDisableDelay(args[2]);
 											console.notify(s, "All future child blocks you place will delay on disabling for " + args[2] + " milliseconds.");
 										}
 									}
@@ -91,18 +91,18 @@ public class CommandListener {
 												final String[] splitText = tempText.split(":");
 												if ((splitText.length == 2) && Util.isInteger(splitText[1])) {
 													if (multiString(args[1], "place", "p")) {
-														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), -1);
+														session.setEnableDelayBlock(splitText[1], "-1");
 														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1]);
 													} else {
-														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), -1);
+														session.setDisableDelayBlock(splitText[1], "-1");
 														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1]);
 													}
 												} else if ((splitText.length == 3) && Util.isInteger(splitText[1]) && Util.isInteger(splitText[2])) {
 													if (multiString(args[1], "place", "p")) {
-														session.setEnableDelayBlock(Integer.parseInt(splitText[1]), Integer.parseInt(splitText[2]));
+														session.setEnableDelayBlock(splitText[1], splitText[2]);
 														console.notify(s, "All future child blocks you place will only delay enabling if they are block id " + splitText[1] + ":" + splitText[2]);
 													} else {
-														session.setDisableDelayBlock(Integer.parseInt(splitText[1]), Integer.parseInt(splitText[2]));
+														session.setDisableDelayBlock(splitText[1], splitText[2]);
 														console.notify(s, "All future child blocks you place will only delay disabling if they are block id " + splitText[1] + ":" + splitText[2]);
 													}
 												} else {

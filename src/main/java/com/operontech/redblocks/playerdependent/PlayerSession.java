@@ -27,18 +27,18 @@ public class PlayerSession {
 		p = playerUUID;
 		rb = redblock;
 		rbBlock = block;
-		setEnableDelay(0);
-		setEnableDelayBlock(0, -1);
-		setDisableDelay(0);
-		setDisableDelayBlock(0, -1);
+		setEnableDelay("0");
+		setEnableDelayBlock("0", "-1");
+		setDisableDelay("0");
+		setDisableDelayBlock("0", "-1");
 	}
 
 	/**
 	 * Sets the enable delay for future RedBlockChilds placed by the player.
 	 * @param placeDelay the delay in milliseconds
 	 */
-	public void setEnableDelay(final int placeDelay) {
-		data.put("enableDelay", String.valueOf(placeDelay));
+	public void setEnableDelay(final String placeDelay) {
+		data.put("enableDelay", placeDelay);
 	}
 
 	/**
@@ -49,17 +49,17 @@ public class PlayerSession {
 	 * @param blockId the blockId for the RedBlockChild
 	 * @param blockData the blockData for the RedBlockChild
 	 */
-	public void setEnableDelayBlock(final int blockId, final int blockData) {
-		data.put("enableDelayBlockId", String.valueOf(blockId));
-		data.put("enableDelayBlockData", String.valueOf(blockData));
+	public void setEnableDelayBlock(final String blockId, final String blockData) {
+		data.put("enableDelayBlockId", blockId);
+		data.put("enableDelayBlockData", blockData);
 	}
 
 	/**
 	 * Sets the disable delay for future RedBlockChilds placed by the player.
 	 * @param breakDelay the delay in milliseconds
 	 */
-	public void setDisableDelay(final int breakDelay) {
-		data.put("disableDelay", String.valueOf(breakDelay));
+	public void setDisableDelay(final String breakDelay) {
+		data.put("disableDelay", breakDelay);
 	}
 
 	/**
@@ -70,9 +70,9 @@ public class PlayerSession {
 	 * @param blockId the blockId for the RedBlockChild
 	 * @param blockData the blockData for the RedBlockChild
 	 */
-	public void setDisableDelayBlock(final int blockId, final int blockData) {
-		data.put("enableDelayBlockId", String.valueOf(blockId));
-		data.put("disableDelayBlockData", String.valueOf(blockData));
+	public void setDisableDelayBlock(final String blockId, final String blockData) {
+		data.put("enableDelayBlockId", blockId);
+		data.put("disableDelayBlockData", blockData);
 	}
 
 	/**
