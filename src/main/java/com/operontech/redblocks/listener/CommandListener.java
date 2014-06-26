@@ -39,7 +39,6 @@ public class CommandListener {
 						final RedBlockAnimated rb = plugin.getRedBlockEditing(p);
 						if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("a")) {
 							if (plugin.getWE() == null) {
-								console.error(s, "RedBlocks could not find World-Edit!");
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
