@@ -549,6 +549,10 @@ public class RedBlockAnimated implements Serializable {
 		return listOfBlocks;
 	}
 
+	/**
+	 * Gets the Block of the RedBlock
+	 * @return the Block
+	 */
 	public Block getBlock() {
 		return getLocation().getBlock();
 	}
