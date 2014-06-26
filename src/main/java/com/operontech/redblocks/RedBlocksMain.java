@@ -253,7 +253,7 @@ public class RedBlocksMain extends JavaPlugin {
 						if (rb.add(b, enableDelay, disableDelay)) {
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
 							if ((enableDelay > 0) || (disableDelay > 0)) {
-								notifyEditors(rb, "        Enable Delay:" + enableDelay + "ms | Disable Delay: " + disableDelay + "ms");
+								notifyEditors(rb, "        " + ChatColor.YELLOW + "Enable Delay: " + ChatColor.GOLD + enableDelay + "ms " + ChatColor.YELLOW + "| Disable Delay: " + ChatColor.GOLD + disableDelay + "ms");
 							}
 						}
 						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {

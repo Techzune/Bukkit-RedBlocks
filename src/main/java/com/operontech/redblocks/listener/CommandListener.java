@@ -80,10 +80,10 @@ public class CommandListener {
 									if (Util.isInteger(args[2]) && (args.length == 3)) {
 										if (Util.multiString(args[1], "place", "p", "enable", "e")) {
 											session.setEnableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for", ChatColor.GOLD + args[2] + ChatColor.YELLOW + " milliseconds.");
+											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for" + ChatColor.GOLD + args[2] + "ms.");
 										} else {
 											session.setDisableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for", ChatColor.GOLD + args[2] + ChatColor.YELLOW + " milliseconds.");
+											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for" + ChatColor.GOLD + args[2] + "ms.");
 										}
 									}
 									if (args.length > 3) {
@@ -95,11 +95,11 @@ public class CommandListener {
 													if (Util.multiString(args[1], "place", "p", "enable", "e")) {
 														session.setEnableDelay(args[2]);
 														session.setEnableDelayBlock(splitText[1], ((splitText.length > 2) && Util.isInteger(splitText[2]) ? splitText[2] : "-1"));
-														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for", ChatColor.GOLD + args[2] + ChatColor.YELLOW + " milliseconds if the block has the id: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
+														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for " + ChatColor.GOLD + args[2] + "ms" + ChatColor.YELLOW + " | Block ID: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
 													} else {
 														session.setDisableDelay(args[2]);
 														session.setDisableDelayBlock(splitText[1], ((splitText.length > 2) && Util.isInteger(splitText[2]) ? splitText[2] : "-1"));
-														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for", ChatColor.GOLD + args[2] + ChatColor.YELLOW + " milliseconds if the block has the id: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
+														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for " + ChatColor.GOLD + args[2] + "ms" + ChatColor.YELLOW + " | Block ID: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
 													}
 												} else {
 													sendCMenu(s);
