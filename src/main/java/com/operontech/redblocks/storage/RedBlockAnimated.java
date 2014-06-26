@@ -143,9 +143,9 @@ public class RedBlockAnimated implements Serializable {
 				public void run() {
 					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
-						if (doAnimations && (entry.getValue().get(0) > 0)) {
+						if (doAnimations && (entry.getValue().get(1) > 0)) {
 							try {
-								Thread.sleep(entry.getValue().get(0));
+								Thread.sleep(entry.getValue().get(1));
 							} catch (final InterruptedException e) {
 							}
 						}
