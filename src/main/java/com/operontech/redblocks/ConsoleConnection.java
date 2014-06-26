@@ -1,9 +1,9 @@
 package com.operontech.redblocks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 
 /**
  * ConsoleConnection: Second Edition
@@ -12,16 +12,13 @@ public class ConsoleConnection {
 
 	private final Server server;
 
-	private final Plugin plugin;
-
 	/**
 	 * Initiates a new console connection.
 	 * @param plugin the plugin
 	 * @param server the server
 	 */
-	public ConsoleConnection(final Plugin plugin, final Server server) {
-		this.server = server;
-		this.plugin = plugin;
+	public ConsoleConnection() {
+		server = Bukkit.getServer();
 	}
 
 	/**
@@ -31,7 +28,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void info(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.AQUA + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.AQUA + String.valueOf(msg));
 	}
 
 	/**
@@ -41,7 +38,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void severe(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.RED + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.RED + String.valueOf(msg));
 	}
 
 	/**
@@ -51,7 +48,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void warning(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[" + plugin.getName() + "] " + ChatColor.DARK_RED + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.DARK_RED + String.valueOf(msg));
 	}
 
 	/**
@@ -73,7 +70,7 @@ public class ConsoleConnection {
 	 */
 	public void notify(final CommandSender player, final String... msgs) {
 		for (final String msg : msgs) {
-			msg(player, ChatColor.GREEN + "<!> " + "[" + plugin.getName() + "] " + ChatColor.DARK_GREEN + msg);
+			msg(player, ChatColor.GREEN + "<!> " + "[RB] " + ChatColor.DARK_GREEN + msg);
 		}
 	}
 
@@ -88,7 +85,7 @@ public class ConsoleConnection {
 	 */
 	public void error(final CommandSender player, final String... msgs) {
 		for (final String msg : msgs) {
-			msg(player, ChatColor.RED + "<!> " + "[" + plugin.getName() + "] " + msg);
+			msg(player, ChatColor.RED + "<!> " + "[RB] " + msg);
 		}
 	}
 }

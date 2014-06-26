@@ -58,7 +58,7 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		console = new ConsoleConnection(this, getServer());
+		console = new ConsoleConnection();
 		config = new Configuration(this);
 		storage = new Storage(this);
 		clistener = new CommandListener(this);
