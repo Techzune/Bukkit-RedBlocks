@@ -80,10 +80,10 @@ public class CommandListener {
 									if (Util.isInteger(args[2]) && (args.length == 3)) {
 										if (Util.multiString(args[1], "place", "p", "enable", "e")) {
 											session.setEnableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for" + ChatColor.GOLD + args[2] + "ms.");
+											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for " + ChatColor.GOLD + args[2] + "ms.");
 										} else {
 											session.setDisableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for" + ChatColor.GOLD + args[2] + "ms.");
+											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for " + ChatColor.GOLD + args[2] + "ms.");
 										}
 									}
 									if (args.length > 3) {
