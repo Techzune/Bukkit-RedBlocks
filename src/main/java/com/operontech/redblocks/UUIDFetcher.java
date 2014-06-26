@@ -41,15 +41,12 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 			final int requests = (int) Math.ceil(names.size() / PROFILES_PER_REQUEST);
 			for (int i = 0; i < requests; i++) {
 				final HttpURLConnection connection = createConnection();
-				final String body = JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size())));
-				writeBody(connection, body);
+				writeBody(connection, JSONArray.toJSONString(names.subList(i * 100, Math.min((i + 1) * 100, names.size()))));
 				final JSONArray array = (JSONArray) jsonParser.parse(new InputStreamReader(connection.getInputStream()));
+				JSONObject jsonProfile;
 				for (final Object profile : array) {
-					final JSONObject jsonProfile = (JSONObject) profile;
-					final String id = (String) jsonProfile.get("id");
-					final String name = (String) jsonProfile.get("name");
-					final UUID uuid = UUIDFetcher.getUUID(id);
-					uuidMap.put(name, uuid);
+					jsonProfile = (JSONObject) profile;
+					uuidMap.put((String) jsonProfile.get("name"), UUIDFetcher.getUUID((String) jsonProfile.get("id")));
 				}
 				if (rateLimiting && (i != (requests - 1))) {
 					Thread.sleep(100L);
@@ -69,8 +66,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	}
 
 	private static HttpURLConnection createConnection() throws Exception {
-		final URL url = new URL(PROFILE_URL);
-		final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		final HttpURLConnection connection = (HttpURLConnection) new URL(PROFILE_URL).openConnection();
 		connection.setRequestMethod("POST");
 		connection.setRequestProperty("Content-Type", "application/json");
 		connection.setUseCaches(false);
@@ -84,10 +80,7 @@ public class UUIDFetcher implements Callable<Map<String, UUID>> {
 	}
 
 	public static byte[] toBytes(final UUID uuid) {
-		final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
-		byteBuffer.putLong(uuid.getMostSignificantBits());
-		byteBuffer.putLong(uuid.getLeastSignificantBits());
-		return byteBuffer.array();
+		return ByteBuffer.wrap(new byte[16]).putLong(uuid.getMostSignificantBits()).putLong(uuid.getLeastSignificantBits()).array();
 	}
 
 	public static UUID fromBytes(final byte[] array) {
