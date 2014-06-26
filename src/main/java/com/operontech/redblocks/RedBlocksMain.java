@@ -53,6 +53,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
+	private final Map<RedBlockAnimated, Thread> animationThreads = new HashMap<RedBlockAnimated, Thread>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
@@ -305,10 +306,17 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.ENABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
+			Thread t = animationThreads.get(rb);
+			if (t != null) {
+				t.interrupt();
+			}
 			for (final RedBlockChild rbc : rb.getBlocks()) {
 				activeBlocks.add(rbc.getLocation().toString());
 			}
-			rb.enable(force, doAnimations);
+			t = rb.enable((t == null) && !rb.getActiveState() ? force : true, doAnimations);
+			if (t != null) {
+				animationThreads.put(rb, t);
+			}
 			if (config.getBool(ConfigValue.gc_onEnableRedBlock)) {
 				System.gc();
 			}
@@ -327,6 +335,10 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DISABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
+			Thread t = animationThreads.get(rb);
+			if (t != null) {
+				t.interrupt();
+			}
 			final RBDisableListener listener = new RBDisableListener() {
 				@Override
 				public void threadFinished() {
@@ -335,7 +347,10 @@ public class RedBlocksMain extends JavaPlugin {
 					}
 				}
 			};
-			rb.disable(force, doAnimations, listener);
+			t = rb.disable((t == null) && !rb.getActiveState() ? force : true, doAnimations, listener);
+			if (t != null) {
+				animationThreads.put(rb, t);
+			}
 			if (config.getBool(ConfigValue.gc_onDisableRedBlock)) {
 				System.gc();
 			}

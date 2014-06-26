@@ -91,8 +91,9 @@ public class RedBlockAnimated implements Serializable {
 	 * Enables all of the RedBlockChilds in the RedBlock's database of blocks.
 	 * @param force if true, the blocks will cause block updates when enabled forcibly
 	 * @param doAnimations if true, the RedBlock will pause for animations
+	 * @returns the animations thread
 	 */
-	public void enable(final boolean force, final boolean doAnimations) {
+	public Thread enable(final boolean force, final boolean doAnimations) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (!blocksActive || force) {
 			final Thread thread = new Thread() {
@@ -100,10 +101,14 @@ public class RedBlockAnimated implements Serializable {
 				public void run() {
 					Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
+						if (Thread.interrupted()) {
+							break;
+						}
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
 								Thread.sleep(entry.getValue().get(0));
 							} catch (final InterruptedException e) {
+								break;
 							}
 						}
 						entry.getKey().enableBlock(Util.isSpecialBlock(entry.getKey().getType()));
@@ -118,7 +123,9 @@ public class RedBlockAnimated implements Serializable {
 				}
 			};
 			thread.start();
+			return thread;
 		}
+		return null;
 	}
 
 	/**
@@ -134,8 +141,9 @@ public class RedBlockAnimated implements Serializable {
 	 * Disables all of the RedBlockChilds in the RedBlock's database of blocks.
 	 * @param force if true, the blocks will cause block updates when disabled forcibly
 	 * @param doAnimations if true, the RedBlock will pause for animations
+	 * @return the animations thread
 	 */
-	public void disable(final boolean force, final boolean doAnimations, final RBDisableListener listener) {
+	public Thread disable(final boolean force, final boolean doAnimations, final RBDisableListener listener) {
 		final Set<Chunk> chunks = new HashSet<Chunk>();
 		if (blocksActive || force) {
 			final Thread thread = new Thread() {
@@ -143,10 +151,14 @@ public class RedBlockAnimated implements Serializable {
 				public void run() {
 					Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
+						if (Thread.interrupted()) {
+							break;
+						}
 						if (doAnimations && (entry.getValue().get(1) > 0)) {
 							try {
 								Thread.sleep(entry.getValue().get(1));
 							} catch (final InterruptedException e) {
+								break;
 							}
 						}
 						entry.getKey().disableBlock(Util.isSpecialBlock(entry.getKey().getType()));
@@ -162,7 +174,9 @@ public class RedBlockAnimated implements Serializable {
 				}
 			};
 			thread.start();
+			return thread;
 		}
+		return null;
 	}
 
 	/**
