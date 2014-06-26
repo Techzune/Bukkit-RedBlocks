@@ -3,12 +3,12 @@ package com.operontech.redblocks.storage;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.Chunk;
@@ -36,7 +36,7 @@ public class RedBlockAnimated implements Serializable {
 	private boolean changed = false;
 
 	// RedBlockChild & Delay Times (ENABLE,DISABLE)
-	private final Map<RedBlockChild, List<Integer>> listOfBlocks = new TreeMap<RedBlockChild, List<Integer>>();
+	private final Map<RedBlockChild, List<Integer>> listOfBlocks = new LinkedHashMap<RedBlockChild, List<Integer>>();
 
 	/**
 	 * Creates a RedBlock.
@@ -98,7 +98,7 @@ public class RedBlockAnimated implements Serializable {
 			final Thread thread = new Thread() {
 				@Override
 				public void run() {
-					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
+					Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(0) > 0)) {
 							try {
@@ -141,7 +141,7 @@ public class RedBlockAnimated implements Serializable {
 			final Thread thread = new Thread() {
 				@Override
 				public void run() {
-					Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
+					Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 					for (final Entry<RedBlockChild, List<Integer>> entry : cacheMap.entrySet()) {
 						if (doAnimations && (entry.getValue().get(1) > 0)) {
 							try {
@@ -246,7 +246,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the block was found and removed
 	 */
 	public boolean remove(final Block b) {
-		Set<RedBlockChild> rbcKeys = new TreeSet<RedBlockChild>(listOfBlocks.keySet());
+		Set<RedBlockChild> rbcKeys = new LinkedHashSet<RedBlockChild>(listOfBlocks.keySet());
 		for (final RedBlockChild rbc : rbcKeys) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				listOfBlocks.remove(rbc);
@@ -302,7 +302,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the RedBlockChild of the block was found
 	 */
 	public boolean contains(final Block b) {
-		Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
+		Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return true;
@@ -318,7 +318,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the RedBlockChild of the block that was found
 	 */
 	public RedBlockChild getChild(final Block b) {
-		Map<RedBlockChild, List<Integer>> cacheMap = new TreeMap<RedBlockChild, List<Integer>>(listOfBlocks);
+		Map<RedBlockChild, List<Integer>> cacheMap = new LinkedHashMap<RedBlockChild, List<Integer>>(listOfBlocks);
 		for (final RedBlockChild rbc : cacheMap.keySet()) {
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
 				return rbc;
