@@ -272,7 +272,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (getPlayerSession(p) == null) {
 			addBlock(p, rb, b, 0, 0);
 		} else {
-			addBlock(p, rb, b, getPlayerSession(p).getEnableDelay(), getPlayerSession(p).getDisableDelay());
+			addBlock(p, rb, b, playerSessions.get(p).getEnableDelay(), playerSessions.get(p).getDisableDelay());
 		}
 	}
 
