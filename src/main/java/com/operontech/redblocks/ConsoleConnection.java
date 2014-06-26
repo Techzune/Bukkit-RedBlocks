@@ -28,7 +28,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void info(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.AQUA + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RedBlocks] " + ChatColor.AQUA + String.valueOf(msg));
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void severe(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.RED + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RedBlocks] " + ChatColor.RED + String.valueOf(msg));
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class ConsoleConnection {
 	 * @param msg the message
 	 */
 	public void warning(final Object msg) {
-		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RB] " + ChatColor.DARK_RED + String.valueOf(msg));
+		server.getConsoleSender().sendMessage(ChatColor.DARK_AQUA + "[RedBlocks] " + ChatColor.DARK_RED + String.valueOf(msg));
 	}
 
 	/**
