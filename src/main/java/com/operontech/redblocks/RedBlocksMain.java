@@ -164,7 +164,7 @@ public class RedBlocksMain extends JavaPlugin {
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.NEW_EDITOR, p);
 			getServer().getPluginManager().callEvent(event);
 			if (!event.isCancelled()) {
-				enableRedBlock(rb, !isBeingEdited(rb));
+				enableRedBlock(rb, !isBeingEdited(rb), false);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
@@ -298,16 +298,17 @@ public class RedBlocksMain extends JavaPlugin {
 	 * Enables a RedBlockAnimated.
 	 * @param rb the RedBlockAnimated to be enabled
 	 * @param force if true, the RedBlockAnimated will ignore if the RedBlockAnimated is already enabled and enable it again
+	 * @param doAnimations if true, the RedBlockAnimated will pause for delays
 	 * @return if the RedBlockAnimated was enabled
 	 */
-	public boolean enableRedBlock(final RedBlockAnimated rb, final boolean force) {
+	public boolean enableRedBlock(final RedBlockAnimated rb, final boolean force, final boolean doAnimations) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.ENABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
 			for (final RedBlockChild rbc : rb.getBlocks()) {
 				activeBlocks.add(rbc.getLocation().toString());
 			}
-			rb.enable(force);
+			rb.enable(force, doAnimations);
 			if (config.getBool(ConfigValue.gc_onEnableRedBlock)) {
 				System.gc();
 			}
@@ -319,9 +320,10 @@ public class RedBlocksMain extends JavaPlugin {
 	 * Disabled a RedBlockAnimated.
 	 * @param rb the RedBlockAnimated to be disabled
 	 * @param force if true, the RedBlockAnimated will ignore if the RedBlockAnimated is already disabled and disable it again
+	 * @param doAnimations if true, the RedBlockAnimated will pause for delays
 	 * @return if the RedBlockAnimated was disabled
 	 */
-	public boolean disableRedBlock(final RedBlockAnimated rb, final boolean force) {
+	public boolean disableRedBlock(final RedBlockAnimated rb, final boolean force, final boolean doAnimations) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DISABLED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
@@ -333,7 +335,7 @@ public class RedBlocksMain extends JavaPlugin {
 					}
 				}
 			};
-			rb.disable(force, listener);
+			rb.disable(force, doAnimations, listener);
 			if (config.getBool(ConfigValue.gc_onDisableRedBlock)) {
 				System.gc();
 			}
@@ -351,7 +353,7 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.DESTROYED);
 		getServer().getPluginManager().callEvent(event);
 		if (!isBeingEdited(rb) && !event.isCancelled()) {
-			enableRedBlock(rb, true);
+			enableRedBlock(rb, true, false);
 			storage.removeRedBlock(b);
 			if (breakBlock) {
 				b.breakNaturally();
@@ -515,10 +517,10 @@ public class RedBlocksMain extends JavaPlugin {
 				}
 				final boolean bp = block.getBlockPower() > 0;
 				if ((bp && !rb.getOptionInverted()) || (!bp && rb.getOptionInverted())) {
-					disableRedBlock(rb, false);
+					disableRedBlock(rb, false, true);
 					startTimeout(rb);
 				} else {
-					enableRedBlock(rb, false);
+					enableRedBlock(rb, false, true);
 					startTimeout(rb);
 				}
 			}
