@@ -116,6 +116,21 @@ public class PlayerSession {
 	}
 
 	/**
+	 * Checks if the supplied block matches the blockId and blockData defined by their respective methods.
+	 * @param b the block to match
+	 * @return if the block matches
+	 */
+	@SuppressWarnings("deprecation")
+	public boolean getEnableDelayBlockMatch(final Block b) {
+		if ((getEnableDelayBlockId() == 0) || (getEnableDelayBlockId() == b.getTypeId())) {
+			if ((getEnableDelayBlockData() == -1) || (getEnableDelayBlockData() == b.getData())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Gets the disable delay for any future RedBlockChilds the player places.
 	 * @return the disable delay set for this session
 	 */
@@ -143,6 +158,21 @@ public class PlayerSession {
 	public int getDisableDelayBlockData() {
 		final String value = data.get("disableDelayBlockData");
 		return (Util.isInteger(value)) ? Integer.parseInt(value) : -1;
+	}
+
+	/**
+	 * Checks if the supplied block matches the blockId and blockData defined by their respective methods.
+	 * @param b the block to match
+	 * @return if the block matches
+	 */
+	@SuppressWarnings("deprecation")
+	public boolean getDisableDelayBlockMatch(final Block b) {
+		if ((getDisableDelayBlockId() == 0) || (getDisableDelayBlockId() == b.getTypeId())) {
+			if ((getDisableDelayBlockData() == -1) || (getDisableDelayBlockData() == b.getData())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

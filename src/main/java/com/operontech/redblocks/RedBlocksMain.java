@@ -252,6 +252,9 @@ public class RedBlocksMain extends JavaPlugin {
 					if (!event.isCancelled()) {
 						if (rb.add(b, enableDelay, disableDelay)) {
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
+							if ((enableDelay > 0) || (disableDelay > 0)) {
+								notifyEditors(rb, "        Enable Delay:" + enableDelay + "ms | Disable Delay: " + disableDelay + "ms");
+							}
 						}
 						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
 							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), enableDelay, disableDelay);
@@ -269,10 +272,11 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param b the block to be added
 	 */
 	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
-		if (getPlayerSession(p) == null) {
+		final PlayerSession ps = playerSessions.get(p);
+		if (ps == null) {
 			addBlock(p, rb, b, 0, 0);
 		} else {
-			addBlock(p, rb, b, playerSessions.get(p).getEnableDelay(), playerSessions.get(p).getDisableDelay());
+			addBlock(p, rb, b, ps.getEnableDelayBlockMatch(b) ? ps.getEnableDelay() : 0, ps.getDisableDelayBlockMatch(b) ? ps.getDisableDelay() : 0);
 		}
 	}
 
