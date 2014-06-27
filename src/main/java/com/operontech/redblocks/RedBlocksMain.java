@@ -483,7 +483,7 @@ public class RedBlocksMain extends JavaPlugin {
 		Block db = null;
 		final List<Block> cache = new ArrayList<Block>();
 		if (reg.getArea() > 10000) {
-			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please hold; 10000+ Blocks are being added via WorldEdit by " + p.getName());
+			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please hold; 10000+ Blocks are being " + (remove ? "removed" : "added") + " via WorldEdit by " + ChatColor.DARK_AQUA + p.getName());
 		}
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
@@ -506,9 +506,9 @@ public class RedBlocksMain extends JavaPlugin {
 			}
 		}
 		if (remove) {
-			notifyEditors(rb, rb.removeBlockList(cache) + " Blocks Removed By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
+			notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " removed " + rb.removeBlockList(cache) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
 		} else {
-			notifyEditors(rb, rb.addBlockList(cache, enableDelay, disableDelay) + " Blocks Added By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
+			notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " added " + rb.addBlockList(cache, enableDelay, disableDelay) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
 		}
 		if (config.getBool(ConfigValue.gc_onWorldEdit)) {
 			System.gc();
