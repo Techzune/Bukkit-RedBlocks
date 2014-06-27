@@ -1,7 +1,7 @@
 # Operon TechnologiesTM Configuration
 #     RedBlocks 2 by Techzune
 
-# IGNORE THIS - CHANGING IT WILL WIPE YOUR CONFIG!
+# IGNORE THIS - CHANGING IT WILL RESET YOUR CONFIG!
 configVersion: '1.6'
 
 # Checks for updates from BukkitDev
@@ -12,7 +12,7 @@ rules:
   maxBlocksPer: 100
 
   # The maximum amount of RedBlocks created per player
-  maxRedBlocksPer: 5
+  maxRedBlocksPer: 15
 
 redblocks:
   # The block ID of a RedBlock
@@ -20,17 +20,18 @@ redblocks:
   blockID: '42'
 
   # Drops all controlled blocks when the RedBlock is destroyed
+  #    Turning this on can be considered annoying if the player's inventory is full.
   drops: 'false'
 
   # Plays sound effects when editing RedBlocks
   soundFX: 'true'
 
-  # The item in a player's hand to destroy a RedBlock
+  # The ID of the item that is used while sneaking to break a RedBlock
   destroyItem: '280'
 
   # The time in milliseconds during which the RedBlock will pause after a redstone signal
-  #     This prevents clocks that lag the server! The higher the safer.
-  redstoneTimeout: '500'
+  #     This prevents clocks that lag the server. The higher the safer, but too high can be annoying!
+  redstoneTimeout: '750'
 
 worldedit:
   # The maximum number of blocks added to a RedBlock at a time via WorldEdit
@@ -50,4 +51,4 @@ gc:
 # If you would like any config options added, feel free to suggest them!
 # We appreciate your feedback about Operon Technologies or our plugins!
 
-# ~~ Operon TechnologiesTM ~~ RedBlocks 2 ~~ 2013 ~~ #
+# ~~ Operon TechnologiesTM ~~ RedBlocks 2 ~~ 2014 ~~ #
