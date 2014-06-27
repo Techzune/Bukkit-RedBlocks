@@ -19,6 +19,8 @@ permissions:
     description: Allows the player to reload RedBlock's configuration
   redblocks.worldedit:
     description: Allows the player to use WorldEdit with RedBlocks
+  redblocks.delay:
+    description: Allows the player to add delays to a RedBlockAnimated
   redblocks.bypass.protect:
     description: Allows the player to bypass the block protection by RedBlocks
   redblocks.bypass.wemax:
