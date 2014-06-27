@@ -30,7 +30,8 @@ public class CommandListener {
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (plugin.hasPermission(s, "reload")) {
-						console.notify(s, "RedBlocks Reloading: " + ((plugin.reloadPlugin()) ? "Succeeded" : ChatColor.RED + "Failed to Save"));
+						console.notify(s, ChatColor.DARK_AQUA + "RedBlocks Reloading: " + ((plugin.reloadPlugin()) ? ChatColor.GREEN + "Succeeded" : ChatColor.RED + "Failed to Save"));
+						return true;
 					}
 				}
 				if (s instanceof Player) {

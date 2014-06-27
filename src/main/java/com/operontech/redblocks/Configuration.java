@@ -16,6 +16,7 @@ public class Configuration {
 
 	private void load() {
 		plugin.saveDefaultConfig();
+		plugin.reloadConfig();
 		config = plugin.getConfig();
 		if ((getString(ConfigValue.configVersion) == null) || !getString(ConfigValue.configVersion).equals(configVersion)) {
 			backup();
