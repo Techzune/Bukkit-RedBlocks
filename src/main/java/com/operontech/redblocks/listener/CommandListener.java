@@ -193,8 +193,8 @@ public class CommandListener {
 		console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
 		console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
 		if (plugin.hasPermission(s, "worldedit") && (plugin.getWE() != null)) {
-			console.msg(s, ChatColor.GREEN + "World-Edit: AddCommand Blocks:", "     /rb add [TYPE:DMG]");
-			console.msg(s, ChatColor.GREEN + "World-Edit: RemoveCommand Blocks:", "     /rb remove [TYPE:DMG]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG] [MILLISECONDS]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG] [MILLISECONDS]");
 		}
 	}
 
