@@ -1,15 +1,19 @@
 <--- Changelog for RedBlocks --->
 
 Version 2.3
-  > Deprecated RedBlock
   > Added and Implemented RedBlockAnimated
-  > Initial Implementations of Wait Times
-  > Revamped Various Processes for Efficiency
+  > Added and Implemented The Use Of UUIDs
+  > Added and Implemented RedBlockChild Delays
+  > Added Permission: "redblocks.delay"
+  > Added Command: "/rb delay"
+  > Added Command Help: "/rb delay"
   > Removed saveOnWorld Event
-  > Implementation of UUIDs
-  > Bug Fix: WorldEdit Command Arguments
+  > Deprecated RedBlock
+  > Improved Shutdown Cleanup
+  > Rewrote Many Lines For Performance Efficiency
+  > Substantially Reduced Resource Usage
   > OCD Changes
-  ...> Insertion of RedBlockChild Delays
+  > Bug Fix: WorldEdit Command Arguments
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event
