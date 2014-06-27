@@ -447,7 +447,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param type the type of block to be added, can be null (use colon for data values)
 	 * @param remove if true, the blocks in the selection will be removed, if false, blocks in the selection will be added
 	 */
-	public void useWorldEdit(final RedBlockAnimated rb, final Player p, final String type, final boolean remove) {
+	public void useWorldEdit(final RedBlockAnimated rb, final Player p, final String type, final boolean remove, final int enableDelay, final int disableDelay) {
 		final Selection reg = getWE().getSelection(p);
 		int t = 0;
 		int d = 0;
@@ -508,7 +508,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (remove) {
 			notifyEditors(rb, rb.removeBlockList(cache) + " Blocks Removed By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
 		} else {
-			notifyEditors(rb, rb.addBlockList(cache) + " Blocks Added By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
+			notifyEditors(rb, rb.addBlockList(cache, enableDelay, disableDelay) + " Blocks Added By: " + p.getName() + " | " + rb.getBlockCount() + " Blocks");
 		}
 		if (config.getBool(ConfigValue.gc_onWorldEdit)) {
 			System.gc();

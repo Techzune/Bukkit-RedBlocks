@@ -216,12 +216,14 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Adds multiple RedBlockChilds to the RedBlock's database of blocks.
 	 * @param list the list of RedBlockChilds
+	 * @param enableDelay the enable delay for each of the blocks
+	 * @param disableDelay the disable delay for each of the blocks
 	 * @return the number of RedBlockChilds added
 	 */
-	public int addChildList(final List<RedBlockChild> list) {
+	public int addChildList(final List<RedBlockChild> list, final int enableDelay, final int disableDelay) {
 		int i = 0;
 		for (final RedBlockChild child : list) {
-			if (add(child, 0, 0)) {
+			if (add(child, enableDelay, disableDelay)) {
 				i++;
 			}
 		}
@@ -231,12 +233,14 @@ public class RedBlockAnimated implements Serializable {
 	/**
 	 * Adds multiple Blocks to the RedBlock's database of blocks.
 	 * @param list the list of Blocks
+	 * @param enableDelay the enable delay for each of the blocks
+	 * @param disableDelay the disable delay for each of the blocks
 	 * @return the number of Blocks added
 	 */
-	public int addBlockList(final List<Block> list) {
+	public int addBlockList(final List<Block> list, final int enableDelay, final int disableDelay) {
 		int i = 0;
 		for (final Block child : list) {
-			if (add(child, 0, 0)) {
+			if (add(child, enableDelay, disableDelay)) {
 				i++;
 			}
 		}

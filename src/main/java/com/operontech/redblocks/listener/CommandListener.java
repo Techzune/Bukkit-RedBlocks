@@ -42,7 +42,7 @@ public class CommandListener {
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false, (args.length > 2) && Util.isInteger(args[2]) ? Integer.valueOf(args[2]) : 0, (args.length > 3) && Util.isInteger(args[3]) ? Integer.valueOf(args[3]) : 0);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 								return true;
@@ -53,7 +53,7 @@ public class CommandListener {
 								return true;
 							}
 							if (plugin.hasPermission(s, "worldedit")) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true, 0, 0);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 								return true;
