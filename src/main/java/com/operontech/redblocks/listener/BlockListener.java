@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.ConsoleConnection;
+import com.operontech.redblocks.Permission;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 
@@ -40,7 +41,7 @@ public class BlockListener implements Listener {
 		final boolean isRedBlockAnimated = plugin.getStorage().containsRedBlock(b);
 		if (isRedBlockAnimated && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
 			// Destroy RedBlock
-			if (plugin.hasPermission(p, "createanddestroy")) {
+			if (Permission.CREATEANDDESTROY.check(p)) {
 				return !plugin.destroyRedBlock(b, p);
 			} else {
 				console.error(p, "You do not have permission to destroy RedBlocks!");
@@ -77,7 +78,7 @@ public class BlockListener implements Listener {
 			}
 
 			//  Verify Protection of Block
-			if ((parent != null) && !plugin.hasPermission(p, "bypassProtect")) {
+			if ((parent != null) && !Permission.BYPASS_PROTECT.check(p)) {
 				if (parent.getOptionProtected()) {
 					console.error(p, "That block is protected by a RedBlock!");
 					return true;
@@ -86,7 +87,7 @@ public class BlockListener implements Listener {
 
 			// Begin Editing of RedBlockAnimated and Create RedBlockAnimated (If Necessary)
 			if (isRedBlockAnimated) {
-				if (plugin.hasPermission(p, "use")) {
+				if (Permission.USE.check(p)) {
 					plugin.addEditor(p, b);
 					return true;
 				} else {
@@ -94,7 +95,7 @@ public class BlockListener implements Listener {
 					return true;
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
-				if (plugin.hasPermission(p, "createanddestroy")) {
+				if (Permission.CREATEANDDESTROY.check(p)) {
 					if (parent == null) {
 						plugin.createRedBlock(p, b);
 						return true;
@@ -120,7 +121,7 @@ public class BlockListener implements Listener {
 				redb.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
 			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
-			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !plugin.hasPermission(event.getPlayer(), "bypass.maxBlocksPer")) {
+			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(event.getPlayer())) {
 				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
 			} else {

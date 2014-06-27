@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.ConsoleConnection;
+import com.operontech.redblocks.Permission;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.Util;
 import com.operontech.redblocks.playerdependent.PlayerSession;
@@ -29,7 +30,7 @@ public class CommandListener {
 		if (cmd.getName().equalsIgnoreCase("redblocks") || cmd.getName().equalsIgnoreCase("rb")) {
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("reload")) {
-					if (plugin.hasPermission(s, "reload")) {
+					if (Permission.RELOAD.check(s)) {
 						console.notify(s, ChatColor.DARK_AQUA + "RedBlocks Reloading: " + ((plugin.reloadPlugin()) ? ChatColor.GREEN + "Succeeded" : ChatColor.RED + "Failed to Save"));
 						return true;
 					}
@@ -42,7 +43,7 @@ public class CommandListener {
 							if (plugin.getWE() == null) {
 								return true;
 							}
-							if (plugin.hasPermission(s, "worldedit")) {
+							if (Permission.WORLDEDIT.check(s)) {
 								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false, (args.length > 2) && Util.isInteger(args[2]) ? Integer.valueOf(args[2]) : 0, (args.length > 3) && Util.isInteger(args[3]) ? Integer.valueOf(args[3]) : 0);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
@@ -53,7 +54,7 @@ public class CommandListener {
 								console.error(s, "World-Edit is not installed on this server!");
 								return true;
 							}
-							if (plugin.hasPermission(s, "worldedit")) {
+							if (Permission.WORLDEDIT.check(s)) {
 								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true, 0, 0);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
@@ -62,6 +63,10 @@ public class CommandListener {
 						} else if (Util.multiString(args[0], "stop", "quit", "s")) {
 							plugin.removeEditor(p);
 						} else if (Util.multiString(args[0], "delay", "d")) {
+							if (!Permission.DELAY.check(s)) {
+								console.error(s, "You don't have the permission to add delays to RedBlocks.");
+								return true;
+							}
 							if (args.length >= 2) {
 								if (Util.multiString(args[1], "place", "p", "enable", "e", "break", "b", "disable", "d")) {
 									final PlayerSession session = plugin.getPlayerSession(p);
@@ -123,7 +128,7 @@ public class CommandListener {
 								return true;
 							}
 							if (args[1].equalsIgnoreCase("inverted")) {
-								if (plugin.hasPermission(s, "optionsInverted")) {
+								if (Permission.OPTIONS_INVERTED.check(s)) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
 										console.notify(s, "RedBlock Option Set | inverted: " + ChatColor.GOLD + rb.setInverted(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
@@ -131,7 +136,7 @@ public class CommandListener {
 									}
 								}
 							} else if (args[1].equalsIgnoreCase("protect")) {
-								if (plugin.hasPermission(s, "optionsProtect")) {
+								if (Permission.OPTIONS_PROTECT.check(s)) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
 										console.notify(s, "RedBlock Option Set | protect: " + ChatColor.GOLD + rb.setProtected(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
@@ -139,7 +144,7 @@ public class CommandListener {
 									}
 								}
 							} else if (args[1].equalsIgnoreCase("owner")) {
-								if (plugin.hasPermission(p, "optionsOwner")) {
+								if (Permission.OPTIONS_OWNER.check(s)) {
 									if (s.getServer().getPlayer(args[2]) == null) {
 										changeOwner.remove(s);
 										console.error(s, "That player could not be found.");
@@ -183,17 +188,16 @@ public class CommandListener {
 	}
 
 	private void sendCMenu(final CommandSender s) {
-		console.msg(s, ChatColor.GOLD + "   >>>>> RedBlocks Menu <<<<<   ");
-		if (plugin.hasPermission(s, "reload")) {
+		console.msg(s, ChatColor.RED + "   >>>>> RedBlocks Menu <<<<<   ");
+		if (Permission.RELOAD.check(s)) {
 			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:", "     /rb reload");
 		}
 		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
-		console.msg(s, ChatColor.GREEN + "Set Pause For Single Child Block:", "     /rb p <place/break> <MILLISECONDS>");
-		console.msg(s, ChatColor.GREEN + "Set Pause For Multiple Child Blocks:", "     /rb pm <place/break> <MILLISECONDS>");
-		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
 		console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
-		console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
-		if (plugin.hasPermission(s, "worldedit") && (plugin.getWE() != null)) {
+		if (Permission.DELAY.check(s)) {
+			console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
+		}
+		if (Permission.WORLDEDIT.check(s) && (plugin.getWE() != null)) {
 			console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG] [MILLISECONDS]");
 			console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG] [MILLISECONDS]");
 		}
@@ -201,13 +205,13 @@ public class CommandListener {
 
 	private void sendCOptions(final CommandSender s) {
 		console.msg(s, ChatColor.GOLD + "   >>>>> Options for RedBlocks <<<<<   ");
-		if (plugin.hasPermission(s, "optionsInverted")) {
+		if (Permission.OPTIONS_INVERTED.check(s)) {
 			console.msg(s, ChatColor.GREEN + "Inverted Redstone:", "     /rb options inverted [default/true/false]");
 		}
-		if (plugin.hasPermission(s, "optionsProtect")) {
+		if (Permission.OPTIONS_PROTECT.check(s)) {
 			console.msg(s, ChatColor.GREEN + "Protect Blocks:", "     /rb options protect [true/false]");
 		}
-		if (plugin.hasPermission(s, "optionsOwner")) {
+		if (Permission.OPTIONS_OWNER.check(s)) {
 			console.msg(s, ChatColor.GREEN + "RedBlock Owner:", "     /rb options owner [NAME]");
 			console.msg(s, ChatColor.RED + "     Warning: This cannot be undone. Both players must be online.");
 		}

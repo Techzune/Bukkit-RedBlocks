@@ -1,5 +1,7 @@
 package com.operontech.redblocks;
 
+import org.bukkit.command.CommandSender;
+
 public enum Permission {
 	USE(
 			"use"),
@@ -9,6 +11,8 @@ public enum Permission {
 			"reload"),
 	WORLDEDIT(
 			"worldedit"),
+	DELAY(
+			"delay"),
 	CREATEANDDESTROY(
 			"createanddestroy"),
 	BYPASS_PROTECT(
@@ -33,5 +37,9 @@ public enum Permission {
 
 	public String getPermission() {
 		return "redblocks." + pString.toLowerCase();
+	}
+
+	public boolean check(final CommandSender s) {
+		return s.isOp() || s.hasPermission(getPermission());
 	}
 }

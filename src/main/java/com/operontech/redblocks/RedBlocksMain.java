@@ -415,7 +415,7 @@ public class RedBlocksMain extends JavaPlugin {
 				number++;
 			}
 		}
-		if ((number > config.getInt(ConfigValue.redblocks_blockID)) && !hasPermission(p, "bypass.maxRedBlocksPer")) {
+		if ((number > config.getInt(ConfigValue.redblocks_blockID)) && !Permission.BYPASS_MAXREDBLOCKSPER.check(p)) {
 			console.error(p, "You can't create anymore RedBlocks! Max: " + config.getInt(ConfigValue.redblocks_blockID));
 			return;
 		}
@@ -468,12 +468,12 @@ public class RedBlocksMain extends JavaPlugin {
 			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
-		if ((reg.getArea() > config.getInt(ConfigValue.worldedit_maxAtOnce)) && !hasPermission(p, "bypassWEMax")) {
+		if ((reg.getArea() > config.getInt(ConfigValue.worldedit_maxAtOnce)) && !Permission.BYPASS_WEMAX.check(p)) {
 			console.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.worldedit_maxAtOnce));
 			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
-		if (((reg.getArea() + rb.getBlockCount()) > config.getInt(ConfigValue.rules_maxBlocksPer)) && !hasPermission(p, "bypass.maxBlocksPer")) {
+		if (((reg.getArea() + rb.getBlockCount()) > config.getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(p)) {
 			console.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.rules_maxBlocksPer));
 			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
@@ -486,7 +486,7 @@ public class RedBlocksMain extends JavaPlugin {
 			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please hold; 10000+ Blocks are being " + (remove ? "removed" : "added") + " via WorldEdit by " + ChatColor.DARK_AQUA + p.getName());
 		}
 		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-			for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+			for (int y = max.getBlockY(); y >= min.getBlockY(); y--) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 					db = reg.getWorld().getBlockAt(x, y, z);
 					if (db.getType() == Material.AIR) {
@@ -596,16 +596,6 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public PlayerSession getPlayerSession(final Player p) {
 		return playerSessions.get(p);
-	}
-
-	/**
-	 * Checks if a player is op or has a RedBlockAnimated permission.
-	 * @param p the player to check
-	 * @param perm the permission node
-	 * @return if the player is op or has permission
-	 */
-	public boolean hasPermission(final CommandSender p, final String perm) {
-		return p.isOp() || p.hasPermission("redblocks." + perm);
 	}
 
 	/**
