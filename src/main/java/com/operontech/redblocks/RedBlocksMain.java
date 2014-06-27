@@ -53,7 +53,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
-	private final Map<RedBlockAnimated, Thread> animationThreads = new HashMap<RedBlockAnimated, Thread>();
+	private Map<RedBlockAnimated, Thread> animationThreads = new HashMap<RedBlockAnimated, Thread>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
 
@@ -108,6 +108,7 @@ public class RedBlocksMain extends JavaPlugin {
 		clistener = null;
 		playerSessions = null;
 		activeBlocks = null;
+		animationThreads = null;
 	}
 
 	private boolean checkForUpdate() {
