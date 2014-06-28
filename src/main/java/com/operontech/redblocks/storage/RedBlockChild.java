@@ -77,7 +77,7 @@ public class RedBlockChild implements Serializable {
 					final NoteBlock noteblock = (NoteBlock) state;
 					noteblock.setRawNote(note);
 				}
-				state.update(true);
+				state.update(true, true);
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
@@ -89,7 +89,9 @@ public class RedBlockChild implements Serializable {
 			}
 			s.update();
 		}
-
+		if (blockUpdate) {
+			getBlock().getState().update(true, true);
+		}
 	}
 
 	/**
@@ -144,6 +146,9 @@ public class RedBlockChild implements Serializable {
 			e.printStackTrace();
 		}
 		getBlock().setTypeId(0, false);
+		if (blockUpdate) {
+			getBlock().getState().update(true, true);
+		}
 	}
 
 	/**
