@@ -270,6 +270,6 @@ public class CommandListener {
 			console.msg(s, ChatColor.GREEN + "Change RedBlock's Owner:", "     /rb options owner <NAME>");
 			console.msg(s, ChatColor.RED + "     Warning: This cannot be undone. Both players must be online.");
 		}
-		console.msg(s, ChatColor.RED + "=====<<<<<{          Fin           }>>>>>=====");
+		console.msg(s, ChatColor.RED + "=====<<<<<{          fin           }>>>>>=====");
 	}
 }
