@@ -117,21 +117,27 @@ public class CommandListener {
 								sendCOptions(s);
 								return true;
 							}
-							if (args[1].equalsIgnoreCase("inverted")) {
+							if (Util.multiString(args[1], "invert", "inverted")) {
 								if (Permission.OPTIONS_INVERTED.check(s)) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
 										console.notify(s, "RedBlock Option Set | inverted: " + ChatColor.GOLD + rb.setInverted(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
 										sendCOptions(s);
 									}
+								} else {
+									console.error(s, "You do not have the permissions to set that option.");
+									return true;
 								}
-							} else if (args[1].equalsIgnoreCase("protect")) {
+							} else if (Util.multiString(args[1], "protect", "protected")) {
 								if (Permission.OPTIONS_PROTECT.check(s)) {
 									if (args[2].equalsIgnoreCase("true") || args[2].equalsIgnoreCase("false")) {
-										console.notify(s, "RedBlock Option Set | protect: " + ChatColor.GOLD + rb.setProtected(Boolean.valueOf(args[2].toLowerCase())));
+										console.notify(s, "RedBlock Option Set | protected: " + ChatColor.GOLD + rb.setProtected(Boolean.valueOf(args[2].toLowerCase())));
 									} else {
 										sendCOptions(s);
 									}
+								} else {
+									console.error(s, "You do not have the permissions to set that option.");
+									return true;
 								}
 							} else if (args[1].equalsIgnoreCase("owner")) {
 								if (Permission.OPTIONS_OWNER.check(s)) {
@@ -236,7 +242,9 @@ public class CommandListener {
 		if ((s instanceof Player) && plugin.isEditing((Player) s)) {
 			console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
 			console.msg(s, ChatColor.GREEN + "Point Commands:", "     /rb point <add/remove> [delay:PLACE:BREAK]");
-			console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
+			if (Permission.OPTIONS_INVERTED.check(s) || Permission.OPTIONS_PROTECT.check(s) || Permission.OPTIONS_OWNER.check(s)) {
+				console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <owner/protected/inverted> <VALUE>");
+			}
 			if (Permission.DELAY.check(s)) {
 				console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay <time:PLACE:BREAK> [block:ID:DATA]");
 			}
@@ -251,16 +259,17 @@ public class CommandListener {
 	}
 
 	private void sendCOptions(final CommandSender s) {
-		console.msg(s, ChatColor.GOLD + "   >>>>> Options for RedBlocks <<<<<   ");
+		console.msg(s, ChatColor.GOLD + "=====>>>>>{ Options for RedBlocks }<<<<<=====");
 		if (Permission.OPTIONS_INVERTED.check(s)) {
-			console.msg(s, ChatColor.GREEN + "Inverted Redstone:", "     /rb options inverted [default/true/false]");
+			console.msg(s, ChatColor.GREEN + "Invert Redstone Input:", "     /rb options inverted <default/true/false>");
 		}
 		if (Permission.OPTIONS_PROTECT.check(s)) {
-			console.msg(s, ChatColor.GREEN + "Protect Blocks:", "     /rb options protect [true/false]");
+			console.msg(s, ChatColor.GREEN + "Protect Child Blocks:", "     /rb options protect <true/false>");
 		}
 		if (Permission.OPTIONS_OWNER.check(s)) {
-			console.msg(s, ChatColor.GREEN + "RedBlock Owner:", "     /rb options owner [NAME]");
+			console.msg(s, ChatColor.GREEN + "Change RedBlock's Owner:", "     /rb options owner <NAME>");
 			console.msg(s, ChatColor.RED + "     Warning: This cannot be undone. Both players must be online.");
 		}
+		console.msg(s, ChatColor.RED + "=====<<<<<{          Fin           }>>>>>=====");
 	}
 }
