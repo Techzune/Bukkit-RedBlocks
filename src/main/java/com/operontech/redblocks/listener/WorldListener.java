@@ -37,7 +37,6 @@ public class WorldListener implements Listener {
 				public void run() {
 					if (!event.getPlayer().isOnline()) {
 						plugin.removeEditor(event.getPlayer());
-						plugin.getConsoleConnection().info("Removed PlayerSession for: " + event.getPlayer().getName());
 					}
 				}
 			}, 20L);
