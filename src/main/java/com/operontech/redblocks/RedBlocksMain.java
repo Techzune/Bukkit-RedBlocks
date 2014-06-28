@@ -85,7 +85,7 @@ public class RedBlocksMain extends JavaPlugin {
 		PlayerSession ps;
 		while (it.hasNext()) {
 			ps = it.next();
-			ps.getBlock().setTypeId(Integer.parseInt(config.getString(ConfigValue.redblocks_blockID)));
+			ps.getBlock().setTypeId(config.getInt(ConfigValue.redblocks_blockID));
 			it.remove();
 		}
 		playerSessions.clear();
@@ -221,7 +221,7 @@ public class RedBlocksMain extends JavaPlugin {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
 				}
 				if (!isBeingEdited(rb)) {
-					b.setTypeId(Integer.parseInt(config.getString(ConfigValue.redblocks_blockID)));
+					b.setTypeId(config.getInt(ConfigValue.redblocks_blockID));
 				}
 			}
 		}
@@ -413,6 +413,7 @@ public class RedBlocksMain extends JavaPlugin {
 			enableRedBlock(rb, true, false);
 			storage.removeRedBlock(b);
 			if (breakBlock) {
+				b.setTypeId(config.getInt(ConfigValue.redblocks_blockID));
 				b.breakNaturally();
 			}
 			if (config.getBool(ConfigValue.gc_onDestroyRedBlock)) {
