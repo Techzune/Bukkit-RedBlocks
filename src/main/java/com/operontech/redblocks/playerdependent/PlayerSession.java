@@ -82,8 +82,8 @@ public class PlayerSession {
 			}
 		} else if (data.containsKey(b.getTypeId())) {
 			final String value = data.get(b.getTypeId());
-			if (Util.isInteger(value.split(":")[0])) {
-				return Integer.parseInt(value.split(":")[0]);
+			if (Util.isInteger(value)) {
+				return Integer.parseInt(value);
 			}
 		}
 		return getEnableDelay();
@@ -112,8 +112,8 @@ public class PlayerSession {
 			}
 		} else if (data.containsKey(b.getTypeId())) {
 			final String value = data.get(b.getTypeId());
-			if (Util.isInteger(value.split(":")[1])) {
-				return Integer.parseInt(value.split(":")[1]);
+			if (Util.isInteger(value)) {
+				return Integer.parseInt(value);
 			}
 		}
 		return getDisableDelay();
