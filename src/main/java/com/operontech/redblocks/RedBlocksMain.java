@@ -490,14 +490,11 @@ public class RedBlocksMain extends JavaPlugin {
 			for (int y = max.getBlockY(); y >= min.getBlockY(); y--) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 					db = reg.getWorld().getBlockAt(x, y, z);
-					if (db.getType() == Material.AIR) {
+					if ((db.getType() == Material.AIR) || (((db.getType() == Material.BEDROCK)) && config.getBool(ConfigValue.worldedit_preventBedrock))) {
 						continue;
 					}
 					if ((t == 0) || (db.getTypeId() == t)) {
 						if ((d == 0) || (db.getData() == d)) {
-							if (config.getBool(ConfigValue.worldedit_preventBedrock) && (db.getType() == Material.BEDROCK)) {
-								continue;
-							}
 							if (canBuildHere(p, db.getLocation())) {
 								cache.add(db);
 							}
@@ -506,11 +503,7 @@ public class RedBlocksMain extends JavaPlugin {
 				}
 			}
 		}
-		if (remove) {
-			notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " removed " + rb.removeBlockList(cache) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
-		} else {
-			notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " added " + rb.addBlockList(cache, enableDelay, disableDelay) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
-		}
+		notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + (remove ? " removed " + rb.removeBlockList(cache) : " added " + rb.addBlockList(cache, enableDelay, disableDelay)) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
 		if (config.getBool(ConfigValue.gc_onWorldEdit)) {
 			System.gc();
 		}
