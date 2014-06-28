@@ -44,7 +44,7 @@ public class CommandListener {
 								return true;
 							}
 							if (Permission.WORLDEDIT.check(s)) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false, (args.length > 2) && Util.isInteger(args[2]) ? Integer.valueOf(args[2]) : 0, (args.length > 3) && Util.isInteger(args[3]) ? Integer.valueOf(args[3]) : 0);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, false);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 								return true;
@@ -55,7 +55,7 @@ public class CommandListener {
 								return true;
 							}
 							if (Permission.WORLDEDIT.check(s)) {
-								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true, 0, 0);
+								plugin.useWorldEdit(rb, p, (args.length > 1) ? args[1] : null, true);
 							} else {
 								console.error(s, "You do not have the permissions to use World-Edit with RedBlocks!");
 								return true;
@@ -67,56 +67,42 @@ public class CommandListener {
 								console.error(s, "You don't have the permission to add delays to RedBlocks.");
 								return true;
 							}
-							if (args.length >= 2) {
-								if (Util.multiString(args[1], "place", "p", "enable", "e", "break", "b", "disable", "d")) {
-									final PlayerSession session = plugin.getPlayerSession(p);
-									if (args.length < 3) {
-										if (Util.multiString(args[1], "place", "p", "enable", "e")) {
-											session.setEnableDelay("0");
-											session.setEnableDelayBlock("0", "-1");
-											console.notify(s, ChatColor.YELLOW + "No future placed blocks will be delay enabling.");
+							final PlayerSession session = plugin.getPlayerSession(p);
+							String tempText;
+							String sessionBlock = null;
+							String pDelay = "0";
+							String bDelay = "0";
+							if (args.length > 1) {
+								for (int i = 1; i < args.length; i++) {
+									tempText = args[i].toLowerCase();
+									if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
+										final String[] splitText = tempText.split(":");
+										if (Util.isInteger(splitText[1])) {
+											sessionBlock = splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : "");
 										} else {
-											session.setDisableDelay("0");
-											session.setDisableDelayBlock("0", "-1");
-											console.notify(s, ChatColor.YELLOW + "No future placed blocks will be delay disabling.");
+											sendCMenu(s);
+											return true;
 										}
-										return true;
-									}
-									String tempText;
-									if (Util.isInteger(args[2]) && (args.length == 3)) {
-										if (Util.multiString(args[1], "place", "p", "enable", "e")) {
-											session.setEnableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for " + ChatColor.GOLD + args[2] + "ms.");
+									} else if (tempText.startsWith("time:") || tempText.startsWith("t:")) {
+										final String[] splitText = tempText.split(":");
+										if ((splitText.length >= 2) && Util.isInteger(splitText[1])) {
+											pDelay = splitText[1];
 										} else {
-											session.setDisableDelay(args[2]);
-											console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for " + ChatColor.GOLD + args[2] + "ms.");
+											sendCMenu(s);
+											return true;
+										}
+										if ((splitText.length >= 3) && Util.isInteger(splitText[2])) {
+											bDelay = splitText[2];
 										}
 									}
-									if (args.length > 3) {
-										for (int i = 3; i < args.length; i++) {
-											tempText = args[i].toLowerCase();
-											if (tempText.startsWith("block:") || tempText.startsWith("b:")) {
-												final String[] splitText = tempText.split(":");
-												if (Util.isInteger(splitText[1])) {
-													if (Util.multiString(args[1], "place", "p", "enable", "e")) {
-														session.setEnableDelay(args[2]);
-														session.setEnableDelayBlock(splitText[1], ((splitText.length > 2) && Util.isInteger(splitText[2]) ? splitText[2] : "-1"));
-														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay enabling for " + ChatColor.GOLD + args[2] + "ms" + ChatColor.YELLOW + " | Block ID: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
-													} else {
-														session.setDisableDelay(args[2]);
-														session.setDisableDelayBlock(splitText[1], ((splitText.length > 2) && Util.isInteger(splitText[2]) ? splitText[2] : "-1"));
-														console.notify(s, ChatColor.YELLOW + "Future placed blocks will delay disabling for " + ChatColor.GOLD + args[2] + "ms" + ChatColor.YELLOW + " | Block ID: " + ChatColor.GOLD + splitText[1] + ((splitText.length > 2) && Util.isInteger(splitText[2]) ? ":" + splitText[2] : ""));
-													}
-												} else {
-													sendCMenu(s);
-													return true;
-												}
-											}
-										}
-									}
+								}
+								if (sessionBlock == null) {
+									session.setEnableDelay(pDelay);
+									session.setDisableDelay(bDelay);
+									console.notify(s, ChatColor.YELLOW + "Generic delay for future placed blocks will be: ", ChatColor.YELLOW + "        Enable: " + ChatColor.GOLD + pDelay + "ms" + ChatColor.YELLOW + " | Disable: " + ChatColor.GOLD + bDelay + "ms");
 								} else {
-									sendCMenu(s);
-									return true;
+									session.setBlockDelay(sessionBlock, pDelay, bDelay);
+									console.notify(s, ChatColor.YELLOW + "Delay for future placed blocks with the id " + sessionBlock + " will be: ", ChatColor.YELLOW + "        Enable: " + ChatColor.GOLD + pDelay + "ms" + ChatColor.YELLOW + " | Disable: " + ChatColor.GOLD + bDelay + "ms");
 								}
 							} else {
 								sendCMenu(s);
@@ -188,18 +174,18 @@ public class CommandListener {
 	}
 
 	private void sendCMenu(final CommandSender s) {
-		console.msg(s, ChatColor.RED + "   >>>>> RedBlocks Menu <<<<<   ");
+		console.msg(s, ChatColor.RED + "=====>>>>>{ RedBlocks Menu }<<<<<=====");
 		if (Permission.RELOAD.check(s)) {
 			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:", "     /rb reload");
 		}
 		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
 		console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
 		if (Permission.DELAY.check(s)) {
-			console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay [place/break] [MILLISECONDS] <block:ID:DATA>");
+			console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay <time:PLACE:BREAK> <block:ID:DATA>");
 		}
 		if (Permission.WORLDEDIT.check(s) && (plugin.getWE() != null)) {
-			console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG] [MILLISECONDS]");
-			console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG] [MILLISECONDS]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG]");
+			console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG]");
 		}
 	}
 

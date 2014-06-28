@@ -125,7 +125,7 @@ public class BlockListener implements Listener {
 				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
 			} else {
-				plugin.addBlock(event.getPlayer(), rb, event.getBlock());
+				plugin.addBlock(event.getPlayer(), rb, event.getBlock(), true);
 			}
 		}
 	}

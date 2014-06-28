@@ -28,13 +28,11 @@ public class PlayerSession {
 		rb = redblock;
 		rbBlock = block;
 		setEnableDelay("0");
-		setEnableDelayBlock("0", "-1");
 		setDisableDelay("0");
-		setDisableDelayBlock("0", "-1");
 	}
 
 	/**
-	 * Sets the enable delay for future RedBlockChilds placed by the player.
+	 * Sets the generic enable delay for future RedBlockChilds placed by the player.
 	 * @param placeDelay the delay in milliseconds
 	 */
 	public void setEnableDelay(final String placeDelay) {
@@ -42,20 +40,7 @@ public class PlayerSession {
 	}
 
 	/**
-	 * Sets the type of RedBlockChild to apply the player's enableDelay to.
-	 * 
-	 * If the blockData is -1, there is no preferred blockData set.
-	 * 
-	 * @param blockId the blockId for the RedBlockChild
-	 * @param blockData the blockData for the RedBlockChild
-	 */
-	public void setEnableDelayBlock(final String blockId, final String blockData) {
-		data.put("enableDelayBlockId", blockId);
-		data.put("enableDelayBlockData", blockData);
-	}
-
-	/**
-	 * Sets the disable delay for future RedBlockChilds placed by the player.
+	 * Sets the generic disable delay for future RedBlockChilds placed by the player.
 	 * @param breakDelay the delay in milliseconds
 	 */
 	public void setDisableDelay(final String breakDelay) {
@@ -63,16 +48,14 @@ public class PlayerSession {
 	}
 
 	/**
-	 * Sets the type of RedBlockChild to apply the player's disableDelay to.
+	 * Defines a enableDelay and disableDelay for the provided blockInfo
 	 * 
-	 * If the blockData is -1, there is no preferred blockData set.
+	 * blockInfo can be ID without ":DATA"
 	 * 
-	 * @param blockId the blockId for the RedBlockChild
-	 * @param blockData the blockData for the RedBlockChild
+	 * @param blockInfo the information for the block (ID:DATA)
 	 */
-	public void setDisableDelayBlock(final String blockId, final String blockData) {
-		data.put("enableDelayBlockId", blockId);
-		data.put("disableDelayBlockData", blockData);
+	public void setBlockDelay(final String blockInfo, final String enableDelay, final String disableDelay) {
+		data.put(blockInfo, enableDelay + ":" + disableDelay);
 	}
 
 	/**
@@ -86,8 +69,29 @@ public class PlayerSession {
 	}
 
 	/**
-	 * Gets the enable delay for any future RedBlockChilds the player places.
-	 * @return the enable delay set for this session
+	 * Gets the enable delay for the specified block
+	 * @param b the block to get the delay for
+	 * @return if the block is specified, the specified enable delay; otherwise, the generic enable delay
+	 */
+	@SuppressWarnings("deprecation")
+	public int getEnableDelay(final Block b) {
+		if (data.containsKey(b.getTypeId() + ":" + b.getData())) {
+			final String value = data.get(b.getTypeId() + ":" + b.getData());
+			if (Util.isInteger(value.split(":")[0])) {
+				return Integer.parseInt(value.split(":")[0]);
+			}
+		} else if (data.containsKey(b.getTypeId())) {
+			final String value = data.get(b.getTypeId());
+			if (Util.isInteger(value.split(":")[0])) {
+				return Integer.parseInt(value.split(":")[0]);
+			}
+		}
+		return getEnableDelay();
+	}
+
+	/**
+	 * Gets the generic enable delay for any future RedBlockChilds the player places.
+	 * @return the generic enable delay defined by the session
 	 */
 	public int getEnableDelay() {
 		final String value = data.get("enableDelay");
@@ -95,84 +99,33 @@ public class PlayerSession {
 	}
 
 	/**
-	 * Gets the type (blockId) of RedBlockChild the player's enable delay will apply to.
-	 * @return the type (blockId) of RedBlockChild for this session
-	 */
-	public int getEnableDelayBlockId() {
-		final String value = data.get("enableDelayBlockId");
-		return (Util.isInteger(value)) ? Integer.parseInt(value) : 0;
-	}
-
-	/**
-	 * Gets the type (blockData) of RedBlockChild the player's enable delay will apply to.
-	 * 
-	 * If the blockData is -1, there is no preferred blockData set.
-	 * 
-	 * @return the type (blockData) of RedBlockChild set for this session
-	 */
-	public int getEnableDelayBlockData() {
-		final String value = data.get("enableDelayBlockData");
-		return (Util.isInteger(value)) ? Integer.parseInt(value) : -1;
-	}
-
-	/**
-	 * Checks if the supplied block matches the blockId and blockData defined by their respective methods.
-	 * @param b the block to match
-	 * @return if the block matches
+	 * Gets the disable delay for the specified block
+	 * @param b the block to get the delay for
+	 * @return if the block is specified, the specified disable delay; otherwise, the generic disable delay
 	 */
 	@SuppressWarnings("deprecation")
-	public boolean getEnableDelayBlockMatch(final Block b) {
-		if ((getEnableDelayBlockId() == 0) || (getEnableDelayBlockId() == b.getTypeId())) {
-			if ((getEnableDelayBlockData() == -1) || (getEnableDelayBlockData() == b.getData())) {
-				return true;
+	public int getDisableDelay(final Block b) {
+		if (data.containsKey(b.getTypeId() + ":" + b.getData())) {
+			final String value = data.get(b.getTypeId() + ":" + b.getData());
+			if (Util.isInteger(value.split(":")[1])) {
+				return Integer.parseInt(value.split(":")[1]);
+			}
+		} else if (data.containsKey(b.getTypeId())) {
+			final String value = data.get(b.getTypeId());
+			if (Util.isInteger(value.split(":")[1])) {
+				return Integer.parseInt(value.split(":")[1]);
 			}
 		}
-		return false;
+		return getDisableDelay();
 	}
 
 	/**
-	 * Gets the disable delay for any future RedBlockChilds the player places.
-	 * @return the disable delay set for this session
+	 * Gets the generic disable delay for any future RedBlockChilds the player places.
+	 * @return the generic disable delay defined by the session
 	 */
 	public int getDisableDelay() {
 		final String value = data.get("disableDelay");
 		return (Util.isInteger(value)) ? Integer.parseInt(value) : 0;
-	}
-
-	/**
-	 * Gets the type (blockId) of RedBlockChild the player's disable delay will apply to.
-	 * @return the type (blockId) of RedBlockChild for this session
-	 */
-	public int getDisableDelayBlockId() {
-		final String value = data.get("disableDelayBlockId");
-		return (Util.isInteger(value)) ? Integer.parseInt(value) : 0;
-	}
-
-	/**
-	 * Gets the type (blockData) of RedBlockChild the player's disable delay will apply to.
-	 * 
-	 * If the blockData is -1, there is no preferred blockData set.
-	 * 
-	 * @return the type (blockData) of RedBlockChild set for this session
-	 */
-	public int getDisableDelayBlockData() {
-		final String value = data.get("disableDelayBlockData");
-		return (Util.isInteger(value)) ? Integer.parseInt(value) : -1;
-	}
-
-	/**
-	 * Checks if the supplied block matches the blockId and blockData defined by their respective methods.
-	 * @param b the block to match
-	 * @return if the block matches
-	 */
-	@SuppressWarnings("deprecation")
-	public boolean getDisableDelayBlockMatch(final Block b) {
-		if ((getDisableDelayBlockId() == 0) || (getDisableDelayBlockId() == b.getTypeId())) {
-			if ((getDisableDelayBlockData() == -1) || (getDisableDelayBlockData() == b.getData())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

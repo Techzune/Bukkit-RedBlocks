@@ -241,10 +241,11 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param p the player that placed the block
 	 * @param rb the RedBlockAnimated to add the block to
 	 * @param b the block to be added
+	 * @param notify if true, the editors of the RedBlock will be notified of the change
 	 * @param enableDelay the delay for enabling the particular block
 	 * @param disableDelay the delay for disabling the particular block
 	 */
-	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final int enableDelay, final int disableDelay) {
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final boolean notify, final int enableDelay, final int disableDelay) {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
@@ -252,14 +253,14 @@ public class RedBlocksMain extends JavaPlugin {
 				@Override
 				public void run() {
 					if (!event.isCancelled()) {
-						if (rb.add(b, enableDelay, disableDelay)) {
+						if (rb.add(b, enableDelay, disableDelay) && notify) {
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
 							if ((enableDelay > 0) || (disableDelay > 0)) {
 								notifyEditors(rb, "        " + ChatColor.YELLOW + "Enable Delay: " + ChatColor.GOLD + enableDelay + "ms " + ChatColor.YELLOW + "| Disable Delay: " + ChatColor.GOLD + disableDelay + "ms");
 							}
 						}
 						if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
-							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), enableDelay, disableDelay);
+							addBlock(p, rb, b.getRelative(((Bed) b.getState().getData()).getFacing()), notify, enableDelay, disableDelay);
 						}
 					}
 				}
@@ -272,14 +273,41 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param p the player that placed the block
 	 * @param rb the RedBlockAnimated to add the block to
 	 * @param b the block to be added
+	 * @param notify if true, the editors of the RedBlock will be notified of the change
 	 */
-	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b) {
+	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final boolean notify) {
 		final PlayerSession ps = playerSessions.get(p);
-		if (ps == null) {
-			addBlock(p, rb, b, 0, 0);
-		} else {
-			addBlock(p, rb, b, ps.getEnableDelayBlockMatch(b) ? ps.getEnableDelay() : 0, ps.getDisableDelayBlockMatch(b) ? ps.getDisableDelay() : 0);
+		addBlock(p, rb, b, notify, (ps == null) ? 0 : ps.getEnableDelay(b), (ps == null) ? 0 : ps.getDisableDelay(b));
+	}
+
+	/**
+	 * Adds a list of blocks to a RedBlockAnimated and applies player delays.
+	 * 
+	 * Used for World-Edit
+	 * 
+	 * @param p the player to get the session from
+	 * @param rb the RedBlock to add the Blocks to
+	 * @param cache the list of Blocks
+	 * @return the number of Blocks added
+	 */
+	public int addBlockList(final Player p, final RedBlockAnimated rb, final List<Block> cache) {
+		int num = 0;
+		final PlayerSession ps = playerSessions.get(p);
+		for (final Block b : cache) {
+			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
+			getServer().getPluginManager().callEvent(event);
+			if (!event.isCancelled()) {
+				if (rb.add(b, (ps == null) ? 0 : ps.getEnableDelay(b), (ps == null) ? 0 : ps.getDisableDelay(b))) {
+					num++;
+				}
+				if ((b.getState().getData() instanceof Bed) && !((Bed) b.getState().getData()).isHeadOfBed()) {
+					if (rb.add(b.getRelative(((Bed) b.getState().getData()).getFacing()), (ps == null) ? 0 : ps.getEnableDelay(b), (ps == null) ? 0 : ps.getDisableDelay(b))) {
+						num++;
+					}
+				}
+			}
 		}
+		return num;
 	}
 
 	/**
@@ -448,7 +476,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param type the type of block to be added, can be null (use colon for data values)
 	 * @param remove if true, the blocks in the selection will be removed, if false, blocks in the selection will be added
 	 */
-	public void useWorldEdit(final RedBlockAnimated rb, final Player p, final String type, final boolean remove, final int enableDelay, final int disableDelay) {
+	public void useWorldEdit(final RedBlockAnimated rb, final Player p, final String type, final boolean remove) {
 		final Selection reg = getWE().getSelection(p);
 		int t = 0;
 		int d = 0;
@@ -503,7 +531,7 @@ public class RedBlocksMain extends JavaPlugin {
 				}
 			}
 		}
-		notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + (remove ? " removed " + rb.removeBlockList(cache) : " added " + rb.addBlockList(cache, enableDelay, disableDelay)) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
+		notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + (remove ? " removed " + rb.removeBlockList(cache) : " added " + addBlockList(p, rb, cache)) + " blocks with World-Edit | " + rb.getBlockCount() + " Blocks");
 		if (config.getBool(ConfigValue.gc_onWorldEdit)) {
 			System.gc();
 		}
