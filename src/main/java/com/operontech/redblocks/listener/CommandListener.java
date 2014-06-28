@@ -177,15 +177,17 @@ public class CommandListener {
 										for (int i = 1; i < args.length; i++) {
 											tempText = args[i].toLowerCase();
 											if (Util.multiString(tempText, "add", "a")) {
-												if (plugin.canBuildHere(p, b.getLocation())) {
-													plugin.addBlock(p, rb, b, true);
-												} else {
+												if (!plugin.canBuildHere(p, b.getLocation())) {
 													console.error(s, "You do not have the permissions to add this block.");
 													return true;
+												} else if (rb.contains(b)) {
+													console.error(s, "This block already exists in the RedBlock!");
+													return true;
 												}
+												plugin.addBlock(p, rb, b, true);
 											} else if (Util.multiString(tempText, "remove", "r")) {
 												plugin.removeBlock(p, rb, b);
-											} else if (tempText.startsWith("delay:") || tempText.startsWith("d")) {
+											} else if (tempText.startsWith("delay:") || tempText.startsWith("d:")) {
 												final String[] splitText = tempText.split(":");
 												if ((splitText.length > 1) && Util.isInteger(args[1]) && rb.contains(b)) {
 													rb.setEnableDelayForChild(rbc, Integer.parseInt(args[1]));
