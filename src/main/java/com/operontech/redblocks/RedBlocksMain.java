@@ -420,7 +420,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (playerSessions.containsKey(p) && playerSessions.get(p).getBlock().getLocation().toString().equals(b.getLocation().toString())) {
 			removeEditor(p);
 		}
-		if (playerSessions.containsValue(storage.getRedBlock(b))) {
+		if (isBeingEdited(storage.getRedBlock(b))) {
 			console.error(p, "You can't destroy a RedBlock that is being edited!");
 			return false;
 		}
