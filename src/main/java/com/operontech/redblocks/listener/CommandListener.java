@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.Permission;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.Util;
 import com.operontech.redblocks.playerdependent.PlayerSession;
 import com.operontech.redblocks.storage.RedBlockAnimated;
+import com.operontech.redblocks.storage.RedBlockChild;
 
 public class CommandListener {
 	private final RedBlocksMain plugin;
@@ -156,17 +160,65 @@ public class CommandListener {
 							} else {
 								sendCOptions(s);
 							}
+						} else if (Util.multiString(args[0], "point", "p")) {
+							if (Permission.USE.check(s)) {
+								final Block b = p.getTargetBlock(null, 100);
+								if ((b == null) || b.isEmpty()) {
+									console.error(s, "You're looking at nothing!");
+									return true;
+								} else if ((b.getType() == Material.BEDROCK) && plugin.getConfiguration().getBool(ConfigValue.worldedit_preventBedrock)) {
+									console.error(s, "You may not add bedrock to a RedBlock.");
+									return true;
+								}
+								if (args.length > 1) {
+									String tempText;
+									if (args.length > 1) {
+										final RedBlockChild rbc = rb.getChild(b);
+										for (int i = 1; i < args.length; i++) {
+											tempText = args[i].toLowerCase();
+											if (Util.multiString(tempText, "add", "a")) {
+												if (plugin.canBuildHere(p, b.getLocation())) {
+													plugin.addBlock(p, rb, b, true);
+												} else {
+													console.error(s, "You do not have the permissions to add this block.");
+													return true;
+												}
+											} else if (Util.multiString(tempText, "remove", "r")) {
+												plugin.removeBlock(p, rb, b);
+											} else if (tempText.startsWith("delay:") || tempText.startsWith("d")) {
+												final String[] splitText = tempText.split(":");
+												if ((splitText.length > 1) && Util.isInteger(args[1]) && rb.contains(b)) {
+													rb.setEnableDelayForChild(rbc, Integer.parseInt(args[1]));
+													if ((splitText.length > 2) && Util.isInteger(args[2])) {
+														rb.setDisableDelayForChild(rbc, Integer.parseInt(args[2]));
+													}
+												} else {
+													sendCMenu(s);
+													return true;
+												}
+											} else {
+												sendCMenu(s);
+												return true;
+											}
+										}
+									}
+								} else {
+									sendCMenu(s);
+								}
+							} else {
+								console.error(s, "You do not have the permissions to use RedBlocks.");
+							}
 						} else {
 							sendCMenu(s);
 						}
 					} else {
 						console.error(s, "You must be editing a RedBlock to do that!");
 					}
+				} else {
+					console.error(s, "You must be a Player to use that command.");
 				}
 			} else {
-				if (s instanceof Player) {
-					sendCMenu(s);
-				}
+				sendCMenu(s);
 			}
 			return true;
 		}
@@ -175,18 +227,25 @@ public class CommandListener {
 
 	private void sendCMenu(final CommandSender s) {
 		console.msg(s, ChatColor.RED + "=====>>>>>{ RedBlocks Menu }<<<<<=====");
+		console.msg(s, ChatColor.AQUA + "[] = Optional | <> = Required | UPPERCASE = variable");
 		if (Permission.RELOAD.check(s)) {
 			console.msg(s, ChatColor.GREEN + "Reload RedBlocks:", "     /rb reload");
 		}
-		console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
-		console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
-		if (Permission.DELAY.check(s)) {
-			console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay <time:PLACE:BREAK> <block:ID:DATA>");
+		if ((s instanceof Player) && plugin.isEditing((Player) s)) {
+			console.msg(s, ChatColor.GREEN + "Stop Editing RedBlock:", "     /rb stop");
+			console.msg(s, ChatColor.GREEN + "Point Commands:", "     /rb point <add/remove> [delay:PLACE:BREAK]");
+			console.msg(s, ChatColor.GREEN + "Edit Options:", "     /rb options <OPTION> <VALUE>");
+			if (Permission.DELAY.check(s)) {
+				console.msg(s, ChatColor.GREEN + "Set RedBlockChild Delays:", "     /rb delay <time:PLACE:BREAK> [block:ID:DATA]");
+			}
+			if (Permission.WORLDEDIT.check(s) && (plugin.getWE() != null)) {
+				console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG]");
+				console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG]");
+			}
+		} else {
+			console.msg(s, ChatColor.AQUA + "More commands are available when you are editing a RedBlock.");
 		}
-		if (Permission.WORLDEDIT.check(s) && (plugin.getWE() != null)) {
-			console.msg(s, ChatColor.GREEN + "World-Edit: Add Child Blocks:", "     /rb add [TYPE:DMG]");
-			console.msg(s, ChatColor.GREEN + "World-Edit: Remove Child Blocks:", "     /rb remove [TYPE:DMG]");
-		}
+		console.msg(s, ChatColor.RED + "=====<<<<<{     le'End     }>>>>>=====");
 	}
 
 	private void sendCOptions(final CommandSender s) {
