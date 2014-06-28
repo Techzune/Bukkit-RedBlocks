@@ -1,6 +1,6 @@
 <--- Changelog for RedBlocks --->
 
-Version 2.3
+Version 2.3.0
   > Added and Implemented RedBlockAnimated
   > Added and Implemented The Use Of UUIDs
   > Added and Implemented RedBlockChild Delays
@@ -11,6 +11,7 @@ Version 2.3
   > Deprecated RedBlock
   > Improved Shutdown Cleanup
   > Rewrote Many Lines For Performance Efficiency
+  > World-Edit Improved
   > Substantially Reduced Resource Usage
   > OCD Changes
   > Bug Fix: WorldEdit Command Arguments
