@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -80,7 +81,15 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		final Iterator<PlayerSession> it = playerSessions.values().iterator();
+		PlayerSession ps;
+		while (it.hasNext()) {
+			ps = it.next();
+			ps.getBlock().setTypeId(Integer.parseInt(config.getString(ConfigValue.redblocks_blockID)));
+			it.remove();
+		}
 		playerSessions.clear();
+		animationThreads.clear();
 		if (initialized) {
 			storage.saveRedBlocks();
 			storage.cleanupRedBlocks();
@@ -174,6 +183,7 @@ public class RedBlocksMain extends JavaPlugin {
 					playerSessions.put(p, new PlayerSession(p.getUniqueId(), rb, b));
 				}
 				playerSessions.get(p).setRedBlock(rb, b);
+				b.setType(Material.OBSIDIAN);
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 			}
 		}
@@ -209,6 +219,9 @@ public class RedBlocksMain extends JavaPlugin {
 				playerSessions.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
+				}
+				if (!isBeingEdited(rb)) {
+					b.setTypeId(Integer.parseInt(config.getString(ConfigValue.redblocks_blockID)));
 				}
 			}
 		}
@@ -482,10 +495,10 @@ public class RedBlocksMain extends JavaPlugin {
 		int d = 0;
 		try {
 			if ((type != null) && type.contains(":")) {
-				t = Integer.valueOf(type.split(":")[0]);
-				d = Integer.valueOf(type.split(":")[1]);
+				t = Integer.parseInt(type.split(":")[0]);
+				d = Integer.parseInt(type.split(":")[1]);
 			} else if (type != null) {
-				t = Integer.valueOf(type);
+				t = Integer.parseInt(type);
 			}
 		} catch (final Exception e) {
 			console.error(p, "Unknown Type Format");
