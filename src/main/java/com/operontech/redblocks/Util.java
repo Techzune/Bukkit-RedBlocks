@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class Util {
-	private static final List<Material> specialBList = Arrays.asList(Material.ACTIVATOR_RAIL, Material.ANVIL, Material.BED_BLOCK, Material.BROWN_MUSHROOM, Material.CACTUS, Material.CAKE_BLOCK, Material.CROPS, Material.DETECTOR_RAIL, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.FLOWER_POT, Material.ITEM_FRAME, Material.SUGAR_CANE_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON, Material.PAINTING, Material.POWERED_RAIL, Material.WOOD_DOOR, Material.IRON_DOOR_BLOCK);
+	private static final List<Material> specialBList = Arrays.asList(Material.ACTIVATOR_RAIL, Material.ANVIL, Material.BED_BLOCK, Material.BROWN_MUSHROOM, Material.CACTUS, Material.CAKE_BLOCK, Material.CROPS, Material.DETECTOR_RAIL, Material.DIODE_BLOCK_OFF, Material.DIODE_BLOCK_ON, Material.FLOWER_POT, Material.ITEM_FRAME, Material.SUGAR_CANE_BLOCK, Material.REDSTONE_WIRE, Material.REDSTONE, Material.REDSTONE_COMPARATOR_OFF, Material.REDSTONE_COMPARATOR_ON, Material.REDSTONE_TORCH_OFF, Material.REDSTONE_TORCH_ON, Material.PAINTING, Material.POWERED_RAIL, Material.WOOD_DOOR, Material.IRON_DOOR_BLOCK);
 
 	/**
 	 * Checks if the typeId provided is declared "special"
