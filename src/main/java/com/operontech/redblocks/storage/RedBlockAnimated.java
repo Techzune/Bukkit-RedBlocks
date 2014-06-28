@@ -210,7 +210,7 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean add(final Block b, final int enableDelay, final int disableDelay) {
-		return add(new RedBlockChild(b.getType(), b.getData(), b.getLocation()), enableDelay, disableDelay);
+		return contains(b) ? false : add(new RedBlockChild(b.getType(), b.getData(), b.getLocation()), enableDelay, disableDelay);
 	}
 
 	/**
