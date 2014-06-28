@@ -64,15 +64,15 @@ public class InventorySerializer {
 		final String[] serializedBlocks = invString.split(";");
 		final String invInfo = serializedBlocks[0];
 		Inventory deserializedInventory = null;
-		if ((Integer.valueOf(invInfo) % 9) == 0) {
-			deserializedInventory = Bukkit.getServer().createInventory(null, Integer.valueOf(invInfo));
+		if ((Integer.parseInt(invInfo) % 9) == 0) {
+			deserializedInventory = Bukkit.getServer().createInventory(null, Integer.parseInt(invInfo));
 		} else {
 			deserializedInventory = Bukkit.getServer().createInventory(null, type);
 		}
 
 		for (int i = 1; i < serializedBlocks.length; i++) {
 			final String[] serializedBlock = serializedBlocks[i].split("#");
-			final int stackPosition = Integer.valueOf(serializedBlock[0]);
+			final int stackPosition = Integer.parseInt(serializedBlock[0]);
 
 			if (stackPosition >= deserializedInventory.getSize()) {
 				continue;
@@ -86,16 +86,16 @@ public class InventorySerializer {
 				final String[] itemAttribute = itemInfo.split("@");
 				if (itemAttribute[0].equals("t")) {
 					if (isNumber(itemAttribute[1])) {
-						itemAttribute[1] = Material.getMaterial(Integer.valueOf(itemAttribute[1])).name();
+						itemAttribute[1] = Material.getMaterial(Integer.parseInt(itemAttribute[1])).name();
 					}
 					is = new ItemStack(Material.getMaterial(itemAttribute[1]));
 					createdItemStack = true;
 				} else if (itemAttribute[0].equals("d") && createdItemStack) {
 					is.setDurability(Short.valueOf(itemAttribute[1]));
 				} else if (itemAttribute[0].equals("a") && createdItemStack) {
-					is.setAmount(Integer.valueOf(itemAttribute[1]));
+					is.setAmount(Integer.parseInt(itemAttribute[1]));
 				} else if (itemAttribute[0].equals("e") && createdItemStack) {
-					is.addEnchantment(Enchantment.getByName(itemAttribute[1]), Integer.valueOf(itemAttribute[2]));
+					is.addEnchantment(Enchantment.getByName(itemAttribute[1]), Integer.parseInt(itemAttribute[2]));
 				}
 			}
 			deserializedInventory.setItem(stackPosition, is);

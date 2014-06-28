@@ -51,7 +51,7 @@ public class Configuration {
 	 */
 	public int getInt(final ConfigValue s) {
 		try {
-			return Integer.valueOf(config.getString(s.toString()));
+			return Integer.parseInt(config.getString(s.toString()));
 		} catch (final Exception e) {
 			plugin.getConsoleConnection().severe("Config: " + s + " should be a number!");
 			return 0;
