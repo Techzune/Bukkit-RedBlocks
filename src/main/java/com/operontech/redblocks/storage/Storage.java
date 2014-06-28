@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -199,10 +200,12 @@ public class Storage {
 		int blocksRemoved = 0;
 		List<RedBlockChild> list;
 		Set<RedBlockChild> children;
-		for (final Entry<String, RedBlockAnimated> entry : rbSorted.entrySet()) {
+		final Iterator<Entry<String, RedBlockAnimated>> it = rbSorted.entrySet().iterator();
+		while (it.hasNext()) {
+			final Entry<String, RedBlockAnimated> entry = it.next();
 			if (!plugin.isBeingEdited(entry.getValue())) {
 				if (entry.getValue().getBlockCount() == 0) {
-					rbSorted.remove(entry.getKey());
+					it.remove();
 					redBlocksRemoved++;
 				} else {
 					list = new ArrayList<RedBlockChild>();
@@ -217,8 +220,10 @@ public class Storage {
 			}
 		}
 		if ((redBlocksRemoved != 0) || (blocksRemoved != 0)) {
-			console.info("  " + redBlocksRemoved + " RedBlocks were removed!");
-			console.info("  " + blocksRemoved + " blocks controlled by RedBlocks were removed!");
+			console.info("  " + redBlocksRemoved + " RedBlocks were removed.");
+			console.info("  " + blocksRemoved + " blocks controlled by RedBlocks were removed.");
+		} else {
+			console.info("  " + "No RedBlocks / Blocks were removed.");
 		}
 	}
 
