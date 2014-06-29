@@ -4,10 +4,14 @@ Version 2.3.0
   > Added and Implemented RedBlockAnimated
   > Added and Implemented The Use Of UUIDs
   > Added and Implemented RedBlockChild Delays
+  > Added and Implemented PlayerSessions
   > Added Permission: "redblocks.delay"
   > Added Command: "/rb delay"
   > Added Command Help: "/rb delay"
+  > Added Command: "/rb point"
+  > Added Command Help: "/rb point"
   > Removed saveOnWorld Event
+  > RedBlocks Turn Into OBSIDIAN While Being Edited
   > Deprecated RedBlock
   > Improved Shutdown Cleanup
   > Rewrote Many Lines For Performance Efficiency
