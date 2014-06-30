@@ -1,5 +1,6 @@
 package com.operontech.redblocks.listener;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +11,7 @@ import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.RedBlocksMain;
+import com.operontech.redblocks.storage.RedBlockAnimated;
 
 public class PhysicsListener implements Listener {
 	private final RedBlocksMain plugin;
@@ -23,6 +25,11 @@ public class PhysicsListener implements Listener {
 	public void onPhysics(final BlockPhysicsEvent event) {
 		if (event.getBlock().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) {
 			plugin.doBlockUpdate(event.getBlock());
+		} else if ((event.getBlock().getType() == Material.SAND) || (event.getBlock().getType() == Material.GRAVEL)) {
+			RedBlockAnimated rb;
+			if ((rb = plugin.getStorage().getRedBlockParent(event.getBlock())) != null) {
+				event.setCancelled(rb.getOptionProtected());
+			}
 		}
 	}
 
