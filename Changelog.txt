@@ -19,6 +19,7 @@ Version 2.3.0
   > Substantially Reduced Resource Usage
   > OCD Changes
   > Bug Fix: WorldEdit Command Arguments
+  > Bug Fix: Sand and gravel duplication
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event
