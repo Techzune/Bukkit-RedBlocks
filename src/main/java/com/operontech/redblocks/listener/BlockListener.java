@@ -36,7 +36,7 @@ public class BlockListener implements Listener {
 	 * @param b the block of the event
 	 * @return if the event was cancelled
 	 */
-	private boolean blockBreakDamaged(final Player p, final Block b) {
+	private boolean blockBreakDamaged(final Player p, final Block b, final boolean broken) {
 		plugin.doBlockUpdate(b);
 		final boolean isRedBlockAnimated = plugin.getStorage().containsRedBlock(b);
 		if (isRedBlockAnimated && p.isSneaking() && (p.getItemInHand().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_destroyItem))) {
@@ -65,7 +65,7 @@ public class BlockListener implements Listener {
 			if (controlledRB.isEmpty()) {
 				controlledRB.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
-			if (plugin.getRedBlockEditing(p).contains(b)) {
+			if (plugin.getRedBlockEditing(p).contains(b) && broken) {
 				plugin.removeBlock(p, plugin.getRedBlockEditing(p), b);
 				return false;
 			}
@@ -132,12 +132,12 @@ public class BlockListener implements Listener {
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreak(final BlockBreakEvent event) {
-		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock()));
+		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock(), true));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockDamage(final BlockDamageEvent event) {
-		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock()));
+		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock(), false));
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
