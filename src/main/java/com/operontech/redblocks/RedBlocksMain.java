@@ -331,10 +331,10 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param b the block to be removed
 	 */
 	public void removeBlock(final Player p, final RedBlockAnimated rb, final Block b) {
+		activeBlocks.remove(b.getLocation().toString());
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_REMOVED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled() && (rb.remove(b))) {
-			activeBlocks.remove(b.getLocation().toString());
 			notifyEditors(rb, ChatColor.DARK_AQUA + (p != null ? p.getName() : "Environment") + ChatColor.GOLD + " Removed A Block | " + rb.getBlockCount() + " Blocks");
 		}
 	}
