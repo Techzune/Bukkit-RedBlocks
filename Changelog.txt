@@ -20,6 +20,7 @@ Version 2.3.0
   > OCD Changes
   > Bug Fix: WorldEdit Command Arguments
   > Bug Fix: Sand and gravel duplication
+  > Bug Fix: Gamemode SURVIVAL fixed
 
 Version 2.2.1
   > Added BLOCK_UPDATE Event
