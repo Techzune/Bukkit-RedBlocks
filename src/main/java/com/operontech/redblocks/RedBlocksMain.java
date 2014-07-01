@@ -267,6 +267,7 @@ public class RedBlocksMain extends JavaPlugin {
 				public void run() {
 					if (!event.isCancelled()) {
 						if (rb.add(b, enableDelay, disableDelay) && notify) {
+							activeBlocks.add(b.getLocation().toString());
 							notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.DARK_GREEN + " Added A Block | " + rb.getBlockCount() + " Blocks");
 							if ((enableDelay > 0) || (disableDelay > 0)) {
 								notifyEditors(rb, "        " + ChatColor.YELLOW + "Enable Delay: " + ChatColor.GOLD + enableDelay + "ms " + ChatColor.YELLOW + "| Disable Delay: " + ChatColor.GOLD + disableDelay + "ms");
@@ -333,6 +334,7 @@ public class RedBlocksMain extends JavaPlugin {
 		final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_REMOVED, p);
 		getServer().getPluginManager().callEvent(event);
 		if (!event.isCancelled() && (rb.remove(b))) {
+			activeBlocks.remove(b.getLocation().toString());
 			notifyEditors(rb, ChatColor.DARK_AQUA + (p != null ? p.getName() : "Environment") + ChatColor.GOLD + " Removed A Block | " + rb.getBlockCount() + " Blocks");
 		}
 	}

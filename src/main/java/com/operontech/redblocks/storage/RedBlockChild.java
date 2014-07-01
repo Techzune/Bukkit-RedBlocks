@@ -89,7 +89,7 @@ public class RedBlockChild implements Serializable {
 			}
 			s.update();
 		}
-		if (blockUpdate) {
+		if (blockUpdate && (type != Material.SAND) && (type != Material.GRAVEL)) {
 			getBlock().getState().update(true, true);
 		}
 	}

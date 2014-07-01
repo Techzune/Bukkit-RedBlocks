@@ -17,26 +17,27 @@ public class WorldListener implements Listener {
 		this.plugin = plugin;
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onItemSpawn(final ItemSpawnEvent event) {
-		final Block b = event.getEntity().getLocation().getBlock();
+	@EventHandler
+	public void onItemSpawn(final ItemSpawnEvent e) {
+		final Block b = e.getEntity().getLocation().getBlock();
 		if (plugin.isActiveBlock(b)) {
 			final RedBlockAnimated parent = plugin.getStorage().getRedBlockParent(b);
 			if (plugin.isBeingEdited(parent) && b.isEmpty()) {
 				plugin.removeBlock(null, parent, b);
+			} else {
+				e.setCancelled(true);
 			}
-			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerQuit(final PlayerQuitEvent event) {
-		if (plugin.isEditing(event.getPlayer())) {
+	public void onPlayerQuit(final PlayerQuitEvent e) {
+		if (plugin.isEditing(e.getPlayer())) {
 			plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 				@Override
 				public void run() {
-					if (!event.getPlayer().isOnline()) {
-						plugin.removeEditor(event.getPlayer());
+					if (!e.getPlayer().isOnline()) {
+						plugin.removeEditor(e.getPlayer());
 					}
 				}
 			}, 20L);
