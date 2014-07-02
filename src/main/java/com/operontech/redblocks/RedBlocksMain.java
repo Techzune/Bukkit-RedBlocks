@@ -530,8 +530,8 @@ public class RedBlocksMain extends JavaPlugin {
 		if (reg.getArea() > 10000) {
 			notifyEditors(rb, ChatColor.LIGHT_PURPLE + "Please hold; 10000+ Blocks are being " + (remove ? "removed" : "added") + " via WorldEdit by " + ChatColor.DARK_AQUA + p.getName());
 		}
-		for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
-			for (int y = max.getBlockY(); y >= min.getBlockY(); y--) {
+		for (int y = max.getBlockY(); y >= min.getBlockY(); y--) {
+			for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
 					db = reg.getWorld().getBlockAt(x, y, z);
 					if ((db.getType() == Material.AIR) || (((db.getType() == Material.BEDROCK)) && config.getBool(ConfigValue.worldedit_preventBedrock))) {
