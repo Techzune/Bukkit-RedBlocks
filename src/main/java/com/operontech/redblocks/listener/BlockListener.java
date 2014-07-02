@@ -44,7 +44,7 @@ public class BlockListener implements Listener {
 			if (Permission.CREATEANDDESTROY.check(p)) {
 				return !plugin.destroyRedBlock(b, p);
 			} else {
-				console.error(p, "You do not have permission to destroy RedBlocks!");
+				console.error(p, "You do not have permissions to destroy RedBlocks!");
 				return false;
 			}
 		}
@@ -91,7 +91,7 @@ public class BlockListener implements Listener {
 					plugin.addEditor(p, b);
 					return true;
 				} else {
-					console.error(p, "You don't have the permissiosn to edit RedBlocks!");
+					console.error(p, "You don't have the permissions to edit RedBlocks!");
 					return true;
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
