@@ -12,6 +12,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.operontech.redblocks.ConfigValue;
@@ -112,17 +114,19 @@ public class BlockListener implements Listener {
 		return false;
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent event) {
 		plugin.doBlockUpdate(event.getBlock());
 		if (plugin.isEditing(event.getPlayer())) {
-			final Block redb = plugin.getRedBlockEditing(event.getPlayer()).getBlock();
-			if (redb.isEmpty()) {
-				redb.setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
-			}
 			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
+			if (rb.getBlock().isEmpty()) {
+				rb.getBlock().setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
+			}
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(event.getPlayer())) {
 				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
+				event.setCancelled(true);
+			} else if (rb.contains(event.getBlock())) {
+				console.error(event.getPlayer(), "There's a block here already!");
 				event.setCancelled(true);
 			} else {
 				plugin.addBlock(event.getPlayer(), rb, event.getBlock(), true);
@@ -130,12 +134,39 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
+	public void onBucketEmpty(final PlayerBucketEmptyEvent event) {
+		if (plugin.isEditing(event.getPlayer())) {
+			final RedBlockAnimated rb = plugin.getRedBlockEditing(event.getPlayer());
+			if (rb.getBlock().isEmpty()) {
+				rb.getBlock().setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
+			}
+			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(event.getPlayer())) {
+				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
+				event.setCancelled(true);
+			} else {
+				plugin.addBlock(event.getPlayer(), rb, event.getBlockClicked().getRelative(event.getBlockFace()), true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onBucketFill(final PlayerBucketFillEvent event) {
+		if (plugin.isActiveBlock(event.getBlockClicked().getRelative(event.getBlockFace()))) {
+			if (plugin.isEditing(event.getPlayer())) {
+				plugin.removeBlock(event.getPlayer(), plugin.getRedBlockEditing(event.getPlayer()), event.getBlockClicked().getRelative(event.getBlockFace()));
+			} else {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
 	public void onBlockBreak(final BlockBreakEvent event) {
 		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock(), true));
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler
 	public void onBlockDamage(final BlockDamageEvent event) {
 		event.setCancelled(blockBreakDamaged(event.getPlayer(), event.getBlock(), false));
 	}
