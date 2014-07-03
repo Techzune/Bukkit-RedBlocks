@@ -1,10 +1,11 @@
 package com.operontech.redblocks.storage;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -264,14 +265,15 @@ public class RedBlockAnimated implements Serializable {
 	 * @return if the block was found and removed
 	 */
 	public boolean remove(final Block b) {
-		Set<RedBlockChild> rbcKeys = new LinkedHashSet<RedBlockChild>(listOfBlocks.keySet());
-		for (final RedBlockChild rbc : rbcKeys) {
+		RedBlockChild rbc;
+		final Iterator<RedBlockChild> it = listOfBlocks.keySet().iterator();
+		while (it.hasNext()) {
+			rbc = it.next();
 			if (rbc.getLocation().toString().equals(b.getLocation().toString())) {
-				listOfBlocks.remove(rbc);
+				it.remove();
 				return true;
 			}
 		}
-		rbcKeys = null;
 		return false;
 	}
 
@@ -283,7 +285,7 @@ public class RedBlockAnimated implements Serializable {
 	public int removeChildList(final List<RedBlockChild> list) {
 		int i = 0;
 		for (final RedBlockChild rbc : list) {
-			if (remove(rbc)) {
+			if (listOfBlocks.remove(rbc) != null) {
 				i++;
 			}
 		}
@@ -297,8 +299,16 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	public int removeBlockList(final List<Block> list) {
 		int i = 0;
-		for (final Block rbc : list) {
-			if (remove(rbc)) {
+		final List<String> sList = new ArrayList<String>();
+		for (final Block b : list) {
+			sList.add(b.getLocation().toString());
+		}
+		RedBlockChild rbc;
+		final Iterator<RedBlockChild> it = listOfBlocks.keySet().iterator();
+		while (it.hasNext()) {
+			rbc = it.next();
+			if (sList.contains(rbc.getLocation().toString())) {
+				it.remove();
 				i++;
 			}
 		}
