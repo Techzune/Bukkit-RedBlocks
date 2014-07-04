@@ -19,7 +19,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.RedBlocksMain.RBDisableListener;
-import com.operontech.redblocks.UUIDFetcher;
+import com.operontech.redblocks.playerdependent.UUIDFetcher;
 import com.operontech.redblocks.Util;
 
 public class RedBlockAnimated implements Serializable {
