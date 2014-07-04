@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -53,7 +54,7 @@ public class RedBlocksMain extends JavaPlugin {
 	private Storage storage;
 	private Configuration config;
 	private CommandListener clistener;
-	private Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
+	private Map<UUID, PlayerSession> playerSessions = new HashMap<UUID, PlayerSession>();
 	private Map<RedBlockAnimated, Thread> animationThreads = new HashMap<RedBlockAnimated, Thread>();
 	private List<String> activeBlocks = new ArrayList<String>();
 	private boolean initialized = false;
@@ -150,9 +151,9 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param msg the message
 	 */
 	public void notifyEditors(final RedBlockAnimated rb, final String msg) {
-		for (final Entry<Player, PlayerSession> e : playerSessions.entrySet()) {
+		for (final Entry<UUID, PlayerSession> e : playerSessions.entrySet()) {
 			if (e.getValue().getRedBlock() == rb) {
-				ConsoleConnection.notify(e.getKey(), msg);
+				ConsoleConnection.notify(getServer().getPlayer(e.getKey()), msg);
 			}
 		}
 	}
@@ -177,10 +178,10 @@ public class RedBlocksMain extends JavaPlugin {
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_OPEN, 0.5f, 1f);
 				}
-				if (!playerSessions.containsKey(p)) {
-					playerSessions.put(p, new PlayerSession(p.getUniqueId(), rb, b));
+				if (!playerSessions.containsKey(p.getUniqueId())) {
+					playerSessions.put(p.getUniqueId(), new PlayerSession(p.getUniqueId(), rb, b));
 				}
-				playerSessions.get(p).setRedBlock(rb, b);
+				playerSessions.get(p.getUniqueId()).setRedBlock(rb, b);
 				b.setType(Material.OBSIDIAN);
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.GREEN + " is now editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 			}
@@ -214,7 +215,7 @@ public class RedBlocksMain extends JavaPlugin {
 				if ((getPlayerSession(p).getDisableDelay() != 0) || (getPlayerSession(p).getEnableDelay() != 0)) {
 					ConsoleConnection.notify(p, "You must redefine your place and break delays next time you edit a RedBlock.");
 				}
-				playerSessions.remove(p);
+				playerSessions.remove(p.getUniqueId());
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
 					b.getWorld().playSound(b.getLocation(), Sound.CHEST_CLOSE, 0.5f, 1f);
 				}
@@ -288,7 +289,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param notify if true, the editors of the RedBlock will be notified of the change
 	 */
 	public void addBlock(final Player p, final RedBlockAnimated rb, final Block b, final boolean notify) {
-		final PlayerSession ps = playerSessions.get(p);
+		final PlayerSession ps = playerSessions.get(p.getUniqueId());
 		addBlock(p, rb, b, notify, (ps == null) ? 0 : ps.getEnableDelay(b), (ps == null) ? 0 : ps.getDisableDelay(b));
 	}
 
@@ -304,7 +305,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public int addBlockList(final Player p, final RedBlockAnimated rb, final List<Block> cache) {
 		int num = 0;
-		final PlayerSession ps = playerSessions.get(p);
+		final PlayerSession ps = playerSessions.get(p.getUniqueId());
 		for (final Block b : cache) {
 			final RedBlockEvent event = new RedBlockEvent(this, rb, RedBlockCause.BLOCK_ADDED, p);
 			getServer().getPluginManager().callEvent(event);
@@ -431,7 +432,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return if the RedBlock was destroyed
 	 */
 	public boolean destroyRedBlock(final Block b, final Player p) {
-		if (playerSessions.containsKey(p) && playerSessions.get(p).getBlock().getLocation().toString().equals(b.getLocation().toString())) {
+		if (playerSessions.containsKey(p.getUniqueId()) && playerSessions.get(p.getUniqueId()).getBlock().getLocation().toString().equals(b.getLocation().toString())) {
 			removeEditor(p);
 		}
 		if (isBeingEdited(storage.getRedBlock(b))) {
@@ -476,9 +477,9 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public void redBlockLost(final RedBlockAnimated rb) {
 		notifyEditors(rb, ChatColor.RED + "Your RedBlock was lost/destroyed.");
-		for (final Player p : playerSessions.keySet()) {
-			if (getRedBlockEditing(p) == rb) {
-				removeEditor(p);
+		for (final UUID pUUID : playerSessions.keySet()) {
+			if (getRedBlockEditing(getServer().getPlayer(pUUID)) == rb) {
+				removeEditor(getServer().getPlayer(pUUID));
 			}
 		}
 	}
@@ -600,7 +601,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return if the player is editing a RedBlock
 	 */
 	public boolean isEditing(final Player p) {
-		return playerSessions.containsKey(p);
+		return playerSessions.containsKey(p.getUniqueId());
 	}
 
 	/**
@@ -623,7 +624,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @return the RedBlock
 	 */
 	public RedBlockAnimated getRedBlockEditing(final Player p) {
-		return playerSessions.get(p).getRedBlock();
+		return playerSessions.get(p.getUniqueId()).getRedBlock();
 	}
 
 	/**
@@ -631,7 +632,7 @@ public class RedBlocksMain extends JavaPlugin {
 	 * @param p the player
 	 */
 	public PlayerSession getPlayerSession(final Player p) {
-		return playerSessions.get(p);
+		return playerSessions.get(p.getUniqueId());
 	}
 
 	/**
