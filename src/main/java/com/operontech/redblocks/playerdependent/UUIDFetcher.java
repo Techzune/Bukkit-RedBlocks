@@ -1,4 +1,4 @@
-package com.operontech.redblocks;
+package com.operontech.redblocks.playerdependent;
 
 import java.io.InputStreamReader;
 import java.io.OutputStream;

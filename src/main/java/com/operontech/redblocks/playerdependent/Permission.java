@@ -1,4 +1,4 @@
-package com.operontech.redblocks;
+package com.operontech.redblocks.playerdependent;
 
 import org.bukkit.command.CommandSender;
 

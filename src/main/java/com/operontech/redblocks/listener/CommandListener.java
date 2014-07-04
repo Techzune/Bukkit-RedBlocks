@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.ConsoleConnection;
-import com.operontech.redblocks.Permission;
 import com.operontech.redblocks.RedBlocksMain;
 import com.operontech.redblocks.Util;
+import com.operontech.redblocks.playerdependent.Permission;
 import com.operontech.redblocks.playerdependent.PlayerSession;
 import com.operontech.redblocks.storage.RedBlockAnimated;
 import com.operontech.redblocks.storage.RedBlockChild;
