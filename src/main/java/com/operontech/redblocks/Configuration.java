@@ -53,7 +53,7 @@ public class Configuration {
 		try {
 			return Integer.parseInt(config.getString(s.toString()));
 		} catch (final Exception e) {
-			plugin.getConsoleConnection().severe("Config: " + s + " should be a number!");
+			ConsoleConnection.severe("Config: " + s + " should be a number!");
 			return 0;
 		}
 	}
@@ -67,7 +67,7 @@ public class Configuration {
 		try {
 			return Boolean.valueOf(config.getString(s.toString()));
 		} catch (final Exception e) {
-			plugin.getConsoleConnection().severe("Config: " + s + " should be true/false!");
+			ConsoleConnection.severe("Config: " + s + " should be true/false!");
 			return false;
 		}
 	}

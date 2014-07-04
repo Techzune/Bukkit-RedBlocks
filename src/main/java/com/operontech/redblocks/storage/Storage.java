@@ -22,13 +22,11 @@ import com.operontech.redblocks.RedBlocksMain;
 
 public class Storage {
 	private RedBlocksMain plugin;
-	private ConsoleConnection console;
 	private InventorySerializer invSerializer;
 	private HashMap<String, RedBlockAnimated> rbSorted = new HashMap<String, RedBlockAnimated>();
 
 	public Storage(final RedBlocksMain plugin) {
 		this.plugin = plugin;
-		console = plugin.getConsoleConnection();
 		invSerializer = new InventorySerializer();
 		loadRedBlocks();
 	}
@@ -39,7 +37,6 @@ public class Storage {
 	public void clearRAMUsage() {
 		saveRedBlocks();
 		plugin = null;
-		console = null;
 		invSerializer = null;
 		rbSorted = null;
 	}
@@ -59,30 +56,30 @@ public class Storage {
 				blocksReader = new ObjectInputStream(new FileInputStream(blocks));
 				readObject = blocksReader.readObject();
 				rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
-				console.info("RedBlocks Loaded Successfully!");
+				ConsoleConnection.info("RedBlocks Loaded Successfully!");
 			} else {
 				blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
 				if (blocks.exists()) {
 					blocksReader = new ObjectInputStream(new FileInputStream(blocks));
 					readObject = blocksReader.readObject();
 					final HashMap<String, RedBlock> oldRBSorted;
-					console.info("Old RedBlocks - Preparing To Convert...");
+					ConsoleConnection.info("Old RedBlocks - Preparing To Convert...");
 					if (readObject instanceof HashMap<?, ?>) {
 						oldRBSorted = (HashMap<String, RedBlock>) readObject;
 					} else {
 						oldRBSorted = convertSetToHashMap((Set<RedBlock>) readObject);
 					}
-					console.info(oldRBSorted.values().size() + " Old RedBlocks - Loaded To Convert...");
+					ConsoleConnection.info(oldRBSorted.values().size() + " Old RedBlocks - Loaded To Convert...");
 					rbSorted = new HashMap<String, RedBlockAnimated>();
 					for (final RedBlock rb : oldRBSorted.values()) {
 						rbSorted.put(rb.getLocation().toString(), new RedBlockAnimated(rb));
 					}
-					console.info(rbSorted.entrySet().size() + " Old RedBlocks - Converted and Loaded Successfully!");
+					ConsoleConnection.info(rbSorted.entrySet().size() + " Old RedBlocks - Converted and Loaded Successfully!");
 				}
 			}
 		} catch (final Exception ex) {
 			ex.printStackTrace();
-			console.warning("An error occured while loading the RedBlocks file.");
+			ConsoleConnection.warning("An error occured while loading the RedBlocks file.");
 		}
 		try {
 			if (blocksReader != null) {
@@ -90,7 +87,7 @@ public class Storage {
 			}
 		} catch (final Exception ex) {
 			ex.printStackTrace();
-			console.warning("An error occured while closing the RedBlocks file input stream.");
+			ConsoleConnection.warning("An error occured while closing the RedBlocks file input stream.");
 		}
 		if (rbSorted == null) {
 			rbSorted = new HashMap<String, RedBlockAnimated>();
@@ -110,11 +107,11 @@ public class Storage {
 			blocksWriter.writeObject(rbSorted);
 			blocksWriter.flush();
 			blocksWriter.close();
-			console.info("RedBlocks Saved Successfully!");
+			ConsoleConnection.info("RedBlocks Saved Successfully!");
 			return true;
 		} catch (final Exception ex) {
 			ex.printStackTrace();
-			console.warning("An error occured while saving the RedBlocks file.");
+			ConsoleConnection.warning("An error occured while saving the RedBlocks file.");
 		}
 		try {
 			if (blocksWriter != null) {
@@ -122,7 +119,7 @@ public class Storage {
 			}
 		} catch (final Exception ex) {
 			ex.printStackTrace();
-			console.warning("An error occured while closing the RedBlocks file output stream.");
+			ConsoleConnection.warning("An error occured while closing the RedBlocks file output stream.");
 		}
 		return false;
 	}
@@ -195,7 +192,7 @@ public class Storage {
 	 * Removes children of the RedBlockAnimated if it they're AIR.
 	 */
 	public void cleanupRedBlocks() {
-		console.info("Cleaning up the RedBlocks database...");
+		ConsoleConnection.info("Cleaning up the RedBlocks database...");
 		int redBlocksRemoved = 0;
 		int blocksRemoved = 0;
 		List<RedBlockChild> list;
@@ -220,10 +217,10 @@ public class Storage {
 			}
 		}
 		if ((redBlocksRemoved != 0) || (blocksRemoved != 0)) {
-			console.info("  " + redBlocksRemoved + " RedBlocks were removed.");
-			console.info("  " + blocksRemoved + " blocks controlled by RedBlocks were removed.");
+			ConsoleConnection.info("  " + redBlocksRemoved + " RedBlocks were removed.");
+			ConsoleConnection.info("  " + blocksRemoved + " blocks controlled by RedBlocks were removed.");
 		} else {
-			console.info("  " + "No RedBlocks / Blocks were removed.");
+			ConsoleConnection.info("  " + "No RedBlocks / Blocks were removed.");
 		}
 	}
 

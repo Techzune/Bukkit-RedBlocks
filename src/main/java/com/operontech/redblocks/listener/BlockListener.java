@@ -25,11 +25,9 @@ import com.operontech.redblocks.storage.RedBlockAnimated;
 @SuppressWarnings("deprecation")
 public class BlockListener implements Listener {
 	private final RedBlocksMain plugin;
-	private final ConsoleConnection console;
 
-	public BlockListener(final RedBlocksMain plugin, final ConsoleConnection console) {
+	public BlockListener(final RedBlocksMain plugin) {
 		this.plugin = plugin;
-		this.console = console;
 	}
 
 	/**
@@ -46,7 +44,7 @@ public class BlockListener implements Listener {
 			if (Permission.CREATEANDDESTROY.check(p)) {
 				return !plugin.destroyRedBlock(b, p);
 			} else {
-				console.error(p, "You do not have permissions to destroy RedBlocks!");
+				ConsoleConnection.error(p, "You do not have permissions to destroy RedBlocks!");
 				return false;
 			}
 		}
@@ -55,7 +53,7 @@ public class BlockListener implements Listener {
 			// Stop Editing a RedBlock
 			if (isRedBlockAnimated) {
 				if (!plugin.getRedBlockEditing(p).getLocation().toString().equals(b.getLocation().toString())) {
-					console.error(p, "You are already editing a RedBlock!", "Say " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
+					ConsoleConnection.error(p, "You are already editing a RedBlock!", "Say " + ChatColor.GOLD + "/rb s" + ChatColor.RED + " to stop editing.");
 					return true;
 				}
 				plugin.removeEditor(p);
@@ -82,7 +80,7 @@ public class BlockListener implements Listener {
 			//  Verify Protection of Block
 			if ((parent != null) && !Permission.BYPASS_PROTECT.check(p)) {
 				if (parent.getOptionProtected()) {
-					console.error(p, "That block is protected by a RedBlock!");
+					ConsoleConnection.error(p, "That block is protected by a RedBlock!");
 					return true;
 				}
 			}
@@ -93,7 +91,7 @@ public class BlockListener implements Listener {
 					plugin.addEditor(p, b);
 					return true;
 				} else {
-					console.error(p, "You don't have the permissions to edit RedBlocks!");
+					ConsoleConnection.error(p, "You don't have the permissions to edit RedBlocks!");
 					return true;
 				}
 			} else if ((b.getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) && (b.getRelative(BlockFace.UP).getType() == Material.REDSTONE_WIRE)) {
@@ -102,11 +100,11 @@ public class BlockListener implements Listener {
 						plugin.createRedBlock(p, b);
 						return true;
 					} else {
-						console.error(p, "That block is controlled by another RedBlock!");
+						ConsoleConnection.error(p, "That block is controlled by another RedBlock!");
 						return true;
 					}
 				} else {
-					console.error(p, "You don't have the permissions to create RedBlocks!");
+					ConsoleConnection.error(p, "You don't have the permissions to create RedBlocks!");
 					return false;
 				}
 			}
@@ -123,10 +121,10 @@ public class BlockListener implements Listener {
 				rb.getBlock().setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(event.getPlayer())) {
-				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
+				ConsoleConnection.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
 			} else if (rb.contains(event.getBlock())) {
-				console.error(event.getPlayer(), "There's a block here already!");
+				ConsoleConnection.error(event.getPlayer(), "There's a block here already!");
 				event.setCancelled(true);
 			} else {
 				plugin.addBlock(event.getPlayer(), rb, event.getBlock(), true);
@@ -142,7 +140,7 @@ public class BlockListener implements Listener {
 				rb.getBlock().setTypeId(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID));
 			}
 			if ((rb.getBlockCount() > plugin.getConfiguration().getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(event.getPlayer())) {
-				console.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
+				ConsoleConnection.error(event.getPlayer(), "You can't add anymore blocks! The maximum is: " + plugin.getConfiguration().getString(ConfigValue.rules_maxBlocksPer) + " Blocks");
 				event.setCancelled(true);
 			} else {
 				plugin.addBlock(event.getPlayer(), rb, event.getBlockClicked().getRelative(event.getBlockFace()), true);

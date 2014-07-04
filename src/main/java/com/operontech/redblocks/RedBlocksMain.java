@@ -51,7 +51,6 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class RedBlocksMain extends JavaPlugin {
 	private String projectID = "48951";
 	private Storage storage;
-	private ConsoleConnection console;
 	private Configuration config;
 	private CommandListener clistener;
 	private Map<Player, PlayerSession> playerSessions = new HashMap<Player, PlayerSession>();
@@ -61,17 +60,16 @@ public class RedBlocksMain extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		console = new ConsoleConnection();
 		config = new Configuration(this);
 		storage = new Storage(this);
 		clistener = new CommandListener(this);
 		if ((new File(getDataFolder() + File.separator + "blocks.dat").exists() && new File(getDataFolder() + File.separator + "options.dat").exists()) || new File(getDataFolder() + File.separator + "blocks.dat").exists()) {
-			console.severe("You must run RedBlocks with a version earlier than 2.2 to convert your RedBlocks!");
-			console.severe("If you don't, you'll lose your RedBlocks!");
+			ConsoleConnection.severe("You must run RedBlocks with a version earlier than 2.2 to convert your RedBlocks!");
+			ConsoleConnection.severe("If you don't, you'll lose your RedBlocks!");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
-		getServer().getPluginManager().registerEvents(new BlockListener(this, console), this);
+		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		if (config.canUpdate()) {
@@ -113,7 +111,6 @@ public class RedBlocksMain extends JavaPlugin {
 	private void clearRAM() {
 		projectID = null;
 		storage = null;
-		console = null;
 		config = null;
 		clistener = null;
 		playerSessions = null;
@@ -130,12 +127,12 @@ public class RedBlocksMain extends JavaPlugin {
 				final JSONObject latest = (JSONObject) array.get(array.size() - 1);
 				final String version = ((String) latest.get("name")).replaceAll("[a-zA-Z ]", "");
 				if (!getDescription().getVersion().endsWith("SNAPSHOT") && !getDescription().getVersion().equals(version)) {
-					console.info(ChatColor.GREEN + "An update is available from BukkitDev: " + ChatColor.DARK_GREEN + version);
+					ConsoleConnection.info(ChatColor.GREEN + "An update is available from BukkitDev: " + ChatColor.DARK_GREEN + version);
 					return true;
 				}
 			}
 		} catch (final IOException e) {
-			console.warning("An error occured while checking for updates.");
+			ConsoleConnection.warning("An error occured while checking for updates.");
 		}
 		return false;
 	}
@@ -155,7 +152,7 @@ public class RedBlocksMain extends JavaPlugin {
 	public void notifyEditors(final RedBlockAnimated rb, final String msg) {
 		for (final Entry<Player, PlayerSession> e : playerSessions.entrySet()) {
 			if (e.getValue().getRedBlock() == rb) {
-				console.notify(e.getKey(), msg);
+				ConsoleConnection.notify(e.getKey(), msg);
 			}
 		}
 	}
@@ -169,7 +166,7 @@ public class RedBlocksMain extends JavaPlugin {
 		if (!isEditing(p)) {
 			final RedBlockAnimated rb = storage.getRedBlock(b);
 			if (rb.getTimeoutState()) {
-				console.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
+				ConsoleConnection.error(p, "That RedBlock is under redstone timeout.", "Stop all redstone powering the RedBlock and try again in a few seconds.");
 				rb.setTimeoutState(false);
 				return;
 			}
@@ -215,7 +212,7 @@ public class RedBlocksMain extends JavaPlugin {
 				}
 				notifyEditors(rb, ChatColor.DARK_AQUA + p.getName() + ChatColor.RED + " is no longer editing the RedBlock | " + rb.getBlockCount() + " Blocks");
 				if ((getPlayerSession(p).getDisableDelay() != 0) || (getPlayerSession(p).getEnableDelay() != 0)) {
-					console.notify(p, "You must redefine your place and break delays next time you edit a RedBlock.");
+					ConsoleConnection.notify(p, "You must redefine your place and break delays next time you edit a RedBlock.");
 				}
 				playerSessions.remove(p);
 				if (config.getBool(ConfigValue.redblocks_soundFX)) {
@@ -438,12 +435,12 @@ public class RedBlocksMain extends JavaPlugin {
 			removeEditor(p);
 		}
 		if (isBeingEdited(storage.getRedBlock(b))) {
-			console.error(p, "You can't destroy a RedBlock that is being edited!");
+			ConsoleConnection.error(p, "You can't destroy a RedBlock that is being edited!");
 			return false;
 		}
 		if (removeRedBlock(b, true)) {
 			p.getInventory().removeItem(new ItemStack(config.getInt(ConfigValue.redblocks_destroyItem), 1));
-			console.notify(p, "RedBlock Eliminated");
+			ConsoleConnection.notify(p, "RedBlock Eliminated");
 			return true;
 		}
 		return false;
@@ -462,7 +459,7 @@ public class RedBlocksMain extends JavaPlugin {
 			}
 		}
 		if ((number > config.getInt(ConfigValue.redblocks_blockID)) && !Permission.BYPASS_MAXREDBLOCKSPER.check(p)) {
-			console.error(p, "You can't create anymore RedBlocks! Max: " + config.getInt(ConfigValue.redblocks_blockID));
+			ConsoleConnection.error(p, "You can't create anymore RedBlocks! Max: " + config.getInt(ConfigValue.redblocks_blockID));
 			return;
 		}
 		final RedBlockEvent event = new RedBlockEvent(this, storage.getRedBlock(b), RedBlockCause.CREATED, p);
@@ -505,23 +502,23 @@ public class RedBlocksMain extends JavaPlugin {
 				t = Integer.parseInt(type);
 			}
 		} catch (final Exception e) {
-			console.error(p, "Unknown Type Format");
-			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "Unknown Type Format");
+			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if (reg == null) {
-			console.error(p, "No WorldEditCommand Selection Found");
-			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "No WorldEditCommand Selection Found");
+			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if ((reg.getArea() > config.getInt(ConfigValue.worldedit_maxAtOnce)) && !Permission.BYPASS_WEMAX.check(p)) {
-			console.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.worldedit_maxAtOnce));
-			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.worldedit_maxAtOnce));
+			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if (((reg.getArea() + rb.getBlockCount()) > config.getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(p)) {
-			console.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.rules_maxBlocksPer));
-			console.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.rules_maxBlocksPer));
+			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		final Location min = reg.getMinimumPoint();
@@ -653,14 +650,6 @@ public class RedBlocksMain extends JavaPlugin {
 	 */
 	public boolean isActiveBlock(final Block b) {
 		return isActiveBlock(b.getLocation());
-	}
-
-	/**
-	 * Gets the ConsoleConnection.
-	 * @return RedBlock's ConsoleConnection
-	 */
-	public ConsoleConnection getConsoleConnection() {
-		return console;
 	}
 
 	/**
