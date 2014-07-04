@@ -16,6 +16,7 @@ Version 2.3.0
   > Improved Shutdown Cleanup
   > Rewrote Many Lines For Performance Efficiency
   > World-Edit Improved
+  > Changed ConsoleConnection to static methods
   > Substantially Reduced Resource Usage
   > OCD Changes
   > Bug Fix: WorldEdit Command Arguments
