@@ -12,7 +12,7 @@ public class Util {
 
 	/**
 	 * Checks if the typeId provided is declared "special"
-	 * 
+	 *
 	 * A block that is defined "special" is one that requires a block under it to exist.
 	 * @param typeId the typeId to check
 	 * @return if the typeId was declared "special"
@@ -24,7 +24,7 @@ public class Util {
 
 	/**
 	 * Checks if the Material provided is declared "special"
-	 * 
+	 *
 	 * A block that is defined "special" is one that requires a block under it to exist.
 	 * @param m the material to check
 	 * @return if the material was declared "special"

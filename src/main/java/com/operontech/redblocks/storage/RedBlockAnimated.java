@@ -19,8 +19,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import com.operontech.redblocks.RedBlocksMain.RBDisableListener;
-import com.operontech.redblocks.playerdependent.UUIDFetcher;
 import com.operontech.redblocks.Util;
+import com.operontech.redblocks.playerdependent.UUIDFetcher;
 
 public class RedBlockAnimated implements Serializable {
 
@@ -194,7 +194,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @param child the child to be added
 	 * @param enableDelay the delay when enabling the block
 	 * @param disableDelay the delay when removing the block
-	 * @return the 
+	 * @return the
 	 */
 	public boolean add(final RedBlockChild child, final int enableDelay, final int disableDelay) {
 		return listOfBlocks.put(child, Arrays.asList(enableDelay, disableDelay)) == null;
@@ -202,7 +202,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Adds a block to the RedBlock's database of blocks.
-	 * 
+	 *
 	 * Converts it to a RedBlockChild before adding it.
 	 * @param b the block to be converted then added
 	 * @param enableDelay the delay when enabling the block
@@ -259,7 +259,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Searches for and removed a block from the RedBlock's database of blocks.
-	 * 
+	 *
 	 * It is recommended that remove(RedBlockChild) is used instead as it uses less CPU and therefore takes less time.
 	 * @param b the block to be searched for and removed
 	 * @return if the block was found and removed
@@ -444,7 +444,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Sets the "protected" option of the RedBlock.
-	 * 
+	 *
 	 * Protected prevents the breaking of any controlled blocks.
 	 * @param protect the new "protected" option
 	 * @return the "protected" option after the change
@@ -455,7 +455,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Sets the "inverted" option of the RedBlock.
-	 * 
+	 *
 	 * Inverted switches the on/off states to off/on when activated by redstone.
 	 * @param invert the new "inverted" option
 	 * @return the "inverted" option after the change
@@ -466,7 +466,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Sets the "changed" value of the RedBlock
-	 * 
+	 *
 	 * Changed identifies that the RedBlock's database has changed
 	 * @param changed the new "changed" value
 	 * @return the "changed" value after the change
@@ -477,7 +477,7 @@ public class RedBlockAnimated implements Serializable {
 
 	/**
 	 * Sets the "timeout" value of the RedBlock.
-	 * 
+	 *
 	 * Timeout is a period of time where the RedBlock is disabled after being (de)activated by redstone.
 	 * @param timeout the new "timeout" value
 	 * @return the "timeout" value

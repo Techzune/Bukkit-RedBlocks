@@ -11,7 +11,7 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to the console with the plugin's tag.
-	 * 
+	 *
 	 * Uses AQUA for text color.
 	 * @param msg the message
 	 */
@@ -21,7 +21,7 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to the console with the plugin's tag.
-	 * 
+	 *
 	 * Uses RED for text color.
 	 * @param msg the message
 	 */
@@ -31,7 +31,7 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to the console with the plugin's tag.
-	 * 
+	 *
 	 * Uses DARK_RED for text color.
 	 * @param msg the message
 	 */
@@ -50,7 +50,7 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to a player.
-	 * 
+	 *
 	 * Uses GREEN <!> RedBlocks tag.
 	 * Uses DARK_GREEN as text color.
 	 * @param player player to receive the message
@@ -64,12 +64,12 @@ public class ConsoleConnection {
 
 	/**
 	 * Sends a message to a player.
-	 * 
+	 *
 	 * Uses RED <!> RedBlocks tag.
 	 * Uses RED as text color.
 	 * @param player player to receive the message
 	 * @param msg the message(s)
-	 * @param string 
+	 * @param string
 	 */
 	public static void error(final CommandSender player, final String... msgs) {
 		for (final String msg : msgs) {

@@ -49,9 +49,9 @@ public class PlayerSession {
 
 	/**
 	 * Defines a enableDelay and disableDelay for the provided blockInfo
-	 * 
+	 *
 	 * blockInfo can be ID without ":DATA"
-	 * 
+	 *
 	 * @param blockInfo the information for the block (ID:DATA)
 	 */
 	public void setBlockDelay(final String blockInfo, final String enableDelay, final String disableDelay) {

@@ -145,7 +145,7 @@ public class RedBlocksMain extends JavaPlugin {
 
 	/**
 	 * Sends a message to the editors of the RedBlockAnimated.
-	 * 
+	 *
 	 * Includes: "<!> RedBlocks: "
 	 * @param rb the RedBlock
 	 * @param msg the message
@@ -295,9 +295,9 @@ public class RedBlocksMain extends JavaPlugin {
 
 	/**
 	 * Adds a list of blocks to a RedBlockAnimated and applies player delays.
-	 * 
+	 *
 	 * Used for World-Edit
-	 * 
+	 *
 	 * @param p the player to get the session from
 	 * @param rb the RedBlock to add the Blocks to
 	 * @param cache the list of Blocks

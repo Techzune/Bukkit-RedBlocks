@@ -35,7 +35,7 @@ public class RedBlockEvent extends Event {
 
 	/**
 	 * Sets the cancellation state of this event. A cancelled event will not be executed in the server, but will still pass to other plugins.
-	 * 
+	 *
 	 * @param bool true if you wish to cancel this event
 	 */
 	public void setCancelled(final boolean bool) {
