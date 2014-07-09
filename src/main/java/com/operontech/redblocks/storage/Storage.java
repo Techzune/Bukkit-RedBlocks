@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,7 +55,7 @@ public class Storage {
 			if (blocks.exists() && (blocks.length() != 0)) {
 				blocksReader = new ObjectInputStream(new FileInputStream(blocks));
 				readObject = blocksReader.readObject();
-				rbSorted = (LinkedHashMap<String, RedBlockAnimated>) readObject;
+				rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
 				ConsoleConnection.info("RedBlocks Loaded Successfully!");
 			} else {
 				blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
@@ -71,7 +70,7 @@ public class Storage {
 						oldRBSorted = convertSetToHashMap((Set<RedBlock>) readObject);
 					}
 					ConsoleConnection.info(oldRBSorted.values().size() + " Old RedBlocks - Loaded To Convert...");
-					rbSorted = new LinkedHashMap<String, RedBlockAnimated>();
+					rbSorted = new HashMap<String, RedBlockAnimated>();
 					for (final RedBlock rb : oldRBSorted.values()) {
 						rbSorted.put(rb.getLocation().toString(), new RedBlockAnimated(rb));
 					}
