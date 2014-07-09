@@ -4,18 +4,13 @@ import java.io.Serializable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.BrewingStand;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.Dropper;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Hopper;
 import org.bukkit.block.NoteBlock;
 import org.bukkit.block.Sign;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.InventoryHolder;
 
 import com.operontech.redblocks.Util;
 
@@ -36,7 +31,9 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Sets the block in the world to the child's specifications and inserts inventory data.
+	 * Sets the block in the world to the child's specifications and inserts
+	 * inventory data.
+	 *
 	 * @param blockUpdate
 	 */
 	@SuppressWarnings("deprecation")
@@ -55,24 +52,9 @@ public class RedBlockChild implements Serializable {
 				if (state instanceof Chest) {
 					final Chest inv = (Chest) state;
 					inv.getBlockInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.CHEST));
-				} else if (state instanceof Furnace) {
-					final Furnace inv = (Furnace) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.FURNACE));
-				} else if (state instanceof Dispenser) {
-					final Dispenser inv = (Dispenser) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.DISPENSER));
-				} else if (state instanceof Dropper) {
-					final Dropper inv = (Dropper) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.DROPPER));
-				} else if (state instanceof BrewingStand) {
-					final BrewingStand inv = (BrewingStand) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.BREWING));
-				} else if (state instanceof Hopper) {
-					final Hopper inv = (Hopper) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.HOPPER));
-				} else if (state instanceof Beacon) {
-					final Beacon inv = (Beacon) state;
-					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, InventoryType.BEACON));
+				} else if (state instanceof InventoryHolder) {
+					final InventoryHolder inv = (InventoryHolder) state;
+					inv.getInventory().setContents(new InventorySerializer().convertToInventory(inventory, inv.getInventory().getType()));
 				} else if (state instanceof NoteBlock) {
 					final NoteBlock noteblock = (NoteBlock) state;
 					noteblock.setRawNote(note);
@@ -93,6 +75,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Stores the inventory data of the block then sets it to AIR.
+	 *
 	 * @param blockUpdate
 	 */
 	@SuppressWarnings("deprecation")
@@ -107,30 +90,9 @@ public class RedBlockChild implements Serializable {
 				final Chest inv = (Chest) state;
 				inventory = new InventorySerializer().convertToString(inv.getBlockInventory());
 				inv.getBlockInventory().clear();
-			} else if (state instanceof Furnace) {
-				final Furnace inv = (Furnace) state;
+			} else if (state instanceof InventoryHolder) {
+				final InventoryHolder inv = (InventoryHolder) state;
 				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
-			} else if (state instanceof Dispenser) {
-				final Dispenser inv = (Dispenser) state;
-				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
-			} else if (state instanceof Dropper) {
-				final Dropper inv = (Dropper) state;
-				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
-			} else if (state instanceof BrewingStand) {
-				final BrewingStand inv = (BrewingStand) state;
-				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
-			} else if (state instanceof Hopper) {
-				final Hopper inv = (Hopper) state;
-				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
-			} else if (state instanceof Beacon) {
-				final Beacon inv = (Beacon) state;
-				inventory = new InventorySerializer().convertToString(inv.getInventory());
-				inv.getInventory().clear();
 			} else if (state instanceof NoteBlock) {
 				final NoteBlock noteblock = (NoteBlock) state;
 				note = noteblock.getRawNote();
@@ -150,6 +112,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the Material of the RedBlockChild.
+	 *
 	 * @return the type
 	 */
 	public Material getType() {
@@ -158,6 +121,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the data.
+	 *
 	 * @return the data
 	 */
 	public byte getData() {
@@ -166,6 +130,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the block.
+	 *
 	 * @return the block
 	 */
 	public Block getBlock() {
@@ -174,6 +139,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the location.
+	 *
 	 * @return the location
 	 */
 	public Location getLocation() {
@@ -182,6 +148,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the inventory right.
+	 *
 	 * @return the inventory right
 	 */
 	public String getInventoryRight() {
@@ -190,6 +157,7 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the sign data.
+	 *
 	 * @return the sign data
 	 */
 	public String[] getSignData() {
@@ -198,7 +166,9 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the sign data.
-	 * @param str the new sign data
+	 *
+	 * @param str
+	 *            the new sign data
 	 */
 	public void setSignData(final String[] str) {
 		signData = str;
@@ -206,7 +176,9 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the data.
-	 * @param data the new data
+	 *
+	 * @param data
+	 *            the new data
 	 */
 	public void setData(final byte data) {
 		this.data = data;
@@ -214,7 +186,9 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the Material of the RedBlockChild.
-	 * @param typeId the new material
+	 *
+	 * @param typeId
+	 *            the new material
 	 */
 	public void setType(final Material type) {
 		this.type = type;
@@ -222,7 +196,9 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the location.
-	 * @param location the new location
+	 *
+	 * @param location
+	 *            the new location
 	 */
 	public void setLocation(final Location location) {
 		this.location = location.toString();
