@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class Storage {
 	/**
 	 * Loads the RedBlocks.dat File in the RedBlocks Plugin Folder.
 	 * If the file is using the old rbList (Set) format, it will be converted to the rbSorted (HashMap) format.
-	 * 
+	 *
 	 */
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void loadRedBlocks() {
@@ -55,7 +56,7 @@ public class Storage {
 			if (blocks.exists() && (blocks.length() != 0)) {
 				blocksReader = new ObjectInputStream(new FileInputStream(blocks));
 				readObject = blocksReader.readObject();
-				rbSorted = (HashMap<String, RedBlockAnimated>) readObject;
+				rbSorted = (LinkedHashMap<String, RedBlockAnimated>) readObject;
 				ConsoleConnection.info("RedBlocks Loaded Successfully!");
 			} else {
 				blocks = new File(plugin.getDataFolder() + File.separator + "redblocks.dat");
@@ -70,7 +71,7 @@ public class Storage {
 						oldRBSorted = convertSetToHashMap((Set<RedBlock>) readObject);
 					}
 					ConsoleConnection.info(oldRBSorted.values().size() + " Old RedBlocks - Loaded To Convert...");
-					rbSorted = new HashMap<String, RedBlockAnimated>();
+					rbSorted = new LinkedHashMap<String, RedBlockAnimated>();
 					for (final RedBlock rb : oldRBSorted.values()) {
 						rbSorted.put(rb.getLocation().toString(), new RedBlockAnimated(rb));
 					}
