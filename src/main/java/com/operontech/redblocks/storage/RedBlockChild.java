@@ -31,10 +31,8 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Sets the block in the world to the child's specifications and inserts
-	 * inventory data.
-	 *
-	 * @param blockUpdate
+	 * Sets the block in the world to the child's specifications and inserts inventory data if it exists.
+	 * @param blockUpdate if true, physics will be applied when the block is set
 	 */
 	@SuppressWarnings("deprecation")
 	public void enableBlock(final boolean blockUpdate) {
@@ -74,9 +72,8 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Stores the inventory data of the block then sets it to AIR.
-	 *
-	 * @param blockUpdate
+	 * Stores the inventory data of the block if it exists then sets it to AIR.
+	 * @param blockUpdate if true, physics will be applied when the block is removed
 	 */
 	@SuppressWarnings("deprecation")
 	public void disableBlock(final boolean blockUpdate) {
@@ -112,25 +109,22 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Gets the Material of the RedBlockChild.
-	 *
-	 * @return the type
+	 * @return the Material
 	 */
 	public Material getType() {
 		return type;
 	}
 
 	/**
-	 * Gets the data.
-	 *
-	 * @return the data
+	 * Gets the data byte of the RedBlockChild.
+	 * @return the data byte
 	 */
 	public byte getData() {
 		return data;
 	}
 
 	/**
-	 * Gets the block.
-	 *
+	 * Gets the block of the RedBlockChild.
 	 * @return the block
 	 */
 	public Block getBlock() {
@@ -138,8 +132,7 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Gets the location.
-	 *
+	 * Gets the location of the RedBlockChild.
 	 * @return the location
 	 */
 	public Location getLocation() {
@@ -147,17 +140,15 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Gets the inventory right.
-	 *
-	 * @return the inventory right
+	 * Gets the inventory data of the RedBlockChild.
+	 * @return the inventory
 	 */
-	public String getInventoryRight() {
+	public String getInventory() {
 		return inventory;
 	}
 
 	/**
-	 * Gets the sign data.
-	 *
+	 * Gets the sign data of the RedBlockChild.
 	 * @return the sign data
 	 */
 	public String[] getSignData() {
@@ -165,20 +156,16 @@ public class RedBlockChild implements Serializable {
 	}
 
 	/**
-	 * Sets the sign data.
-	 *
-	 * @param str
-	 *            the new sign data
+	 * Sets the sign data of the RedBlockChild.
+	 * @param str the new sign data
 	 */
 	public void setSignData(final String[] str) {
 		signData = str;
 	}
 
 	/**
-	 * Sets the data.
-	 *
-	 * @param data
-	 *            the new data
+	 * Sets the data of the RedBlockChild.
+	 * @param data the new data
 	 */
 	public void setData(final byte data) {
 		this.data = data;
@@ -186,19 +173,15 @@ public class RedBlockChild implements Serializable {
 
 	/**
 	 * Sets the Material of the RedBlockChild.
-	 *
-	 * @param typeId
-	 *            the new material
+	 * @param typeId the new material
 	 */
 	public void setType(final Material type) {
 		this.type = type;
 	}
 
 	/**
-	 * Sets the location.
-	 *
-	 * @param location
-	 *            the new location
+	 * Sets the location of the RedBlockChild.
+	 * @param location the new location
 	 */
 	public void setLocation(final Location location) {
 		this.location = location.toString();
