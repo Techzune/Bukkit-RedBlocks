@@ -37,7 +37,6 @@ import com.operontech.redblocks.events.RedBlockCause;
 import com.operontech.redblocks.events.RedBlockEvent;
 import com.operontech.redblocks.listener.BlockListener;
 import com.operontech.redblocks.listener.CommandListener;
-import com.operontech.redblocks.listener.PhysicsListener;
 import com.operontech.redblocks.listener.WorldListener;
 import com.operontech.redblocks.playerdependent.Permission;
 import com.operontech.redblocks.playerdependent.PlayerSession;
@@ -71,7 +70,6 @@ public class RedBlocksMain extends JavaPlugin {
 			return;
 		}
 		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
-		getServer().getPluginManager().registerEvents(new PhysicsListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		if (config.canUpdate()) {
 			checkForUpdate();

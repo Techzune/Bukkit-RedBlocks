@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,7 +12,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -190,5 +195,35 @@ public class BlockListener implements Listener {
 				}
 			}
 		}, 2L);
+	}
+
+	@EventHandler
+	public void onEntityChangeBlock(final EntityChangeBlockEvent e) {
+		if ((e.getEntityType() == EntityType.FALLING_BLOCK) && plugin.isActiveBlock(e.getBlock())) {
+			e.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onPhysics(final BlockPhysicsEvent e) {
+		if (e.getBlock().getTypeId() == plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)) {
+			plugin.doBlockUpdate(e.getBlock());
+		}
+	}
+
+	@EventHandler
+	public void onPistonExtend(final BlockPistonExtendEvent e) {
+		for (final Block b : e.getBlocks()) {
+			if (plugin.isActiveBlock(b)) {
+				e.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onPistonPull(final BlockPistonRetractEvent e) {
+		if (e.isSticky() && !e.getRetractLocation().getBlock().isEmpty() && (plugin.isActiveBlock((e.getRetractLocation().getBlock())))) {
+			e.setCancelled(true);
+		}
 	}
 }
