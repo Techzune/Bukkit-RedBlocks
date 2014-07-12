@@ -1,8 +1,10 @@
 package com.operontech.redblocks.storage;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -14,11 +16,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import com.operontech.redblocks.ConfigValue;
 import com.operontech.redblocks.ConsoleConnection;
 import com.operontech.redblocks.RedBlocksMain;
+import com.operontech.redblocks.playerdependent.UUIDFetcher;
 
 public class Storage {
 	private RedBlocksMain plugin;
@@ -76,6 +81,17 @@ public class Storage {
 					}
 					ConsoleConnection.info(rbSorted.entrySet().size() + " Old RedBlocks - Converted and Loaded Successfully!");
 				}
+			}
+			blocks = new File(plugin.getDataFolder().getParentFile() + File.separator + "ControllerBlock" + File.separator + "ControllerBlock.dat");
+			if (blocks.exists()) {
+				final int rbc = readControllerBlockFile(blocks);
+				if (rbc > -1) {
+					ConsoleConnection.info("ControllerBlock data file was read and converted successfully!");
+					ConsoleConnection.info(rbc + " ControllerBlock blocks added.");
+				} else {
+					ConsoleConnection.warning("Failed to read ControllerBlock data file!");
+				}
+				blocks.renameTo(new File(plugin.getDataFolder().getParentFile() + File.separator + "ControllerBlock" + File.separator + "ControllerBlock-REMOVEME.dat"));
 			}
 		} catch (final Exception ex) {
 			ex.printStackTrace();
@@ -239,5 +255,50 @@ public class Storage {
 			newSet.put(rb.getLocation().toString(), rb);
 		}
 		return newSet;
+	}
+
+	/**
+	 * Attempts to read a ControllerBlock file and convert the blocks to RedBlock files.
+	 */
+	private int readControllerBlockFile(final File cbFile) {
+		int rbCreated = 0;
+		try {
+			final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(cbFile), "UTF-8"));
+			final String version = in.readLine().trim();
+			if (!version.equals("# v4")) {
+				ConsoleConnection.severe("Cannot read ControllerBlock file - It's not v4!");
+				in.close();
+				return -1;
+			}
+			String s;
+			String[] args;
+			while ((s = in.readLine()) != null) {
+				if (s.trim().isEmpty() || ((args = s.split(",")).length < 5)) {
+					break;
+				}
+				@SuppressWarnings("deprecation")
+				final RedBlockAnimated rb = new RedBlockAnimated(parseCBLocation(args[0], args[1], args[2], args[3]), Material.getMaterial(plugin.getConfiguration().getInt(ConfigValue.redblocks_blockID)), (byte) 0, UUIDFetcher.getUUIDOf(args[5]), args.length > 6 ? args[6].equals("protected") : false, false);
+				int i = 6;
+				Location l;
+				while (i < args.length) {
+					if ((args.length - i) >= 5) {
+						l = parseCBLocation(args[(i++)], args[(i++)], args[(i++)], args[(i++)]);
+						rb.add(new RedBlockChild(Material.getMaterial(args[4]), Byte.parseByte(args[(i++)]), l), 0, 0);
+					} else {
+						break;
+					}
+				}
+				rbSorted.put(rb.getLocation().toString(), rb);
+				rbCreated++;
+			}
+			in.close();
+		} catch (final Exception e) {
+			return rbCreated > 0 ? rbCreated : -1;
+		}
+		return rbCreated;
+	}
+
+	private Location parseCBLocation(final String worldName, final String X, final String Y, final String Z) {
+		return new Location(plugin.getServer().getWorld(worldName), Integer.parseInt(X), Integer.parseInt(Y), Integer.parseInt(Z));
 	}
 }
