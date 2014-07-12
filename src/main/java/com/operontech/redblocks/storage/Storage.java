@@ -257,7 +257,7 @@ public class Storage {
 	}
 
 	/**
-	 * Attempts to read a ControllerBlock file and convert the blocks to RedBlock files.
+	 * Attempts to read a ControllerBlock file and convert the blocks to RedBlocks.
 	 * @param cbFile the ControllerBlock data file
 	 * @return the number of ControllerBlock blocks added
 	 */
