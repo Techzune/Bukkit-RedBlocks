@@ -501,23 +501,19 @@ public class RedBlocksMain extends JavaPlugin {
 				t = Integer.parseInt(type);
 			}
 		} catch (final Exception e) {
-			ConsoleConnection.error(p, "Unknown Type Format");
-			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "Unknown Type Format", ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if (reg == null) {
-			ConsoleConnection.error(p, "No WorldEditCommand Selection Found");
-			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "No WorldEditCommand Selection Found", ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if ((reg.getArea() > config.getInt(ConfigValue.worldedit_maxAtOnce)) && !Permission.BYPASS_WEMAX.check(p)) {
-			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.worldedit_maxAtOnce));
-			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.worldedit_maxAtOnce), ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		if (((reg.getArea() + rb.getBlockCount()) > config.getInt(ConfigValue.rules_maxBlocksPer)) && !Permission.BYPASS_MAXBLOCKSPER.check(p)) {
-			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.rules_maxBlocksPer));
-			ConsoleConnection.error(p, ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
+			ConsoleConnection.error(p, "You have exceeded the maximum threshold of blocks: " + config.getInt(ConfigValue.rules_maxBlocksPer), ChatColor.LIGHT_PURPLE + "Operation Cancelled.");
 			return;
 		}
 		final Location min = reg.getMinimumPoint();
