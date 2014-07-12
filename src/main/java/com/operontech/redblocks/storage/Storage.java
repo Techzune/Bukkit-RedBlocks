@@ -49,7 +49,6 @@ public class Storage {
 	/**
 	 * Loads the RedBlocks.dat File in the RedBlocks Plugin Folder.
 	 * If the file is using the old rbList (Set) format, it will be converted to the rbSorted (HashMap) format.
-	 *
 	 */
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void loadRedBlocks() {
@@ -259,6 +258,8 @@ public class Storage {
 
 	/**
 	 * Attempts to read a ControllerBlock file and convert the blocks to RedBlock files.
+	 * @param cbFile the ControllerBlock data file
+	 * @return the number of ControllerBlock blocks added
 	 */
 	private int readControllerBlockFile(final File cbFile) {
 		int rbCreated = 0;
