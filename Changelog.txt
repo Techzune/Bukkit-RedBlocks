@@ -5,7 +5,7 @@ Version 2.3.0
   > Added and Implemented The Use Of UUIDs
   > Added and Implemented RedBlockChild Delays
   > Added and Implemented PlayerSessions
-  > Added and Implemented the conversion of ControllerBlock blocks to RedBlocks
+  > Added and Implemented the Conversion of ControllerBlock Blocks to RedBlocks
   > Added Permission: "redblocks.delay"
   > Added Command: "/rb delay"
   > Added Command Help: "/rb delay"
