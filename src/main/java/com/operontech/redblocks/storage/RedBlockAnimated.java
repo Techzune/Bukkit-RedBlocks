@@ -527,6 +527,17 @@ public class RedBlockAnimated implements Serializable {
 	}
 
 	/**
+	 * Gets the location of the Redblock's physical block.
+	 *
+	 * To be used, it must be converted back into a location via Util.convertStringToLocation(location)!
+	 *
+	 * @return the location
+	 */
+	public String getLocationSerialized() {
+		return location;
+	}
+
+	/**
 	 * Gets UUID of the RedBlock's owner.
 	 * @return the owner's name
 	 */
