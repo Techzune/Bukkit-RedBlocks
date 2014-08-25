@@ -27,7 +27,7 @@ public class RedBlockChild implements Serializable {
 	public RedBlockChild(final Material type, final byte data, final Location location) {
 		this.type = type;
 		this.data = data;
-		this.location = Util.convertLocationToString(location);
+		this.location = Util.serializeLocation(location);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class RedBlockChild implements Serializable {
 	 * @return the location
 	 */
 	public Location getLocation() {
-		return Util.convertStringToLocation(location);
+		return Util.deSerializeLocation(location);
 	}
 
 	/**

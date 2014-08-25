@@ -49,7 +49,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @param inverted the "inverted" option
 	 */
 	public RedBlockAnimated(final Location location, final Material type, final byte data, final UUID owner, final boolean protect, final boolean inverted) {
-		this.location = Util.convertLocationToString(location);
+		this.location = Util.serializeLocation(location);
 		ownerUUID = owner;
 		this.protect = protect;
 		this.inverted = inverted;
@@ -66,7 +66,7 @@ public class RedBlockAnimated implements Serializable {
 	 */
 	@SuppressWarnings("deprecation")
 	public RedBlockAnimated(final Block b, final UUID owner, final boolean protect, final boolean inverted) {
-		location = Util.convertLocationToString(b.getLocation());
+		location = Util.serializeLocation(b.getLocation());
 		type = b.getType();
 		data = b.getData();
 		ownerUUID = owner;
@@ -76,7 +76,7 @@ public class RedBlockAnimated implements Serializable {
 
 	@SuppressWarnings("deprecation")
 	public RedBlockAnimated(final RedBlock rb) {
-		location = Util.convertLocationToString(rb.getLocation());
+		location = Util.serializeLocation(rb.getLocation());
 		type = Material.getMaterial(rb.getTypeId());
 		data = rb.getData();
 		owner = rb.getOwner();
@@ -421,7 +421,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the location after the change
 	 */
 	public String setLocation(final Location loc) {
-		return setLocation(Util.convertLocationToString(loc));
+		return setLocation(Util.serializeLocation(loc));
 	}
 
 	/**
@@ -523,7 +523,7 @@ public class RedBlockAnimated implements Serializable {
 	 * @return the location
 	 */
 	public Location getLocation() {
-		return Util.convertStringToLocation(location);
+		return Util.deSerializeLocation(location);
 	}
 
 	/**
