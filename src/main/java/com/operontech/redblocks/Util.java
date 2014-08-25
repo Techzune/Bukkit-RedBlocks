@@ -38,7 +38,7 @@ public class Util {
 	 * @param loc the location to convert to a string
 	 * @return the location as a string
 	 */
-	public static String convertLocationToString(final Location loc) {
+	public static String serializeLocation(final Location loc) {
 		return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
 	}
 
@@ -47,7 +47,7 @@ public class Util {
 	 * @param str the Location as a String to be converted back into a Location
 	 * @return the Location from the String, null if conversion failed
 	 */
-	public static Location convertStringToLocation(final String str) {
+	public static Location deSerializeLocation(final String str) {
 		final String splitString[] = str.split("\\:");
 		final Location loc = new Location(Bukkit.getServer().getWorld(splitString[0]), 0, 0, 0);
 		if ((splitString.length < 4) || (loc == null)) {
