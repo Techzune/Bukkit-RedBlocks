@@ -1,5 +1,9 @@
-# README #
+# NOTICE: Imported Project
+Please note that this project was imported from my BitBucket account. 
+This project is outdated and may reflect naive writing styles.
+If you are curious about my older projects, read on!
 
-Oh would you look at that! This is a README.
+## RedBlocks for Bukkit
+Toggle blocks with redstone!
 
-Nothing to read here; move on.
+For more details, visit www.operontech.com/redblocks!
